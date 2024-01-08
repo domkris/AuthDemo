@@ -1,5 +1,5 @@
-﻿using AuthDemo.Domain;
-using AuthDemo.Domain.Entities;
+﻿using AuthDemo.Infrastructure;
+using AuthDemo.Infrastructure.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

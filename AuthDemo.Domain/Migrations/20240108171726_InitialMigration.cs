@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace AuthDemo.Domain.Migrations
+namespace AuthDemo.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialMigration : Migration

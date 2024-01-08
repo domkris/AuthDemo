@@ -1,4 +1,4 @@
-﻿namespace AuthDemo.Domain.Audit
+﻿namespace AuthDemo.Infrastructure.Audit
 {
     public interface IAuditableEntity
     {
