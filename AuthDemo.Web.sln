@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Web", "AuthDemo.Web\AuthDemo.Web.csproj", "{9C0B55DC-E6F0-441E-891C-833C2FC159ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Web", "AuthDemo.Web\AuthDemo.Web.csproj", "{9C0B55DC-E6F0-441E-891C-833C2FC159ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Domain", "AuthDemo.Domain\AuthDemo.Domain.csproj", "{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
