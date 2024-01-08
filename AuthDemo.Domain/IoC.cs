@@ -8,7 +8,8 @@ namespace AuthDemo.Domain
     {
         public static void RegisterDomainServices(this IServiceCollection services, IConfiguration configuration)
         {
-            
+            services.AddDbContext<AuthDemoDbContext>(options =>
+                options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
         }
     }
 }

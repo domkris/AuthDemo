@@ -1,4 +1,5 @@
-﻿using AuthDemo.Domain.Entities;
+﻿using AuthDemo.Domain.Audit;
+using AuthDemo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,26 @@ namespace AuthDemo.Domain
         }
 
         public DbSet<Chore> Chores { get; set; }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is IAuditableEntity && (
+                    e.State == EntityState.Added || e.State == EntityState.Modified));
+
+            foreach (var entityEntry in entries)
+            {
+                if (entityEntry.State == EntityState.Added)
+                {
+                    ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                } else
+                {
+                    ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                }
+            }
+            return await base.SaveChangesAsync(cancellationToken);
+        }
     }
 
     internal class AuthDemoDbContextFactory : IDesignTimeDbContextFactory<AuthDemoDbContext>
