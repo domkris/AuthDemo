@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthDemo.Domain\AuthDemo.Domain.csproj" />
+    <ProjectReference Include="..\AuthDemo.Domain\AuthDemo.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

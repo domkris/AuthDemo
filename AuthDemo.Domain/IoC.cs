@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AuthDemo.Domain
+namespace AuthDemo.Infrastructure
 {
     public static class IoC
     {

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AuthDemo.Domain.Audit;
+﻿using AuthDemo.Infrastructure.Audit;
 
-namespace AuthDemo.Domain.Entities
+namespace AuthDemo.Infrastructure.Entities
 {
     public class Chore : BaseEntity, IAuditableEntity
     {

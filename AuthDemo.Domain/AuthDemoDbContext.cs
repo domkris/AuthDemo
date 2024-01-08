@@ -1,17 +1,13 @@
-﻿using AuthDemo.Domain.Audit;
-using AuthDemo.Domain.Entities;
+﻿using AuthDemo.Infrastructure.Audit;
+using AuthDemo.Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
-namespace AuthDemo.Domain
+namespace AuthDemo.Infrastructure
 {
-    public class AuthDemoDbContext: DbContext
+    public class AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : DbContext(options)
     {
-        public AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<Chore> Chores { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

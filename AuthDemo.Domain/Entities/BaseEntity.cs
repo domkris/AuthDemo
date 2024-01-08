@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AuthDemo.Domain.Entities
+﻿
+namespace AuthDemo.Infrastructure.Entities
 {
     public abstract class BaseEntity
     {
