@@ -1,9 +1,8 @@
 ﻿using AuthDemo.Infrastructure;
 using AuthDemo.Infrastructure.Entities;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace AuthDemo.Web.Controllers
 {
@@ -48,7 +47,7 @@ namespace AuthDemo.Web.Controllers
 
             await _context.Chores.AddAsync(chore);
             await _context.SaveChangesAsync();
-            return Ok(chore);
+            return Created();
         }
 
         [HttpPut("{id}")]
@@ -71,7 +70,7 @@ namespace AuthDemo.Web.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(dbChore);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

@@ -1,13 +1,19 @@
 ﻿using AuthDemo.Infrastructure.Audit;
 using AuthDemo.Infrastructure.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace AuthDemo.Infrastructure
 {
-    public class AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : DbContext(options)
+    public class AuthDemoDbContext : IdentityDbContext<User, IdentityRole<long>, long>
     {
+        public AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : base(options)
+        {
+        }
+    
         public DbSet<Chore> Chores { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -31,6 +37,8 @@ namespace AuthDemo.Infrastructure
         }
     }
 
+    // This is only used for migrations and dotnet ef database update
+    // See https://docs.microsoft.com/en-us/ef/core/cli/dbcontext-creation?tabs=dotnet-core-cli#from-a-design-time-factory
     internal class AuthDemoDbContextFactory : IDesignTimeDbContextFactory<AuthDemoDbContext>
     {
         public AuthDemoDbContext CreateDbContext(string[] args)

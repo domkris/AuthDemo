@@ -1,8 +1,11 @@
 using AuthDemo.Infrastructure;
+using AuthDemo.Security;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.RegisterDomainServices(builder.Configuration);
+builder.Services.RegisterInfrastructureServices(builder.Configuration);
+builder.Services.RegisterSecurityServices(builder.Configuration);
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,7 +21,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
