@@ -23,7 +23,9 @@ namespace AuthDemo.Security.Authentication
             
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.UserName!)
+                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim(ClaimTypes.Email, user.Email!),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var securityKey = new JwtSecurityToken(
