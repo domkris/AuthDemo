@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="9.16.0.82469">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthDemo.Contracts\AuthDemo.Contracts.csproj" />
     <ProjectReference Include="..\AuthDemo.Domain\AuthDemo.Infrastructure.csproj" />
     <ProjectReference Include="..\AuthDemo.Security\AuthDemo.Security.csproj" />
   </ItemGroup>

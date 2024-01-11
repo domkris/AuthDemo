@@ -1,10 +1,12 @@
 ﻿using AuthDemo.Infrastructure.Audit;
-using Microsoft.AspNetCore.Identity;
 
-namespace AuthDemo.Infrastructure.Entities
+namespace AuthDemo.Contracts.DataTransferObjects.Response
 {
-    public class User : IdentityUser<long>, IAuditableEntity
+    public class ChoreResponse : IAuditableEntity
     {
+        public long Id { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public long? CreatedBy { get; set; }
         public long? UpdatedBy { get; set; }
         public DateTime? CreatedAt { get; set; }

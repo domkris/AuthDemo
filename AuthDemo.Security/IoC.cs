@@ -50,7 +50,13 @@ namespace AuthDemo.Security
             services.AddIdentityCore<User>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
-            }).AddEntityFrameworkStores<AuthDemoDbContext>();
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
+            .AddEntityFrameworkStores<AuthDemoDbContext>();
 
             return services;
         }
