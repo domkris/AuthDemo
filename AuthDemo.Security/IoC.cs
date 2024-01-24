@@ -1,6 +1,7 @@
 ﻿using AuthDemo.Infrastructure;
 using AuthDemo.Infrastructure.Entities;
 using AuthDemo.Security.Authentication;
+using AuthDemo.Security.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -47,7 +48,10 @@ namespace AuthDemo.Security
                 };
             });
 
-            services.AddIdentityCore<User>(options =>
+            // services.AddIdentity internally sets cookie authentication handler as default
+            //and therefore we will not be able to set JwtBearer as default but have to specify it explicitly in every controller in authorize attribute
+            // so we will create a default policy in AddGlobalAuthorizationPolicies that will use JwtBearer authentication scheme
+            services.AddIdentity<User, Role>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
@@ -57,6 +61,8 @@ namespace AuthDemo.Security
                 options.Password.RequireLowercase = false;
             })
             .AddEntityFrameworkStores<AuthDemoDbContext>();
+
+            services.AddGlobalAuthorizationPolicies();
 
             return services;
         }

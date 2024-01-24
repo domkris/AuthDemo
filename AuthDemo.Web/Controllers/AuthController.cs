@@ -1,5 +1,6 @@
 ﻿using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Infrastructure.Entities;
+using AuthDemo.Infrastructure.LookupData;
 using AuthDemo.Security.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,10 @@ namespace AuthDemo.Web.Controllers
             var newUser = new User
             {
                 Email = request.Email,
-                UserName = request.UserName
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                RoleId = (long)Roles.Administrator,
+                UserName = string.Concat(request.FirstName, request.LastName).ToLower(),
             };
 
             var result = await _userManager.CreateAsync(newUser, request.Password);
