@@ -5,7 +5,10 @@ namespace AuthDemo.Contracts.DataTransferObjects.Request
     public class AuthRegisterRequest
     {
         [Required]
-        public required string UserName { get; set; }
+        public required string FirstName { get; set; }
+
+        [Required]
+        public required string LastName { get; set; }
 
         [Required]
         [EmailAddress]

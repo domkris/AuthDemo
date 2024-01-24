@@ -61,7 +61,7 @@ namespace AuthDemo.Web.Controllers
             };
             await _context.Chores.AddAsync(dbChore);
             await _context.SaveChangesAsync();
-            return Created();
+            return CreatedAtAction("Get", new { dbChore.Id});
         }
 
         [HttpPut("{id}")]

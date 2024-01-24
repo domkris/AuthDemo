@@ -8,13 +8,21 @@ using Microsoft.Extensions.Configuration;
 
 namespace AuthDemo.Infrastructure
 {
-    public class AuthDemoDbContext : IdentityDbContext<User, IdentityRole<long>, long>
+    public class AuthDemoDbContext : IdentityDbContext<User, Role, long>
     {
         public AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : base(options)
         {
         }
     
         public DbSet<Chore> Chores { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            // remove asp.net identity default many-to-many relationship between User and Role
+            builder.Ignore<IdentityUserRole<long>>();
+            builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+        }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
