@@ -1,17 +1,20 @@
 ﻿using AuthDemo.Contracts.DataTransferObjects.Request;
+using AuthDemo.Contracts.DataTransferObjects.Common;
 using AuthDemo.Infrastructure.Entities;
-using AuthDemo.Infrastructure.LookupData;
 using AuthDemo.Security.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Security.Claims;
+using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -58,6 +61,7 @@ namespace AuthDemo.Web.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(AuthLoginRequest request)
         {
@@ -82,6 +86,59 @@ namespace AuthDemo.Web.Controllers
             var token = tokenGenerator.GenerateToken(user);
 
             return Ok(new {token});
+        }
+
+        [Authorize(Roles = Policies.Roles.Admin)]
+        [HttpPost("ToggleUserActivation/{id}")]
+        public async Task<IActionResult> ToggleUserActivation(long id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return BadRequest("User does not exist");
+            }
+            user.IsActive = !user.IsActive;
+            await _userManager.UpdateAsync(user);
+            
+            return Ok();
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(AuthPasswordResetRequest request)
+        {
+            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
+
+            var dbUser = await _userManager.FindByIdAsync(request.UserId.ToString());
+
+            if (loggedInUserRole is (long)Roles.Administrator)
+            {
+                if (dbUser == null)
+                {
+                    return BadRequest("User does not exist");
+                }
+                await _userManager.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
+                return Ok();
+            }
+
+            if (request.UserId != loggedInUserId)
+            {
+                return Forbid();
+            }
+
+            if (dbUser == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+            await _userManager.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
+
+            return Ok();
         }
     }
 }

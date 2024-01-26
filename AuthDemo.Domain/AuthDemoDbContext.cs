@@ -42,7 +42,7 @@ namespace AuthDemo.Infrastructure
             
             if (!long.TryParse(userId, out long id))
             {
-                //throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
+                throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
             }
             
             foreach (var entityEntry in entries)

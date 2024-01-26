@@ -18,17 +18,31 @@ namespace AuthDemo.Security.Authorization
 
                 options.AddPolicy(AuthDemoPolicies.Roles.Admin, policy =>
                 {
-                    policy.RequireRole(
-                        Enum.GetName(typeof(Roles), Roles.Administrator)!);
+                    policy.RequireRole(Roles.Administrator.GetValue());
                 });
 
                 options.AddPolicy(AuthDemoPolicies.Roles.AdminAndManager, policy =>
                 {
                     policy.RequireRole(
-                        Enum.GetName(typeof(Roles), Roles.Manager)!,
-                        Enum.GetName(typeof(Roles), Roles.Administrator)!);
+                        Roles.Administrator.GetValue(),
+                        Roles.Manager.GetValue());
                 });
             });
         }
+       
     }
+
+    public static class EnumExtensions
+    {
+        public static string GetName<T>(this T enumValue) where T : Enum
+        {
+               return Enum.GetName(typeof(T), enumValue)!;
+        }
+
+        public static string GetValue<T>(this T enumValue) where T : Enum
+        {
+               return enumValue.ToString("D");
+        }
+    }
+
 }
