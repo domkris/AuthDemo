@@ -11,12 +11,21 @@ namespace AuthDemo.Web.AutoMapper
         {
             // Chore
             ConfigureChore();
+
+            // User
+            ConfigureUser();
         }
 
         private void ConfigureChore()
         {
-            CreateMap<ChoreRequest, Chore>();
-            CreateMap<Chore, ChoreResponse>();
+            CreateMap<ChoreEditRequest, Chore>();
+            CreateMap<Chore, ChoreResponse>()
+                .ForMember(dest => dest.CreatedBy, opt => opt.MapFrom(src => src.CreatedBy));
+        }
+
+        private void ConfigureUser()
+        {
+            CreateMap<User, UserResponse>();
         }
     }
 }

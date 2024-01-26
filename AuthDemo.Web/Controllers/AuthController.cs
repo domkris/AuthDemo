@@ -44,7 +44,7 @@ namespace AuthDemo.Web.Controllers
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                RoleId = (long)Roles.Administrator,
+                RoleId = (long)request.Role,
                 UserName = string.Concat(request.FirstName, request.LastName).ToLower(),
             };
 

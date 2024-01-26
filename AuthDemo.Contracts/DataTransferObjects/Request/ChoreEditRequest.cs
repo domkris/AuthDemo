@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 {
-    public class ChoreRequest
+    public class ChoreEditRequest
     {
         [Required]
         [MinLength(3)]

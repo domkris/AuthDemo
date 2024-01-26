@@ -1,6 +1,7 @@
 ﻿using AuthDemo.Infrastructure.Audit;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AuthDemo.Infrastructure.Entities
 {
@@ -17,8 +18,10 @@ namespace AuthDemo.Infrastructure.Entities
         public virtual long RoleId { get; set; }
         public virtual Role? Role { get; set; }
         public virtual bool IsActive { get; set; }
-        public long? CreatedBy { get; set; }
-        public long? UpdatedBy { get; set; }
+        public virtual long? CreatedById { get; set; }
+        public virtual User? CreatedBy { get; set; }
+        public virtual long? UpdatedById { get; set; }
+        public virtual User? UpdatedBy { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

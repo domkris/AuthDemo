@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AuthDemo.Contracts.DataTransferObjects.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 { 
@@ -21,5 +22,8 @@ namespace AuthDemo.Contracts.DataTransferObjects.Request
         [Required]
         [Compare("Password")]
         public required string ConfirmPassword { get; set;}
+
+        [Required]
+        public required Roles Role { get; set; }
     }
 }

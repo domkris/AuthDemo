@@ -2,8 +2,8 @@
 {
     public interface IAuditableEntity
     {
-        public long? CreatedBy { get; set; }
-        public long? UpdatedBy { get; set; }
+        long? CreatedById { get; set; }
+        long? UpdatedById { get; set; }
         DateTime? CreatedAt { get; set; }
         DateTime? UpdatedAt { get; set; }
 

@@ -3,6 +3,7 @@ using System;
 using AuthDemo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(AuthDemoDbContext))]
-    partial class AuthDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240124191455_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
@@ -32,12 +35,6 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsFinished")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -48,16 +45,11 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<long?>("UpdatedById")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("UserAssigneeId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
-
-                    b.HasIndex("UserAssigneeId");
 
                     b.ToTable("Chores");
                 });
@@ -305,15 +297,9 @@ namespace AuthDemo.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
-                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UserAssignee")
-                        .WithMany()
-                        .HasForeignKey("UserAssigneeId");
-
                     b.Navigation("CreatedBy");
 
                     b.Navigation("UpdatedBy");
-
-                    b.Navigation("UserAssignee");
                 });
 
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.User", b =>

@@ -1,15 +1,12 @@
-﻿using AuthDemo.Infrastructure.Audit;
-
+﻿
 namespace AuthDemo.Contracts.DataTransferObjects.Response
 {
-    public class ChoreResponse : IAuditableEntity
+    public class ChoreResponse
     {
         public long Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public long? CreatedBy { get; set; }
-        public long? UpdatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public UserResponse? CreatedBy { get; set; }
+        public UserResponse? UserAssignee { get; set; }
     }
 }

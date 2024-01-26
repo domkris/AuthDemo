@@ -1,17 +1,23 @@
 ﻿using AuthDemo.Infrastructure.Audit;
 using AuthDemo.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace AuthDemo.Infrastructure
 {
     public class AuthDemoDbContext : IdentityDbContext<User, Role, long>
     {
-        public AuthDemoDbContext(DbContextOptions<AuthDemoDbContext> options) : base(options)
+        private readonly IHttpContextAccessor? _httpContextAccessor;
+        public AuthDemoDbContext(
+            IHttpContextAccessor? httpContextAccessor,
+            DbContextOptions<AuthDemoDbContext> options) : base(options)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
     
         public DbSet<Chore> Chores { get; set; }
@@ -31,14 +37,24 @@ namespace AuthDemo.Infrastructure
                 .Where(e => e.Entity is IAuditableEntity && (
                     e.State == EntityState.Added || e.State == EntityState.Modified));
 
+            var userId = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            
+            if (!long.TryParse(userId, out long id))
+            {
+                //throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
+            }
+            
             foreach (var entityEntry in entries)
             {
                 if (entityEntry.State == EntityState.Added)
                 {
                     ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).CreatedById = id;
                 } else
                 {
                     ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).UpdatedById = id;
                 }
             }
             return await base.SaveChangesAsync(cancellationToken);
@@ -62,7 +78,7 @@ namespace AuthDemo.Infrastructure
                 builder => builder.MigrationsAssembly(typeof(AuthDemoDbContext).Assembly.FullName)
                 );
 
-            return new AuthDemoDbContext(optionsBuilder.Options);
+            return new AuthDemoDbContext(null, optionsBuilder.Options);
         }
     }
 }

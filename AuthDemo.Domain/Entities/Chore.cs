@@ -7,10 +7,16 @@ namespace AuthDemo.Infrastructure.Entities
     {
         [MinLength(3)]
         public required string Title { get; set; }
-        public string? Description { get; set; }
-        public long? CreatedBy { get; set; }
-        public long? UpdatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public virtual string? Description { get; set; }
+        public virtual long? UserAssigneeId { get; set; }
+        public virtual User? UserAssignee { get; set; }
+        public virtual bool IsFinished { get; set; }
+        public virtual bool IsApproved { get; set; }
+        public virtual long? CreatedById { get; set; }
+        public virtual User? CreatedBy { get; set; }
+        public virtual long? UpdatedById { get; set; }
+        public virtual User? UpdatedBy { get; set; }
+        public virtual DateTime? CreatedAt { get; set; }
+        public virtual DateTime? UpdatedAt { get; set; }
     }
 }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(AuthDemoDbContext))]
-    [Migration("20240122203415_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240124193721_AddAssigneeUserToChore")]
+    partial class AddAssigneeUserToChore
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,7 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedBy")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
@@ -42,10 +42,19 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UpdatedBy")
+                    b.Property<long?>("UpdatedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("UserAssigneeId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("UserAssigneeId");
 
                     b.ToTable("Chores");
                 });
@@ -60,12 +69,6 @@ namespace AuthDemo.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("CreatedBy")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -75,12 +78,6 @@ namespace AuthDemo.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -130,7 +127,7 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("CreatedBy")
+                    b.Property<long?>("CreatedById")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
@@ -142,7 +139,6 @@ namespace AuthDemo.Infrastructure.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
@@ -150,7 +146,6 @@ namespace AuthDemo.Infrastructure.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -188,7 +183,7 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<long?>("UpdatedBy")
+                    b.Property<long?>("UpdatedById")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
@@ -196,6 +191,8 @@ namespace AuthDemo.Infrastructure.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -205,6 +202,8 @@ namespace AuthDemo.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -293,15 +292,50 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Chore", b =>
+                {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UserAssignee")
+                        .WithMany()
+                        .HasForeignKey("UserAssigneeId");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("UpdatedBy");
+
+                    b.Navigation("UserAssignee");
+                });
+
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.User", b =>
                 {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("AuthDemo.Infrastructure.Entities.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CreatedBy");
+
                     b.Navigation("Role");
+
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>

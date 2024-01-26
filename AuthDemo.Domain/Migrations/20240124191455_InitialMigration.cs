@@ -19,10 +19,6 @@ namespace AuthDemo.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
@@ -30,24 +26,6 @@ namespace AuthDemo.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Chores",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", nullable: false),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Chores", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,12 +55,12 @@ namespace AuthDemo.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
                     RoleId = table.Column<long>(type: "INTEGER", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedBy = table.Column<long>(type: "INTEGER", nullable: true),
-                    UpdatedBy = table.Column<long>(type: "INTEGER", nullable: true),
+                    CreatedById = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedById = table.Column<long>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -107,6 +85,18 @@ namespace AuthDemo.Infrastructure.Migrations
                         name: "FK_AspNetUsers_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AspNetUsers_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -172,16 +162,45 @@ namespace AuthDemo.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "AspNetRoles",
-                columns: new[] { "Id", "ConcurrencyStamp", "CreatedAt", "CreatedBy", "Name", "NormalizedName", "UpdatedAt", "UpdatedBy" },
-                values: new object[,]
+            migrationBuilder.CreateTable(
+                name: "Chores",
+                columns: table => new
                 {
-                    { 1L, null, DateTime.UtcNow, null, "Administrator", "ADMINISTRATOR", null, null },
-                    { 2L, null, DateTime.UtcNow, null, "Manager", "MANAGER", null, null },
-                    { 3L, null, DateTime.UtcNow, null, "Employee", "EMPLOYEE", null, null }
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedById = table.Column<long>(type: "INTEGER", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Chores", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Chores_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Chores_AspNetUsers_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { 1L, null, "Administrator", "ADMINISTRATOR" },
+                    { 2L, null, "Manager", "MANAGER" },
+                    { 3L, null, "Employee", "EMPLOYEE" }
+                });
+
+            
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -215,15 +234,35 @@ namespace AuthDemo.Infrastructure.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_CreatedById",
+                table: "AspNetUsers",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_RoleId",
                 table: "AspNetUsers",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UpdatedById",
+                table: "AspNetUsers",
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chores_CreatedById",
+                table: "Chores",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chores_UpdatedById",
+                table: "Chores",
+                column: "UpdatedById");
         }
 
         /// <inheritdoc />
