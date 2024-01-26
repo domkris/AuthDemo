@@ -1,5 +1,6 @@
 ﻿using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Contracts.DataTransferObjects.Response;
+using AuthDemo.Contracts.DataTransferObjects.Common;
 using AuthDemo.Infrastructure;
 using AuthDemo.Infrastructure.Entities;
 using AutoMapper;
@@ -20,19 +21,16 @@ namespace AuthDemo.Web.Controllers
         private readonly IMapper _mapper;
         private readonly AuthDemoDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly IAuthorizationService _authorizationService;
 
 
         public ChoresController(
             IMapper mapper,
             AuthDemoDbContext context,
-            UserManager<User> userManager,
-            IAuthorizationService authorizationService)
+            UserManager<User> userManager)
         {
             _mapper = mapper;
             _context = context;
             _userManager = userManager;
-            _authorizationService = authorizationService;
 
 
         }
@@ -40,7 +38,6 @@ namespace AuthDemo.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result = await _authorizationService.AuthorizeAsync(User, Policies.Roles.AdminAndManager);
             var dbChore = await _context.Chores
                 .Include(chore => chore.CreatedBy)
                 .Include(chore => chore.UserAssignee)
@@ -125,8 +122,8 @@ namespace AuthDemo.Web.Controllers
             return Ok();
         }
 
-        [HttpPut("AssignUser")]
         [Authorize(Roles = Policies.Roles.AdminAndManager)]
+        [HttpPut("AssignUser")]
         public async Task<IActionResult> AssignUser(ChoreAssignUserRequest request)
         {
             if (!ModelState.IsValid)
@@ -156,9 +153,10 @@ namespace AuthDemo.Web.Controllers
         [HttpPut("Finish/{id}")]
         public async Task<IActionResult> Finish(long id)
         {
+            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long userRole);
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
             
             var dbChore = await _context.Chores
-                .Include(chore => chore.UserAssignee)
                 .FirstOrDefaultAsync(chore => chore.Id == id);
 
             if (dbChore == null)
@@ -166,10 +164,42 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest("Chore does not exists");
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if(userRole is not (long)Roles.Employee)
+            {
+                dbChore.IsFinished = !dbChore.IsFinished;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if(dbChore.UserAssigneeId != userId)
+                {
+                    return Forbid(); 
+                }
 
-         
+                dbChore.IsFinished = !dbChore.IsFinished;
+                await _context.SaveChangesAsync();
+            }
+            return Ok();
+        }
 
+        [Authorize(Roles = Policies.Roles.AdminAndManager)]
+        [HttpPut("Approve/{id}")]
+        public async Task<IActionResult> Approve(long id)
+        {
+           
+
+            var dbChore = await _context.Chores
+                .FirstOrDefaultAsync(chore => chore.Id == id);
+
+            if (dbChore == null)
+            {
+                return BadRequest("Chore does not exists");
+            }
+
+           
+            dbChore.IsApproved = !dbChore.IsApproved;
+            await _context.SaveChangesAsync();
+            
             return Ok();
         }
 
