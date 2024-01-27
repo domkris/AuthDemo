@@ -55,8 +55,8 @@ namespace AuthDemo.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
-                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
                     RoleId = table.Column<long>(type: "INTEGER", nullable: false),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedById = table.Column<long>(type: "INTEGER", nullable: true),
@@ -86,7 +86,7 @@ namespace AuthDemo.Infrastructure.Migrations
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
@@ -143,6 +143,30 @@ namespace AuthDemo.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<long>(type: "INTEGER", nullable: false),
+                    RoleId = table.Column<long>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
@@ -170,6 +194,9 @@ namespace AuthDemo.Infrastructure.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
+                    UserAssigneeId = table.Column<long>(type: "INTEGER", nullable: true),
+                    IsFinished = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsApproved = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedById = table.Column<long>(type: "INTEGER", nullable: true),
                     UpdatedById = table.Column<long>(type: "INTEGER", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
@@ -188,6 +215,11 @@ namespace AuthDemo.Infrastructure.Migrations
                         column: x => x.UpdatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Chores_AspNetUsers_UserAssigneeId",
+                        column: x => x.UserAssigneeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -200,7 +232,15 @@ namespace AuthDemo.Infrastructure.Migrations
                     { 3L, null, "Employee", "EMPLOYEE" }
                 });
 
-            
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "CreatedById", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RoleId", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UpdatedById", "UserName" },
+                values: new object[,]
+                {
+                    { 1L, 0, "b6004e65-39b2-44f1-a8f0-2c408d3c3df4", new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(264), null, null, false, null, false, null, false, null, null, "SYSTEM", null, null, false, 1L, null, false, null, null, "system" },
+                    { 2L, 0, "9a12e934-017e-400d-9df4-5e171d23eeca", new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(273), 1L, "admin@authdemo.com", true, null, true, null, false, null, "ADMIN@AUTHDEMO.COM", "ADMINAUTHDEMO", "AQAAAAIAAYagAAAAEKYMRYFFajZaMzi5lUv9wkQy+VyjaiKeoPaa53zQypoGKjj64OIU9zhVc7xfAezVcw==", null, false, 1L, "NEBCKA6U3JRKZFIUZWH2MJXA5SLBXNQD", false, null, null, "adminauthdemo" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -227,6 +267,11 @@ namespace AuthDemo.Infrastructure.Migrations
                 name: "IX_AspNetUserLogins_UserId",
                 table: "AspNetUserLogins",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -263,6 +308,11 @@ namespace AuthDemo.Infrastructure.Migrations
                 name: "IX_Chores_UpdatedById",
                 table: "Chores",
                 column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Chores_UserAssigneeId",
+                table: "Chores",
+                column: "UserAssigneeId");
         }
 
         /// <inheritdoc />
@@ -276,6 +326,9 @@ namespace AuthDemo.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");

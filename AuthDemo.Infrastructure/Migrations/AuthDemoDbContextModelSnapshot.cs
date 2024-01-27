@@ -3,7 +3,6 @@ using System;
 using AuthDemo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,11 +10,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AuthDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(AuthDemoDbContext))]
-    [Migration("20240124191455_InitialMigration")]
-    partial class InitialMigration
+    partial class AuthDemoDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
@@ -35,6 +32,12 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -45,11 +48,16 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Property<long?>("UpdatedById")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long?>("UserAssigneeId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
+
+                    b.HasIndex("UserAssigneeId");
 
                     b.ToTable("Chores");
                 });
@@ -133,14 +141,12 @@ namespace AuthDemo.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -201,6 +207,43 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.HasIndex("UpdatedById");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b6004e65-39b2-44f1-a8f0-2c408d3c3df4",
+                            CreatedAt = new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(264),
+                            EmailConfirmed = false,
+                            IsActive = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "SYSTEM",
+                            PhoneNumberConfirmed = false,
+                            RoleId = 1L,
+                            TwoFactorEnabled = false,
+                            UserName = "system"
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "9a12e934-017e-400d-9df4-5e171d23eeca",
+                            CreatedAt = new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(273),
+                            CreatedById = 1L,
+                            Email = "admin@authdemo.com",
+                            EmailConfirmed = true,
+                            IsActive = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@AUTHDEMO.COM",
+                            NormalizedUserName = "ADMINAUTHDEMO",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKYMRYFFajZaMzi5lUv9wkQy+VyjaiKeoPaa53zQypoGKjj64OIU9zhVc7xfAezVcw==",
+                            PhoneNumberConfirmed = false,
+                            RoleId = 1L,
+                            SecurityStamp = "NEBCKA6U3JRKZFIUZWH2MJXA5SLBXNQD",
+                            TwoFactorEnabled = false,
+                            UserName = "adminauthdemo"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -268,6 +311,21 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
                 {
                     b.Property<long>("UserId")
@@ -297,9 +355,15 @@ namespace AuthDemo.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UpdatedById");
 
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UserAssignee")
+                        .WithMany()
+                        .HasForeignKey("UserAssigneeId");
+
                     b.Navigation("CreatedBy");
 
                     b.Navigation("UpdatedBy");
+
+                    b.Navigation("UserAssignee");
                 });
 
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.User", b =>
@@ -347,6 +411,21 @@ namespace AuthDemo.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
                 {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
+                {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AuthDemo.Infrastructure.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

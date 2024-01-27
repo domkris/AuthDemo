@@ -5,11 +5,11 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Web", "AuthDemo.Web\AuthDemo.Web.csproj", "{9C0B55DC-E6F0-441E-891C-833C2FC159ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Infrastructure", "AuthDemo.Domain\AuthDemo.Infrastructure.csproj", "{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Security", "AuthDemo.Security\AuthDemo.Security.csproj", "{CF8CCA3A-D312-4862-AC05-62DAA50A9956}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Security", "AuthDemo.Security\AuthDemo.Security.csproj", "{CF8CCA3A-D312-4862-AC05-62DAA50A9956}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Contracts", "AuthDemo.Contracts\AuthDemo.Contracts.csproj", "{84255A69-AD16-438D-8292-90EEA612A939}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Contracts", "AuthDemo.Contracts\AuthDemo.Contracts.csproj", "{84255A69-AD16-438D-8292-90EEA612A939}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Infrastructure", "AuthDemo.Infrastructure\AuthDemo.Infrastructure.csproj", "{816C7F81-A452-4DB0-8C22-09D4993444E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C0B55DC-E6F0-441E-891C-833C2FC159ED}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49FE228A-BF07-43E2-B75A-6D7EEE732A3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF8CCA3A-D312-4862-AC05-62DAA50A9956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF8CCA3A-D312-4862-AC05-62DAA50A9956}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF8CCA3A-D312-4862-AC05-62DAA50A9956}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{84255A69-AD16-438D-8292-90EEA612A939}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84255A69-AD16-438D-8292-90EEA612A939}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84255A69-AD16-438D-8292-90EEA612A939}.Release|Any CPU.Build.0 = Release|Any CPU
+		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

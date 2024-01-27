@@ -26,7 +26,7 @@ namespace AuthDemo.Infrastructure
         {
             base.OnModelCreating(builder);
             // remove asp.net identity default many-to-many relationship between User and Role
-            builder.Ignore<IdentityUserRole<long>>();
+            // builder.Ignore<IdentityUserRole<long>>();
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
 
@@ -42,20 +42,25 @@ namespace AuthDemo.Infrastructure
             
             if (!long.TryParse(userId, out long id))
             {
-                throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
+                // throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
             }
             
             foreach (var entityEntry in entries)
             {
-                if (entityEntry.State == EntityState.Added)
+                if (!entityEntry.Property("AccessFailedCount").IsModified)
                 {
-                    ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
-                    ((IAuditableEntity)entityEntry.Entity).CreatedById = id;
-                } else
-                {
-                    ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
-                    ((IAuditableEntity)entityEntry.Entity).UpdatedById = id;
+                    if (entityEntry.State == EntityState.Added)
+                    {
+                        ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                        ((IAuditableEntity)entityEntry.Entity).CreatedById = id;
+                    }
+                    else
+                    {
+                        ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                        ((IAuditableEntity)entityEntry.Entity).UpdatedById = id;
+                    }
                 }
+               
             }
             return await base.SaveChangesAsync(cancellationToken);
         }

@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AuthDemo.Contracts\AuthDemo.Contracts.csproj" />
-    <ProjectReference Include="..\AuthDemo.Domain\AuthDemo.Infrastructure.csproj" />
+    <ProjectReference Include="..\AuthDemo.Infrastructure\AuthDemo.Infrastructure.csproj" />
     <ProjectReference Include="..\AuthDemo.Security\AuthDemo.Security.csproj" />
   </ItemGroup>
 

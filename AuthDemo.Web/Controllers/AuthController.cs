@@ -17,14 +17,17 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public AuthController(
             UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IOptionsMonitor<JwtSettings> optionsMonitor)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _jwtSettings = optionsMonitor.CurrentValue;
         }
 
@@ -65,27 +68,36 @@ namespace AuthDemo.Web.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(AuthLoginRequest request)
         {
+            bool rememberMe = false;
+            bool lockoutOnFailure = true;
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
             var user = await _userManager.FindByEmailAsync(request.Email);
-            if(user == null)
-            {
-                return BadRequest("Invalid email/password");
+            if(user == null) 
+            {                 
+                return BadRequest("Invalid login attempt");       
             }
 
-            var result = await _userManager.CheckPasswordAsync(user, request.Password);
-            if(!result)
+            var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, rememberMe, lockoutOnFailure);
+
+            if(result.IsLockedOut)
             {
-                return BadRequest("Invalid email/password");
+                return BadRequest("Too many unsuceesful login attempts, your account is temporarily locked. Please try again in 5 minutes.");
             }
 
-            var tokenGenerator = new JwtTokenGenerator(Options.Create(_jwtSettings));
-            var token = tokenGenerator.GenerateToken(user);
+            if (result.Succeeded)
+            {
+                var tokenGenerator = new JwtTokenGenerator(Options.Create(_jwtSettings));
+                var token = tokenGenerator.GenerateToken(user!);
 
-            return Ok(new {token});
+                return Ok(new { token });
+            }
+
+            return BadRequest("Invalid login attempt");
         }
 
         [Authorize(Roles = Policies.Roles.Admin)]

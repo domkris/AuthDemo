@@ -2,21 +2,19 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata.Ecma335;
 
 namespace AuthDemo.Infrastructure.Entities
 {
     public class User : IdentityUser<long>, IAuditableEntity
     {
-        [Required]
-        [MinLength(1)]
-        public virtual required string FirstName { get; set; }
+        public virtual string? FirstName { get; set; }
+        public virtual string? LastName { get; set; }
 
-        [Required]
-        [MinLength(1)]
-        public virtual required string LastName { get; set; }
         [Required]
         public virtual long RoleId { get; set; }
         public virtual Role? Role { get; set; }
+
         public virtual bool IsActive { get; set; }
         public virtual long? CreatedById { get; set; }
         public virtual User? CreatedBy { get; set; }
