@@ -1,16 +1,16 @@
 ﻿using AuthDemo.Infrastructure.Audit;
 using AuthDemo.Infrastructure.Entities;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthDemo.Infrastructure
 {
-    public class AuthDemoDbContext : IdentityDbContext<User, Role, long>
+    public class AuthDemoDbContext : IdentityDbContext<Entities.User, Entities.Role, long>
     {
         private readonly IHttpContextAccessor? _httpContextAccessor;
         public AuthDemoDbContext(
@@ -25,8 +25,6 @@ namespace AuthDemo.Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            // remove asp.net identity default many-to-many relationship between User and Role
-            // builder.Ignore<IdentityUserRole<long>>();
             builder.ApplyConfigurationsFromAssembly(GetType().Assembly);
         }
 
@@ -37,32 +35,49 @@ namespace AuthDemo.Infrastructure
                 .Where(e => e.Entity is IAuditableEntity && (
                     e.State == EntityState.Added || e.State == EntityState.Modified));
 
-            var userId = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+            long userId = GetSystemOrLoggedInUserId();
 
-            
-            if (!long.TryParse(userId, out long id))
-            {
-                // throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
-            }
-            
             foreach (var entityEntry in entries)
             {
-                if (!entityEntry.Property("AccessFailedCount").IsModified)
+                if (entityEntry.State == EntityState.Added)
                 {
-                    if (entityEntry.State == EntityState.Added)
-                    {
-                        ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
-                        ((IAuditableEntity)entityEntry.Entity).CreatedById = id;
-                    }
-                    else
-                    {
-                        ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
-                        ((IAuditableEntity)entityEntry.Entity).UpdatedById = id;
-                    }
+                    ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).CreatedById = userId;
                 }
-               
+                else
+                {
+                    ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).UpdatedById = userId;
+                }
             }
             return await base.SaveChangesAsync(cancellationToken);
+        }
+
+        private long GetSystemOrLoggedInUserId()
+        {
+            if (IsAnonymousEndpoint())
+            {
+                return 1L;
+            }
+            else
+            {
+                string? userId = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (!long.TryParse(userId, out long id))
+                {
+                    throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
+                }
+
+                return id;
+            }
+        }
+
+        private bool IsAnonymousEndpoint()
+        {
+            if (_httpContextAccessor?.HttpContext?.GetEndpoint()?.Metadata?.GetMetadata<AllowAnonymousAttribute>() != null) 
+            {
+                return true;
+            }
+            return false;
         }
     }
 

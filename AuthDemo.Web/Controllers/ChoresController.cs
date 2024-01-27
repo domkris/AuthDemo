@@ -22,7 +22,6 @@ namespace AuthDemo.Web.Controllers
         private readonly AuthDemoDbContext _context;
         private readonly UserManager<User> _userManager;
 
-
         public ChoresController(
             IMapper mapper,
             AuthDemoDbContext context,
@@ -186,8 +185,6 @@ namespace AuthDemo.Web.Controllers
         [HttpPut("Approve/{id}")]
         public async Task<IActionResult> Approve(long id)
         {
-           
-
             var dbChore = await _context.Chores
                 .FirstOrDefaultAsync(chore => chore.Id == id);
 
@@ -196,7 +193,6 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest("Chore does not exists");
             }
 
-           
             dbChore.IsApproved = !dbChore.IsApproved;
             await _context.SaveChangesAsync();
             
