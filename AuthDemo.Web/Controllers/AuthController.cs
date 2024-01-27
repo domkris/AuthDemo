@@ -31,6 +31,7 @@ namespace AuthDemo.Web.Controllers
             _jwtSettings = optionsMonitor.CurrentValue;
         }
 
+        [Authorize(Policy = Policies.Roles.Admin)]
         [HttpPost("register")]
         public async Task<IActionResult> Register(AuthRegisterRequest request)
         {
@@ -100,7 +101,7 @@ namespace AuthDemo.Web.Controllers
             return BadRequest("Invalid login attempt");
         }
 
-        [Authorize(Roles = Policies.Roles.Admin)]
+        [Authorize(Policy = Policies.Roles.Admin)]
         [HttpPost("ToggleUserActivation/{id}")]
         public async Task<IActionResult> ToggleUserActivation(long id)
         {
