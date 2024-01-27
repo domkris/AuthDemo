@@ -63,8 +63,8 @@ namespace AuthDemo.Web.Controllers
             return Ok(uiChore);
         }
 
+        [Authorize(Policy = Policies.Roles.AdminOrManager)]
         [HttpPost]
-        [Authorize(Roles = Policies.Roles.AdminAndManager)]
         public async Task<IActionResult> Post(ChoreEditRequest uiChore)
         {
             if (!ModelState.IsValid)
@@ -81,8 +81,8 @@ namespace AuthDemo.Web.Controllers
             return CreatedAtAction("Get", new { dbChore.Id});
         }
 
+        [Authorize(Policy = Policies.Roles.AdminOrManager)]
         [HttpPut("{id}")]
-        [Authorize(Roles = Policies.Roles.AdminAndManager)]
         public async Task<IActionResult> Put(long id, ChoreEditRequest uiChore)
         {
             if (!ModelState.IsValid)
@@ -105,7 +105,7 @@ namespace AuthDemo.Web.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = Policies.Roles.Admin)]
+        [Authorize(Policy = Policies.Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(long id)
         {
@@ -122,7 +122,7 @@ namespace AuthDemo.Web.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = Policies.Roles.AdminAndManager)]
+        [Authorize(Policy = Policies.Roles.AdminOrManager)]
         [HttpPut("AssignUser")]
         public async Task<IActionResult> AssignUser(ChoreAssignUserRequest request)
         {
@@ -182,7 +182,7 @@ namespace AuthDemo.Web.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = Policies.Roles.AdminAndManager)]
+        [Authorize(Policy = Policies.Roles.AdminOrManager)]
         [HttpPut("Approve/{id}")]
         public async Task<IActionResult> Approve(long id)
         {
@@ -202,6 +202,5 @@ namespace AuthDemo.Web.Controllers
             
             return Ok();
         }
-
     }
 }

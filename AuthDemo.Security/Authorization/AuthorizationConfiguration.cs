@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using System.Security.Claims;
 
 namespace AuthDemo.Security.Authorization
 {
@@ -18,12 +19,18 @@ namespace AuthDemo.Security.Authorization
 
                 options.AddPolicy(AuthDemoPolicies.Roles.Admin, policy =>
                 {
-                    policy.RequireRole(Roles.Administrator.GetValue());
+                    policy.RequireClaim(ClaimTypes.Role, Roles.Administrator.GetValue());
                 });
 
-                options.AddPolicy(AuthDemoPolicies.Roles.AdminAndManager, policy =>
+                options.AddPolicy(AuthDemoPolicies.Roles.Manager, policy =>
                 {
-                    policy.RequireRole(
+                    policy.RequireClaim(ClaimTypes.Role, Roles.Manager.GetValue());
+                });
+
+                options.AddPolicy(AuthDemoPolicies.Roles.AdminOrManager, policy =>
+                {
+                    policy.RequireClaim(
+                        ClaimTypes.Role,
                         Roles.Administrator.GetValue(),
                         Roles.Manager.GetValue());
                 });
