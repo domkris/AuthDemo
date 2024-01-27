@@ -4,6 +4,7 @@ using AuthDemo.Security.Authentication;
 using AuthDemo.Security.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -54,13 +55,23 @@ namespace AuthDemo.Security
             services.AddIdentity<User, Role>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequiredLength = 8;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireLowercase = false;
+
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.AllowedForNewUsers = true;
             })
-            .AddEntityFrameworkStores<AuthDemoDbContext>();
+            //.AddUserStore<UserStore<User, Role, AuthDemoDbContext, long, IdentityUserClaim<long>, IdentityUserRole<long>, IdentityUserLogin<long>, IdentityUserToken<long>, IdentityRoleClaim<long>>>()
+            //.AddRoleStore<RoleStore<Role, AuthDemoDbContext, long, IdentityUserRole<long>, IdentityRoleClaim<long>>>()
+            .AddEntityFrameworkStores<AuthDemoDbContext>()
+            .AddSignInManager<SignInManager<User>>();
 
             services.AddGlobalAuthorizationPolicies();
 
