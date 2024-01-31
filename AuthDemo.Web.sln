@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Contracts", "AuthD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Infrastructure", "AuthDemo.Infrastructure\AuthDemo.Infrastructure.csproj", "{816C7F81-A452-4DB0-8C22-09D4993444E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Domain", "AuthDemo.Domain\AuthDemo.Domain.csproj", "{73EC3DE6-2BFB-4999-8CD4-D06FB87F7185}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{816C7F81-A452-4DB0-8C22-09D4993444E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73EC3DE6-2BFB-4999-8CD4-D06FB87F7185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73EC3DE6-2BFB-4999-8CD4-D06FB87F7185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73EC3DE6-2BFB-4999-8CD4-D06FB87F7185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73EC3DE6-2BFB-4999-8CD4-D06FB87F7185}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
