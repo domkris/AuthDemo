@@ -9,9 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
+    <PackageReference Include="MyCSharp.HttpUserAgentParser" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AuthDemo.Cache\AuthDemo.Cache.csproj" />
     <ProjectReference Include="..\AuthDemo.Domain\AuthDemo.Domain.csproj" />
     <ProjectReference Include="..\AuthDemo.Infrastructure\AuthDemo.Infrastructure.csproj" />
   </ItemGroup>

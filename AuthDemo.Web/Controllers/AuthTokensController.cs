@@ -1,8 +1,8 @@
-﻿using AuthDemo.Domain;
-using AuthDemo.Domain.Cache.CacheObjects;
+﻿using AuthDemo.Cache.Interfaces;
+using AuthDemo.Cache.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static AuthDemo.Domain.Cache.CacheKeys;
+using static AuthDemo.Cache.Constants.CacheKeys;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
@@ -12,19 +12,19 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthTokensController : ControllerBase
     {
-        private readonly ISystemCache _systemCache;
+        private readonly ICacheService _cacheService;
 
         public AuthTokensController(
-            ISystemCache systemCache)
+            ICacheService cacheService)
         {
-            _systemCache = systemCache;
+            _cacheService = cacheService;
         }
 
         [Authorize(Policy = Policies.Roles.Admin)]
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            UserToken? userToken = await _systemCache.GetDataAsync<UserToken>(key);
+            UserToken? userToken = await _cacheService.GetDataAsync<UserToken>(key);
             return Ok(userToken);
         }
 
@@ -32,7 +32,7 @@ namespace AuthDemo.Web.Controllers
         [HttpGet("GetTokensPerUser/{id}")]
         public async Task<IActionResult> GetTokensPerUser(long id)
         {
-            var result = await _systemCache.GetAllResourcesPerObjectIdAsync<UserToken>(CacheResources.UserToken, id.ToString());
+            var result = await _cacheService.GetAllResourcesPerObjectIdAsync<UserToken>(CacheResources.UserToken, id.ToString());
             return Ok(result);
         }
     }
