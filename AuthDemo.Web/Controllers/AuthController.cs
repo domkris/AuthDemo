@@ -5,13 +5,11 @@ using AuthDemo.Security.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System.Security.Claims;
-using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 using AuthDemo.Domain;
 using static AuthDemo.Domain.Cache.CacheKeys;
-using AuthDemo.Domain.Cache.CacheObjects;
 using System.IdentityModel.Tokens.Jwt;
+using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -20,37 +18,21 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly JwtSettings _jwtSettings;
-        private readonly ISystemCache _memoryCache;
+        private readonly ISystemCache _sytemCache;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly JwtTokenGenerator _jwtTokenGenerator;
 
         public AuthController(
-            ISystemCache memoryCache,
+            ISystemCache systemCache,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            IOptionsMonitor<JwtSettings> optionsMonitor)
+            JwtTokenGenerator jwtTokenGenerator)
         {
-            _memoryCache = memoryCache;
+            _sytemCache = systemCache;
             _userManager = userManager;
             _signInManager = signInManager;
-            _jwtSettings = optionsMonitor.CurrentValue;
-        }
-
-        [AllowAnonymous]
-        [HttpGet("Tokens")]
-        public async Task<IActionResult> Tokens(string key)
-        {
-            UserToken? userToken = await _memoryCache.GetDataAsync<UserToken>(key);
-            return Ok(userToken);
-        }
-
-        [AllowAnonymous]
-        [HttpGet("GetTokenPerUserId")]
-        public async Task<IActionResult> GetTokenPerUserId(long id)
-        {
-            var result = await _memoryCache.GetAllResourcesPerObjectIdAsync<UserToken>(CacheResources.UserToken, id.ToString());
-            return Ok(result);
+            _jwtTokenGenerator = jwtTokenGenerator;
         }
 
         [Authorize(Policy = Policies.Roles.Admin)]
@@ -114,8 +96,7 @@ namespace AuthDemo.Web.Controllers
 
             if (result.Succeeded)
             {
-                var tokenGenerator = new JwtTokenGenerator(_memoryCache, Options.Create(_jwtSettings));
-                var token = await tokenGenerator.GenerateToken(user!);
+                var token = await _jwtTokenGenerator.GenerateToken(user!);
 
                 return Ok(new { token });
             }
@@ -123,14 +104,14 @@ namespace AuthDemo.Web.Controllers
             return BadRequest("Invalid login attempt");
         }
 
-        [HttpPost("logout")]
+        [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
             string tokenId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
             // logout user from current session
-            var result = await _memoryCache.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, tokenId, loggedInUserId.ToString());
+            var result = await _sytemCache.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, tokenId, loggedInUserId.ToString());
             if(!result)
             {
                 return BadRequest("Unable to logout");
@@ -138,31 +119,7 @@ namespace AuthDemo.Web.Controllers
             return Ok(new { message = "Logout successful" });
         }
 
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpPost("ToggleUserActivation/{id}")]
-        public async Task<IActionResult> ToggleUserActivation(long id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null)
-            {
-                return BadRequest("User does not exist");
-            }
-            user.IsActive = !user.IsActive;
-            await _userManager.UpdateAsync(user);
-
-            if (!user.IsActive)
-            {
-                // logout user from all sessions
-                await _memoryCache.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
-            }
-            return Ok();
-        }
-
+       
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(AuthPasswordResetRequest request)
         {
@@ -184,7 +141,7 @@ namespace AuthDemo.Web.Controllers
             await _userManager.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
 
             // logout user from all sessions
-            await _memoryCache.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+            await _sytemCache.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
 
             return Ok();
         }

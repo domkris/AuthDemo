@@ -1,5 +1,4 @@
-﻿using System.Buffers.Text;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace AuthDemo.Infrastructure.Utilities

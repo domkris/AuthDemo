@@ -1,5 +1,4 @@
 ﻿using StackExchange.Redis;
-using System;
 using System.Text.Json;
 using static AuthDemo.Domain.Cache.CacheKeys;
 
@@ -79,6 +78,18 @@ namespace AuthDemo.Domain.Cache
             var newCacheKey = $"{App}:{resource.GetEnumName()}:{objectId}:{resourceId}";
             var expirationTime = expiration - DateTime.UtcNow;
             return await _cacheDb.StringSetAsync(newCacheKey, JsonSerializer.Serialize(resourceValue), expirationTime);
+        }
+
+        public async Task<T> GetResourcePerObjectIdAsync<T>(CacheResources resource, string resourceId, string objectId)
+        {
+            var key = $"{App}:{resource.GetEnumName()}:{objectId}:{resourceId}";
+            var value = await _cacheDb.StringGetAsync(key);
+
+            if (value.HasValue)
+            {
+                return JsonSerializer.Deserialize<T>(value);
+            }
+            return default;
         }
 
         public async Task<IEnumerable<T>> GetAllResourcesPerObjectIdAsync<T>(CacheResources resource, string objectId)

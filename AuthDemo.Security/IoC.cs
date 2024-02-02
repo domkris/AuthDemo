@@ -4,10 +4,11 @@ using AuthDemo.Security.Authentication;
 using AuthDemo.Security.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace AuthDemo.Security
@@ -18,7 +19,7 @@ namespace AuthDemo.Security
         {
             services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
             services.AddSingleton<JwtTokenGenerator>();
-
+            services.AddSingleton<IJwtTokenRevoker, JwtTokenRevoker>();
             services.AddAuthentication(configureOptions =>
             {
                 configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -46,6 +47,33 @@ namespace AuthDemo.Security
                     IssuerSigningKey = new SymmetricSecurityKey(secretKey),
                     ValidateLifetime = true,
                     RequireExpirationTime = true,
+                };
+                var tokenRevoker = services.BuildServiceProvider().GetRequiredService<IJwtTokenRevoker>();
+                jwtBearerOptions.Events = new JwtBearerEvents
+                {
+                   OnTokenValidated = context => {
+                       context.Fail("Unauthorized");
+                       long.TryParse(context.Principal.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
+                       string? tokenId = context.Principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+                       if (string.IsNullOrEmpty(tokenId))
+                       {
+                           throw new SecurityTokenException($"Claim of type JwtRegisteredClaimNames.Jti is missing");
+                       }
+
+                       if(userId == 0) 
+                       {                            
+                           throw new SecurityTokenException($"Claim of type ClaimTypes.NameIdentifier is missing or has invalid value");
+                       }
+
+                       var result = tokenRevoker.IsTokenInCache(tokenId, userId).Result;
+                       if (!result)
+                       {
+                           // each generated token must be in cache! If it is not it means we removed it from cache and therefore it is not valid anymore
+                           context.Fail("Unauthorized");
+                       }
+                       return Task.CompletedTask;
+                   }
                 };
             });
 

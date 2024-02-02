@@ -12,6 +12,7 @@ namespace AuthDemo.Domain
         Task<bool> RemoveResourcePerObjectIdAsync(CacheResources resource, string resourceId, string objectId);
         Task<bool> RemoveAllResourcesPerObjectIdAsync(CacheResources resource, string objectId);
         Task<IEnumerable<T>> GetAllResourcesPerObjectIdAsync<T>(CacheResources resource, string objectId);
+        Task<T> GetResourcePerObjectIdAsync<T>(CacheResources resource, string resourceId, string objectId);
         Task<bool> SetResourceDataPerObjectIdAsync<T>(CacheResources resource, string resourceId, T resourceValue, string objectId, DateTime expiration);
     }
 }
