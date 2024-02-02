@@ -1,5 +1,4 @@
-﻿
-using AuthDemo.Infrastructure.LookupData;
+﻿using AuthDemo.Infrastructure.LookupData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -30,8 +30,6 @@ namespace AuthDemo.Web.Controllers
             _mapper = mapper;
             _context = context;
             _userManager = userManager;
-
-
         }
 
         [HttpGet]

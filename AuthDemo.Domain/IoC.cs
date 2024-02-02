@@ -17,23 +17,6 @@ namespace AuthDemo.Domain
             services.AddSingleton<ISystemCache, SystemCache>();
             services.AddSingleton(provider =>
                provider.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
-            /*
-            services.AddSingleton<SystemCache>();
-            services.AddSingleton(ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!));
-
-            services.AddScoped<SystemCache2>();
-            services.AddSingleton<IConnectionMultiplexer>(provider =>
-            ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!));
-
-            services.AddScoped(provider =>
-                provider.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
-            
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = configuration.GetConnectionString("Redis");
-                options.InstanceName = CacheKeys.App;
-            });
-            */
         }
     }
 }

@@ -36,7 +36,6 @@ namespace AuthDemo.Security.Authorization
                 });
             });
         }
-       
     }
 
     public static class EnumExtensions
@@ -51,5 +50,4 @@ namespace AuthDemo.Security.Authorization
                return enumValue.ToString("D");
         }
     }
-
 }

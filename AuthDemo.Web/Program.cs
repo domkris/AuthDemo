@@ -48,7 +48,6 @@ builder.Services.AddSwaggerGen(setupAction =>
 builder.Services.AddAutoMapper(typeof(AuthDemoMappingProfile));
 
 builder.Services.AddMemoryCache();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -65,3 +64,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
