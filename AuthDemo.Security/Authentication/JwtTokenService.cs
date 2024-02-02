@@ -1,30 +1,48 @@
-﻿using AuthDemo.Domain;
-using AuthDemo.Domain.Cache.CacheObjects;
+﻿
+using AuthDemo.Cache.Interfaces;
+using AuthDemo.Cache.Models;
 using AuthDemo.Infrastructure.Entities;
+using AuthDemo.Security.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using MyCSharp.HttpUserAgentParser.Providers;
+using static AuthDemo.Cache.Constants.CacheKeys;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
-using static AuthDemo.Domain.Cache.CacheKeys;
+using MyCSharp.HttpUserAgentParser;
+using System.Security.Cryptography;
 
 namespace AuthDemo.Security.Authentication
 {
-    public class JwtTokenGenerator
+    internal class JwtTokenService : IJwtTokenService
     {
         private readonly JwtSettings _jwtSettings;
-        private readonly ISystemCache _systemCache;
+        private readonly ICacheService _cacheService;
+        private readonly IHttpUserAgentParserProvider _parser;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public JwtTokenGenerator(
-            ISystemCache systemCache,
+
+        public JwtTokenService(
+            ICacheService cacheService,
             IOptions<JwtSettings> jwtSettings,
+            IHttpUserAgentParserProvider parser,
             IHttpContextAccessor httpContextAccessor)
         {
-            _systemCache = systemCache;
+            _cacheService = cacheService;
             _jwtSettings = jwtSettings.Value;
+            _parser = parser;
             _httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<bool> IsTokenCached(string tokenId, long userId)
+        {
+            var result = await _cacheService.GetResourcePerObjectIdAsync<UserToken>(CacheResources.UserToken, tokenId, userId.ToString());
+            if (result == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<string> GenerateToken(User user)
@@ -54,7 +72,7 @@ namespace AuthDemo.Security.Authentication
             );
 
             string result = new JwtSecurityTokenHandler().WriteToken(securityKey);
-            var userAgent = _httpContextAccessor.HttpContext!.Request.Headers["Test"].ToString();
+            var userAgentString = _httpContextAccessor.HttpContext!.Request.Headers["User-Agent"].ToString();
 
             UserToken cachedUserToken = new UserToken
             {
@@ -63,12 +81,35 @@ namespace AuthDemo.Security.Authentication
                 Token = HashToken(result),
                 TokenExpiration = tokenExpiration,
                 TokenDuration = TimeSpan.FromMinutes(_jwtSettings.ExpirationInMinutes),
-                UserAgentInfo = UserAgentInfo.Parse(userAgent) 
-              
+                UserAgentInfo = Parse(userAgentString)
+
             };
-            await _systemCache.SetResourceDataPerObjectIdAsync(CacheResources.UserToken, tokenGuid, cachedUserToken, user.Id.ToString(), tokenExpiration);
+            await _cacheService.SetResourceDataPerObjectIdAsync(CacheResources.UserToken, tokenGuid, cachedUserToken, user.Id.ToString(), tokenExpiration);
 
             return result;
+        }
+
+        private UserAgentInfo Parse(string? userAgentString)
+        {
+            if (string.IsNullOrEmpty(userAgentString))
+            {
+                // Handle empty or null user-agent string
+                return new UserAgentInfo
+                {
+                    BrowserName = "Unknown",
+                    Version = "Unknown",
+                    Platform = "Unknown"
+                };
+            }
+
+            HttpUserAgentInformation info = _parser.Parse(userAgentString);
+
+            return new UserAgentInfo
+            {
+                BrowserName = info.Name ?? "Unknown",
+                Version = info.Version ?? "Unknown",
+                Platform = info.Platform?.Name ?? "Unknown"
+            };
         }
 
         private string HashToken(string token)

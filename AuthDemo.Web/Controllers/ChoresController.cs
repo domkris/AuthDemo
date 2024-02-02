@@ -30,6 +30,8 @@ namespace AuthDemo.Web.Controllers
             _mapper = mapper;
             _context = context;
             _userManager = userManager;
+
+
         }
 
         [HttpGet]
@@ -69,13 +71,14 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            Chore dbChore = new() { 
-                Title = uiChore.Title, 
-                Description = uiChore.Description 
+            Chore dbChore = new()
+            {
+                Title = uiChore.Title,
+                Description = uiChore.Description
             };
             await _context.Chores.AddAsync(dbChore);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("Get", new { dbChore.Id});
+            return CreatedAtAction("Get", new { dbChore.Id });
         }
 
         [Authorize(Policy = Policies.Roles.AdminOrManager)]
@@ -152,7 +155,7 @@ namespace AuthDemo.Web.Controllers
         {
             long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long userRole);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
-            
+
             var dbChore = await _context.Chores
                 .FirstOrDefaultAsync(chore => chore.Id == id);
 
@@ -161,16 +164,16 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest("Chore does not exists");
             }
 
-            if(userRole is not (long)Roles.Employee)
+            if (userRole is not (long)Roles.Employee)
             {
                 dbChore.IsFinished = !dbChore.IsFinished;
                 await _context.SaveChangesAsync();
             }
             else
             {
-                if(dbChore.UserAssigneeId != userId)
+                if (dbChore.UserAssigneeId != userId)
                 {
-                    return Forbid(); 
+                    return Forbid();
                 }
 
                 dbChore.IsFinished = !dbChore.IsFinished;
@@ -193,7 +196,7 @@ namespace AuthDemo.Web.Controllers
 
             dbChore.IsApproved = !dbChore.IsApproved;
             await _context.SaveChangesAsync();
-            
+
             return Ok();
         }
     }

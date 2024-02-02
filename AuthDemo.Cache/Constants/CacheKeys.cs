@@ -1,5 +1,4 @@
-﻿
-namespace AuthDemo.Domain.Cache
+﻿namespace AuthDemo.Cache.Constants
 {
     public static class CacheKeys
     {

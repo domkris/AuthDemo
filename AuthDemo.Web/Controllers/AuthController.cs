@@ -1,15 +1,15 @@
 ﻿using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Contracts.DataTransferObjects.Common;
 using AuthDemo.Infrastructure.Entities;
-using AuthDemo.Security.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using AuthDemo.Domain;
-using static AuthDemo.Domain.Cache.CacheKeys;
 using System.IdentityModel.Tokens.Jwt;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
+using AuthDemo.Cache.Interfaces;
+using AuthDemo.Security.Interfaces;
+using static AuthDemo.Cache.Constants.CacheKeys;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -18,21 +18,21 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly ISystemCache _sytemCache;
+        private readonly ICacheService _cacheService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly JwtTokenGenerator _jwtTokenGenerator;
+        private readonly IJwtTokenService _jwtTokenService;
 
         public AuthController(
-            ISystemCache systemCache,
+            ICacheService cacheService,
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            JwtTokenGenerator jwtTokenGenerator)
+            IJwtTokenService jwtTokenService)
         {
-            _sytemCache = systemCache;
+            _cacheService = cacheService;
             _userManager = userManager;
             _signInManager = signInManager;
-            _jwtTokenGenerator = jwtTokenGenerator;
+            _jwtTokenService = jwtTokenService;
         }
 
         [Authorize(Policy = Policies.Roles.Admin)]
@@ -96,7 +96,7 @@ namespace AuthDemo.Web.Controllers
 
             if (result.Succeeded)
             {
-                var token = await _jwtTokenGenerator.GenerateToken(user!);
+                var token = await _jwtTokenService.GenerateToken(user!);
 
                 return Ok(new { token });
             }
@@ -111,7 +111,7 @@ namespace AuthDemo.Web.Controllers
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
             // logout user from current session
-            var result = await _sytemCache.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, tokenId, loggedInUserId.ToString());
+            var result = await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, tokenId, loggedInUserId.ToString());
             if(!result)
             {
                 return BadRequest("Unable to logout");
@@ -141,7 +141,7 @@ namespace AuthDemo.Web.Controllers
             await _userManager.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
 
             // logout user from all sessions
-            await _sytemCache.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
 
             return Ok();
         }

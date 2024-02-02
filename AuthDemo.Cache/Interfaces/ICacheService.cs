@@ -1,8 +1,8 @@
-﻿using static AuthDemo.Domain.Cache.CacheKeys;
+﻿using static AuthDemo.Cache.Constants.CacheKeys;
 
-namespace AuthDemo.Domain
+namespace AuthDemo.Cache.Interfaces
 {
-    public interface ISystemCache
+    public interface ICacheService
     {
         Task<T?> GetDataAsync<T>(string key);
         Task<bool> SetDataAsync<T>(string key, T value);

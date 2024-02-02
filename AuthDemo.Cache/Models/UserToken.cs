@@ -1,6 +1,4 @@
-﻿using AuthDemo.Domain.Utilities;
-
-namespace AuthDemo.Domain.Cache.CacheObjects
+﻿namespace AuthDemo.Cache.Models
 {
     public sealed class UserAgentInfo
     {
@@ -8,10 +6,6 @@ namespace AuthDemo.Domain.Cache.CacheObjects
         public required string Version { get; set; }
         public required string Platform { get; set; }
 
-        public static UserAgentInfo Parse(string userAgentString)
-        {
-            return new UserAgentParser().Parse(userAgentString);
-        }
     }
 
     public class UserToken

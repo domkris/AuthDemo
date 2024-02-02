@@ -1,9 +1,9 @@
-﻿using AuthDemo.Domain;
+﻿using AuthDemo.Cache.Interfaces;
 using AuthDemo.Infrastructure.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using static AuthDemo.Domain.Cache.CacheKeys;
+using static AuthDemo.Cache.Constants.CacheKeys;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
@@ -13,14 +13,14 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class UsersController : ControllerBase
     {
-        private readonly ISystemCache _systemCache;
+        private readonly ICacheService _cacheService;
         private readonly UserManager<User> _userManager;
 
         public UsersController(
-            ISystemCache systemCache,
+            ICacheService cacheService,
             UserManager<User> userManager)
         {
-            _systemCache = systemCache;
+            _cacheService = cacheService;
             _userManager = userManager;
         }
 
@@ -44,7 +44,7 @@ namespace AuthDemo.Web.Controllers
             if (!user.IsActive)
             {
                 // logout user from all sessions
-                await _systemCache.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
+                await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
             }
             return Ok();
         }

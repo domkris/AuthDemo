@@ -1,13 +1,14 @@
-﻿using StackExchange.Redis;
+﻿using AuthDemo.Cache.Interfaces;
+using StackExchange.Redis;
 using System.Text.Json;
-using static AuthDemo.Domain.Cache.CacheKeys;
+using static AuthDemo.Cache.Constants.CacheKeys;
 
-namespace AuthDemo.Domain.Cache
+namespace AuthDemo.Cache.Services
 {
-    public class SystemCache : ISystemCache
+    public class CacheService : ICacheService
     {
         private readonly IDatabase _cacheDb;
-        public SystemCache(IDatabase cacheDb)
+        public CacheService(IDatabase cacheDb)
         {
             _cacheDb = cacheDb;
         }

@@ -2,11 +2,13 @@
 using AuthDemo.Infrastructure.Entities;
 using AuthDemo.Security.Authentication;
 using AuthDemo.Security.Authorization;
+using AuthDemo.Security.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MyCSharp.HttpUserAgentParser.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -17,9 +19,9 @@ namespace AuthDemo.Security
     {
         public static IServiceCollection RegisterSecurityServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddHttpUserAgentParser();
             services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
-            services.AddSingleton<JwtTokenGenerator>();
-            services.AddSingleton<IJwtTokenRevoker, JwtTokenRevoker>();
+            services.AddSingleton<IJwtTokenService, JwtTokenService>();
             services.AddAuthentication(configureOptions =>
             {
                 configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -48,11 +50,10 @@ namespace AuthDemo.Security
                     ValidateLifetime = true,
                     RequireExpirationTime = true,
                 };
-                var tokenRevoker = services.BuildServiceProvider().GetRequiredService<IJwtTokenRevoker>();
+                var tokenService = services.BuildServiceProvider().GetRequiredService<IJwtTokenService>();
                 jwtBearerOptions.Events = new JwtBearerEvents
                 {
                    OnTokenValidated = context => {
-                       context.Fail("Unauthorized");
                        long.TryParse(context.Principal.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
                        string? tokenId = context.Principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
 
@@ -66,7 +67,7 @@ namespace AuthDemo.Security
                            throw new SecurityTokenException($"Claim of type ClaimTypes.NameIdentifier is missing or has invalid value");
                        }
 
-                       var result = tokenRevoker.IsTokenInCache(tokenId, userId).Result;
+                       var result = tokenService.IsTokenCached(tokenId, userId).Result;
                        if (!result)
                        {
                            // each generated token must be in cache! If it is not it means we removed it from cache and therefore it is not valid anymore
