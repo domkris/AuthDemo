@@ -1,5 +1,6 @@
 using AuthDemo.Infrastructure;
 using AuthDemo.Cache;
+using AuthDemo.Domain;
 using AuthDemo.Security;
 using AuthDemo.Web.AutoMapper;
 using Microsoft.OpenApi.Models;
@@ -9,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterSecurityServices(builder.Configuration);
 builder.Services.RegisterInfrastructureServices(builder.Configuration);
 builder.Services.RegisterCacheServices(builder.Configuration);
+builder.Services.RegisterDomainServices(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

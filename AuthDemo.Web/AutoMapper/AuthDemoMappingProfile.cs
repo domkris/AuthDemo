@@ -26,6 +26,7 @@ namespace AuthDemo.Web.AutoMapper
         private void ConfigureUser()
         {
             CreateMap<User, UserResponse>();
+            CreateMap<User, SimpleUserResponse>();
         }
     }
 }

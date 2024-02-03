@@ -10,6 +10,7 @@ using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 using AuthDemo.Cache.Interfaces;
 using AuthDemo.Security.Interfaces;
 using static AuthDemo.Cache.Constants.CacheKeys;
+using AuthDemo.Domain.Identity.Interfaces;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -19,20 +20,17 @@ namespace AuthDemo.Web.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ICacheService _cacheService;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IJwtTokenService _jwtTokenService;
+        private readonly IUserIdentityService _userIdentityService;
 
         public AuthController(
             ICacheService cacheService,
-            UserManager<User> userManager,
-            SignInManager<User> signInManager,
-            IJwtTokenService jwtTokenService)
+            IJwtTokenService jwtTokenService,
+            IUserIdentityService userIdentityService)
         {
             _cacheService = cacheService;
-            _userManager = userManager;
-            _signInManager = signInManager;
             _jwtTokenService = jwtTokenService;
+            _userIdentityService = userIdentityService;
         }
 
         [Authorize(Policy = Policies.Roles.Admin)]
@@ -44,8 +42,8 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existingUser = await _userManager.FindByEmailAsync(request.Email);
-            if(existingUser != null) 
+            var existingUserByEmail = await _userIdentityService.FindByEmailAsync(request.Email);
+            if (existingUserByEmail != null) 
             {
                 return BadRequest("User already exists");
             }
@@ -59,7 +57,7 @@ namespace AuthDemo.Web.Controllers
                 UserName = string.Concat(request.FirstName, request.LastName).ToLower(),
             };
 
-            var result = await _userManager.CreateAsync(newUser, request.Password);
+            var result = await _userIdentityService.CreateAsync(newUser, request.Password);
 
             if (!result.Succeeded)
             {
@@ -81,13 +79,13 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if(user == null) 
+            var user = await _userIdentityService.FindByEmailAsync(request.Email);
+            if (user == null) 
             {                 
                 return BadRequest("Invalid login attempt");       
             }
 
-            var result = await _signInManager.PasswordSignInAsync(user.UserName!, request.Password, rememberMe, lockoutOnFailure);
+            var result = await _userIdentityService.PasswordSignInAsync(user, request.Password, rememberMe, lockoutOnFailure);
 
             if(result.IsLockedOut)
             {
@@ -120,13 +118,13 @@ namespace AuthDemo.Web.Controllers
         }
 
        
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(AuthPasswordResetRequest request)
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(AuthPasswordResetRequest request)
         {
             long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
-            var dbUser = await _userManager.FindByIdAsync(request.UserId.ToString());
+            var dbUser = await _userIdentityService.FindByIdAsync(request.UserId);
 
             if (request.UserId != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
             {
@@ -138,8 +136,8 @@ namespace AuthDemo.Web.Controllers
                 return BadRequest("User does not exist");
             }
 
-            await _userManager.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
-
+            await _userIdentityService.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
+            
             // logout user from all sessions
             await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
 

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AuthDemo.Infrastructure
 {
-    public class AuthDemoDbContext : IdentityDbContext<Entities.User, Entities.Role, long>
+    public class AuthDemoDbContext : IdentityDbContext<User, Role, long>
     {
         private readonly IHttpContextAccessor? _httpContextAccessor;
         public AuthDemoDbContext(
@@ -66,7 +66,6 @@ namespace AuthDemo.Infrastructure
                 {
                     throw new ArgumentException($"Invalid input for {userId}. Unable to parse as a valid long value");
                 }
-
                 return id;
             }
         }
@@ -97,7 +96,6 @@ namespace AuthDemo.Infrastructure
                 configuration.GetConnectionString("DefaultConnection"),
                 builder => builder.MigrationsAssembly(typeof(AuthDemoDbContext).Assembly.FullName)
                 );
-
             return new AuthDemoDbContext(null, optionsBuilder.Options);
         }
     }
