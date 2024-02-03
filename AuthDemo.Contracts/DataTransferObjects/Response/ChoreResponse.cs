@@ -6,7 +6,12 @@ namespace AuthDemo.Contracts.DataTransferObjects.Response
         public long Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
-        public UserResponse? CreatedBy { get; set; }
-        public UserResponse? UserAssignee { get; set; }
+        public bool IsFinished { get; set; }
+        public bool IsApproved { get; set; }
+        public SimpleUserResponse? CreatedBy { get; set; }
+        public SimpleUserResponse? UpdatedBy { get; set; }
+        public SimpleUserResponse? UserAssignee { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }
