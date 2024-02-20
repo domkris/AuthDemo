@@ -92,7 +92,7 @@ namespace AuthDemo.Web.Controllers
 
         [Authorize(Policy = Policies.Roles.AdminOrManager)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, ChoreEditRequest uiChore)
+        public async Task<IActionResult> Put(long id, ChoreEditRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -108,8 +108,8 @@ namespace AuthDemo.Web.Controllers
                 return NotFound();
             }
 
-            dbChore.Title = uiChore.Title;
-            dbChore.Description = uiChore.Description;
+            dbChore.Title = request.Title;
+            dbChore.Description = request.Description;
 
             await _unitOfWork.SaveAsync();
 

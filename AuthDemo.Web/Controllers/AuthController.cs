@@ -11,6 +11,8 @@ using AuthDemo.Cache.Interfaces;
 using AuthDemo.Security.Interfaces;
 using static AuthDemo.Cache.Constants.CacheKeys;
 using AuthDemo.Domain.Identity.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -35,7 +37,7 @@ namespace AuthDemo.Web.Controllers
 
         [Authorize(Policy = Policies.Roles.Admin)]
         [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser(AuthCreateUserRequest request)
+        public async Task<IActionResult> CreateUser(AuthUserCreateRequest request)
         {
             if(!ModelState.IsValid)
             {
@@ -47,14 +49,14 @@ namespace AuthDemo.Web.Controllers
             {
                 return BadRequest("User already exists");
             }
-
+          
             var newUser = new User
             {
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 RoleId = (long)request.Role,
-                UserName = string.Concat(request.FirstName, request.LastName).ToLower(),
+                UserName = await _userIdentityService.GetCustomUniqueUserName(request.FirstName, request.LastName),
             };
 
             var result = await _userIdentityService.CreateAsync(newUser, request.Password);
@@ -69,7 +71,7 @@ namespace AuthDemo.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(AuthLoginRequest request)
+        public async Task<IActionResult> Login(AuthUserLoginRequest request)
         {
             bool rememberMe = false;
             bool lockoutOnFailure = true;
@@ -119,21 +121,21 @@ namespace AuthDemo.Web.Controllers
 
        
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword(AuthPasswordResetRequest request)
+        public async Task<IActionResult> ChangePassword(AuthUserPasswordChangeRequest request)
         {
             long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
             var dbUser = await _userIdentityService.FindByIdAsync(request.UserId);
 
-            if (request.UserId != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
-            {
-                return Forbid();
-            }
-
             if (dbUser == null)
             {
                 return BadRequest("User does not exist");
+            }
+
+            if (request.UserId != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
+            {
+                return Forbid();
             }
 
             await _userIdentityService.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
@@ -143,5 +145,85 @@ namespace AuthDemo.Web.Controllers
 
             return Ok();
         }
+
+        [HttpPost("ChangeEmail")]
+        public async Task<IActionResult> ChangeEmail(AuthUserEmailChangeRequest request)
+        {
+            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
+
+            var dbUser = await _userIdentityService.FindByIdAsync(request.UserId);
+
+            if (dbUser == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+            if (dbUser!.Id != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
+            {
+                return Forbid();
+            }
+
+            if (dbUser.Email != request.CurrentEmail)
+            {
+                return BadRequest("Wrong current user email");
+            }
+
+            var dbUserOfNewEmail = await _userIdentityService.FindByEmailAsync(request.NewEmail);
+            if (dbUserOfNewEmail != null)
+            {
+                return BadRequest("Choose another new email");
+            }
+
+            dbUser.Email = request.NewEmail;
+
+            await _userIdentityService.UpdateAsync(dbUser);
+
+            // logout user from all sessions
+            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+
+            return Ok();
+        }
+
+        [HttpPost("RequestEmailChangeToken")]
+        public async Task<IActionResult> RequestEmailChangeToken(AuthUserEmailChangeRequest request)
+        {
+            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
+
+            var dbUser = await _userIdentityService.FindByIdAsync(request.UserId);
+
+            if (dbUser == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+            if (dbUser!.Id != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
+            {
+                return Forbid();
+            }
+
+            if (dbUser.Email != request.CurrentEmail)
+            {
+                return BadRequest("Wrong current user email");
+            }
+
+            var dbUserOfNewEmail = await _userIdentityService.FindByEmailAsync(request.NewEmail);
+            if (dbUserOfNewEmail != null)
+            {
+                return BadRequest("Choose another new email");
+            }
+
+            dbUser.Email = request.NewEmail;
+
+            await _userIdentityService.UpdateAsync(dbUser);
+
+            // logout user from all sessions
+            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+
+            return Ok();
+        }
+
+
     }
 }

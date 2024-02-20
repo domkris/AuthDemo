@@ -37,7 +37,7 @@ namespace AuthDemo.Security.Authentication
 
         public async Task<bool> IsTokenCached(string tokenId, long userId)
         {
-            var result = await _cacheService.GetResourcePerObjectIdAsync<UserToken>(CacheResources.UserToken, tokenId, userId.ToString());
+            var result = await _cacheService.GetResourcePerObjectIdAsync<AccessToken>(CacheResources.UserToken, tokenId, userId.ToString());
             if (result == null)
             {
                 return false;
@@ -74,7 +74,7 @@ namespace AuthDemo.Security.Authentication
             string result = new JwtSecurityTokenHandler().WriteToken(securityKey);
             var userAgentString = _httpContextAccessor.HttpContext!.Request.Headers["User-Agent"].ToString();
 
-            UserToken cachedUserToken = new UserToken
+            AccessToken cachedUserToken = new AccessToken
             {
                 UserId = user.Id.ToString(),
                 TokenId = tokenGuid,

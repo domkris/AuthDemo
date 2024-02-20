@@ -2,7 +2,7 @@
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 {
-    public class AuthPasswordResetRequest
+    public class AuthUserPasswordChangeRequest
     {
         [Required]
         public required long UserId { get; set; }
