@@ -1,4 +1,6 @@
 ﻿using AuthDemo.Cache.Interfaces;
+using AuthDemo.Contracts.DataTransferObjects.Common;
+using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Contracts.DataTransferObjects.Response;
 using AuthDemo.Domain.Identity.Interfaces;
 using AuthDemo.Infrastructure.Entities;
@@ -7,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using static AuthDemo.Cache.Constants.CacheKeys;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
@@ -82,6 +85,34 @@ namespace AuthDemo.Web.Controllers
 
             var uiUser = _mapper.Map<UserResponse>(dbUser);
             return Ok(uiUser);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(long id, AuthUserEditRequest request)
+        {
+            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
+
+            var dbUser = await _userIdentityService.FindByIdAsync(id);
+
+            if (dbUser == null)
+            {
+                return BadRequest("User does not exist");
+            }
+
+            if (dbUser!.Id != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
+            {
+                return Forbid();
+            }
+
+           
+            dbUser.FirstName = request.FirstName;
+            dbUser.LastName = request.LastName;
+            dbUser.UserName = await _userIdentityService.GetCustomUniqueUserName(request.FirstName, request.LastName);
+
+            await _userIdentityService.UpdateAsync(dbUser);
+
+            return Ok();
         }
     }
 }

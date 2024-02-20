@@ -8,7 +8,7 @@
 
     }
 
-    public class UserToken
+    public class AccessToken
     {
         public required string UserId { get; set; }
         public required string TokenId { get; set; }

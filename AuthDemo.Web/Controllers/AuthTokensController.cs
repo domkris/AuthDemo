@@ -1,5 +1,6 @@
 ﻿using AuthDemo.Cache.Interfaces;
 using AuthDemo.Cache.Models;
+using AuthDemo.Contracts.DataTransferObjects.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static AuthDemo.Cache.Constants.CacheKeys;
@@ -20,19 +21,28 @@ namespace AuthDemo.Web.Controllers
             _cacheService = cacheService;
         }
 
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpGet("{key}")]
-        public async Task<IActionResult> Get(string key)
-        {
-            UserToken? userToken = await _cacheService.GetDataAsync<UserToken>(key);
-            return Ok(userToken);
-        }
-
+       
         [Authorize(Policy = Policies.Roles.Admin)]
         [HttpGet("GetTokensPerUser/{id}")]
         public async Task<IActionResult> GetTokensPerUser(long id)
         {
-            var result = await _cacheService.GetAllResourcesPerObjectIdAsync<UserToken>(CacheResources.UserToken, id.ToString());
+            var result = await _cacheService.GetAllResourcesPerObjectIdAsync<AccessToken>(CacheResources.UserToken, id.ToString());
+            return Ok(result);
+        }
+
+        [Authorize(Policy = Policies.Roles.Admin)]
+        [HttpGet("RemoveTokenPerUser")]
+        public async Task<IActionResult> RemoveTokenPerUser(AuthTokenRemoveRequest request)
+        {
+            var result = await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, request.TokenId, request.UserId.ToString());
+            return Ok(result);
+        }
+
+        [Authorize(Policy = Policies.Roles.Admin)]
+        [HttpGet("RemoveAllTokensPerUser/{id}")]
+        public async Task<IActionResult> RemoveAllTokensPerUser(long id)
+        {
+            var result = await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
             return Ok(result);
         }
     }
