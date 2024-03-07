@@ -114,6 +114,60 @@ namespace AuthDemo.Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Token", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("CreatedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JwtAccessTokenId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReasonRevoked")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReplacedByRefreshToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("Revoked")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("UpdatedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("RefreshToken");
+
+                    b.HasIndex("UpdatedById");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.User", b =>
                 {
                     b.Property<long>("Id")
@@ -213,8 +267,7 @@ namespace AuthDemo.Infrastructure.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b6004e65-39b2-44f1-a8f0-2c408d3c3df4",
-                            CreatedAt = new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(264),
+                            ConcurrencyStamp = "421737d3-02bf-45ce-98a0-cb91122af253",
                             EmailConfirmed = false,
                             IsActive = false,
                             LockoutEnabled = false,
@@ -228,8 +281,7 @@ namespace AuthDemo.Infrastructure.Migrations
                         {
                             Id = 2L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a12e934-017e-400d-9df4-5e171d23eeca",
-                            CreatedAt = new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(273),
+                            ConcurrencyStamp = "7b9956b9-0133-4ac3-9443-5c7063d35cac",
                             CreatedById = 1L,
                             Email = "admin@authdemo.com",
                             EmailConfirmed = true,
@@ -237,10 +289,10 @@ namespace AuthDemo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@AUTHDEMO.COM",
                             NormalizedUserName = "ADMINAUTHDEMO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKYMRYFFajZaMzi5lUv9wkQy+VyjaiKeoPaa53zQypoGKjj64OIU9zhVc7xfAezVcw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEByMAynwH/eZavfHslVYtnZo8zy7AWlb7hgFiUWBWMUp9w6B5D5XnrgJa1GHLd8z/w==",
                             PhoneNumberConfirmed = false,
                             RoleId = 1L,
-                            SecurityStamp = "NEBCKA6U3JRKZFIUZWH2MJXA5SLBXNQD",
+                            SecurityStamp = "653JEL7A45MU7TUKQKZMXP3YY3ME4SDX",
                             TwoFactorEnabled = false,
                             UserName = "adminauthdemo"
                         });
@@ -364,6 +416,27 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.Navigation("UpdatedBy");
 
                     b.Navigation("UserAssignee");
+                });
+
+            modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Token", b =>
+                {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "UpdatedBy")
+                        .WithMany()
+                        .HasForeignKey("UpdatedById");
+
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("UpdatedBy");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.User", b =>

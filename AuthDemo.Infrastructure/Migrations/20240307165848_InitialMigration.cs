@@ -222,6 +222,44 @@ namespace AuthDemo.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true),
+                    JwtAccessTokenId = table.Column<string>(type: "TEXT", nullable: false),
+                    RefreshToken = table.Column<string>(type: "TEXT", nullable: false),
+                    Expires = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Revoked = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    ReplacedByRefreshToken = table.Column<string>(type: "TEXT", nullable: true),
+                    ReasonRevoked = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedById = table.Column<long>(type: "INTEGER", nullable: true),
+                    UpdatedById = table.Column<long>(type: "INTEGER", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -237,8 +275,8 @@ namespace AuthDemo.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "CreatedById", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RoleId", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UpdatedById", "UserName" },
                 values: new object[,]
                 {
-                    { 1L, 0, "b6004e65-39b2-44f1-a8f0-2c408d3c3df4", new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(264), null, null, false, null, false, null, false, null, null, "SYSTEM", null, null, false, 1L, null, false, null, null, "system" },
-                    { 2L, 0, "9a12e934-017e-400d-9df4-5e171d23eeca", new DateTime(2024, 1, 27, 16, 27, 15, 787, DateTimeKind.Utc).AddTicks(273), 1L, "admin@authdemo.com", true, null, true, null, false, null, "ADMIN@AUTHDEMO.COM", "ADMINAUTHDEMO", "AQAAAAIAAYagAAAAEKYMRYFFajZaMzi5lUv9wkQy+VyjaiKeoPaa53zQypoGKjj64OIU9zhVc7xfAezVcw==", null, false, 1L, "NEBCKA6U3JRKZFIUZWH2MJXA5SLBXNQD", false, null, null, "adminauthdemo" }
+                    { 1L, 0, "421737d3-02bf-45ce-98a0-cb91122af253", null, null, null, false, null, false, null, false, null, null, "SYSTEM", null, null, false, 1L, null, false, null, null, "system" },
+                    { 2L, 0, "7b9956b9-0133-4ac3-9443-5c7063d35cac", null, 1L, "admin@authdemo.com", true, null, true, null, false, null, "ADMIN@AUTHDEMO.COM", "ADMINAUTHDEMO", "AQAAAAIAAYagAAAAEByMAynwH/eZavfHslVYtnZo8zy7AWlb7hgFiUWBWMUp9w6B5D5XnrgJa1GHLd8z/w==", null, false, 1L, "653JEL7A45MU7TUKQKZMXP3YY3ME4SDX", false, null, null, "adminauthdemo" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -313,6 +351,26 @@ namespace AuthDemo.Infrastructure.Migrations
                 name: "IX_Chores_UserAssigneeId",
                 table: "Chores",
                 column: "UserAssigneeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_CreatedById",
+                table: "Tokens",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_RefreshToken",
+                table: "Tokens",
+                column: "RefreshToken");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UpdatedById",
+                table: "Tokens",
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UserId",
+                table: "Tokens",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -335,6 +393,9 @@ namespace AuthDemo.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Chores");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

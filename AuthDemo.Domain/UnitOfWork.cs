@@ -11,9 +11,11 @@ namespace AuthDemo.Domain
         {
             _dbContext = dbContext;
             Chores = new ChoresRepository(_dbContext);
+            Tokens = new TokensRepository(_dbContext);
         }
 
         public IChoresRepository Chores { get; }
+        public ITokensRepository Tokens { get; }
 
         public void Dispose()
         {

@@ -1,16 +1,13 @@
-﻿using AuthDemo.Cache.Interfaces;
-using AuthDemo.Contracts.DataTransferObjects.Common;
-using AuthDemo.Contracts.DataTransferObjects.Request;
+﻿using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Contracts.DataTransferObjects.Response;
 using AuthDemo.Domain.Identity.Interfaces;
 using AuthDemo.Infrastructure.Entities;
+using AuthDemo.Security.Interfaces;
+using AuthDemo.Web.Common;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using static AuthDemo.Cache.Constants.CacheKeys;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
@@ -21,16 +18,16 @@ namespace AuthDemo.Web.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly ICacheService _cacheService;
+        private readonly ITokenService _tokenService;
         private readonly IUserIdentityService _userIdentityService;
 
         public UsersController(
             IMapper mapper,
-            ICacheService cacheService,
+            ITokenService tokenService,
             IUserIdentityService userIdentityService)
         {
             _mapper = mapper;
-            _cacheService = cacheService;
+            _tokenService = tokenService;
             _userIdentityService = userIdentityService;
         }
 
@@ -54,7 +51,7 @@ namespace AuthDemo.Web.Controllers
             if (!user.IsActive)
             {
                 // logout user from all sessions
-                await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
+                await _tokenService.InvalidateUserTokens(id, Constants.ReasonsOfRevoke.UserDeactivated);
             }
             return Ok();
         }
@@ -87,30 +84,36 @@ namespace AuthDemo.Web.Controllers
             return Ok(uiUser);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, AuthUserEditRequest request)
+        [Authorize(Policy = Policies.Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> Post(UserPostRequest request)
         {
-            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
-            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
-
-            var dbUser = await _userIdentityService.FindByIdAsync(id);
-
-            if (dbUser == null)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("User does not exist");
+                return BadRequest(ModelState);
             }
 
-            if (dbUser!.Id != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
+            var existingUserByEmail = await _userIdentityService.FindByEmailAsync(request.Email);
+            if (existingUserByEmail != null)
             {
-                return Forbid();
+                return BadRequest("User already exists");
             }
 
-           
-            dbUser.FirstName = request.FirstName;
-            dbUser.LastName = request.LastName;
-            dbUser.UserName = await _userIdentityService.GetCustomUniqueUserName(request.FirstName, request.LastName);
+            var newUser = new User
+            {
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                RoleId = (long)request.Role,
+                UserName = await _userIdentityService.GetCustomUniqueUserName(request.FirstName, request.LastName),
+            };
 
-            await _userIdentityService.UpdateAsync(dbUser);
+            var result = await _userIdentityService.CreateAsync(newUser, request.Password);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
 
             return Ok();
         }

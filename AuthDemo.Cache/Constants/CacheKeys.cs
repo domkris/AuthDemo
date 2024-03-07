@@ -6,7 +6,8 @@
 
         public enum CacheResources
         {
-            UserToken
+            AccessToken,
+            RefreshToken
         }
     }
 }

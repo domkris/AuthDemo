@@ -1,5 +1,4 @@
-﻿using AuthDemo.Infrastructure.Audit;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace AuthDemo.Infrastructure.Entities
 {
