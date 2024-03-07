@@ -1,18 +1,13 @@
 ﻿using AuthDemo.Contracts.DataTransferObjects.Request;
-using AuthDemo.Contracts.DataTransferObjects.Common;
-using AuthDemo.Infrastructure.Entities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
-using AuthDemo.Cache.Interfaces;
-using AuthDemo.Security.Interfaces;
-using static AuthDemo.Cache.Constants.CacheKeys;
+using AuthDemo.Contracts.DataTransferObjects.Response;
 using AuthDemo.Domain.Identity.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
+using AuthDemo.Infrastructure.LookupData;
+using AuthDemo.Security.Interfaces;
+using AuthDemo.Web.Common;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -21,57 +16,21 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly ICacheService _cacheService;
-        private readonly IJwtTokenService _jwtTokenService;
+        private readonly ITokenService _tokenService;
         private readonly IUserIdentityService _userIdentityService;
 
         public AuthController(
-            ICacheService cacheService,
-            IJwtTokenService jwtTokenService,
+            ITokenService tokenService,
             IUserIdentityService userIdentityService)
         {
-            _cacheService = cacheService;
-            _jwtTokenService = jwtTokenService;
+            _tokenService = tokenService;
             _userIdentityService = userIdentityService;
         }
 
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser(AuthUserCreateRequest request)
-        {
-            if(!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var existingUserByEmail = await _userIdentityService.FindByEmailAsync(request.Email);
-            if (existingUserByEmail != null) 
-            {
-                return BadRequest("User already exists");
-            }
-          
-            var newUser = new User
-            {
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                RoleId = (long)request.Role,
-                UserName = await _userIdentityService.GetCustomUniqueUserName(request.FirstName, request.LastName),
-            };
-
-            var result = await _userIdentityService.CreateAsync(newUser, request.Password);
-
-            if (!result.Succeeded)
-            {
-                return BadRequest(result.Errors);
-            }
-
-            return Ok();
-        }
-
+       
         [AllowAnonymous]
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(AuthUserLoginRequest request)
+        public async Task<IActionResult> Login(AuthLoginRequest request)
         {
             bool rememberMe = false;
             bool lockoutOnFailure = true;
@@ -96,9 +55,9 @@ namespace AuthDemo.Web.Controllers
 
             if (result.Succeeded)
             {
-                var token = await _jwtTokenService.GenerateToken(user!);
+                (var accessToken, var refreshToken) = await _tokenService.GenerateTokens(user!);
 
-                return Ok(new { token });
+                return Ok(new AuthResponse{ AccessToken = accessToken, RefreshToken = refreshToken });
             }
 
             return BadRequest("Invalid login attempt");
@@ -107,21 +66,41 @@ namespace AuthDemo.Web.Controllers
         [HttpPost("Logout")]
         public async Task<IActionResult> Logout()
         {
-            string tokenId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+            string? accessTokenId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+            if(accessTokenId == null)
+            {
+                return BadRequest("Invalid logout attempt");
+            }
+
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
-            // logout user from current session
-            var result = await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, tokenId, loggedInUserId.ToString());
-            if(!result)
+            var result = await _tokenService.InvalidateUserTokensOnLogout(accessTokenId, loggedInUserId, Constants.ReasonsOfRevoke.UserRequestedLogout);
+
+            if (!result)
             {
                 return BadRequest("Unable to logout");
             }
             return Ok(new { message = "Logout successful" });
         }
 
-       
+        [HttpPost("LogoutAllSessions")]
+        public async Task<IActionResult> LogoutAllSessions()
+        {
+            string? accessTokenId = User.FindFirstValue(JwtRegisteredClaimNames.Jti);
+            if (accessTokenId == null)
+            {
+                return BadRequest("Invalid logout attempt");
+            }
+
+            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
+
+            var result = await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserRequestedInvalidationOfUserTokens);
+            return Ok(result);
+        }
+
+
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword(AuthUserPasswordChangeRequest request)
+        public async Task<IActionResult> ChangePassword(AuthPasswordChangeRequest request)
         {
             long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
@@ -139,15 +118,15 @@ namespace AuthDemo.Web.Controllers
             }
 
             await _userIdentityService.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
-            
+
             // logout user from all sessions
-            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+            await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedPassword);
 
             return Ok();
         }
 
         [HttpPost("ChangeEmail")]
-        public async Task<IActionResult> ChangeEmail(AuthUserEmailChangeRequest request)
+        public async Task<IActionResult> ChangeEmail(AuthEmailChangeRequest request)
         {
             long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
@@ -180,50 +159,9 @@ namespace AuthDemo.Web.Controllers
             await _userIdentityService.UpdateAsync(dbUser);
 
             // logout user from all sessions
-            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
+            await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedEmail);
 
             return Ok();
         }
-
-        [HttpPost("RequestEmailChangeToken")]
-        public async Task<IActionResult> RequestEmailChangeToken(AuthUserEmailChangeRequest request)
-        {
-            long.TryParse(User.FindFirstValue(ClaimTypes.Role), out long loggedInUserRole);
-            long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
-
-            var dbUser = await _userIdentityService.FindByIdAsync(request.UserId);
-
-            if (dbUser == null)
-            {
-                return BadRequest("User does not exist");
-            }
-
-            if (dbUser!.Id != loggedInUserId && loggedInUserRole is not (long)Roles.Administrator)
-            {
-                return Forbid();
-            }
-
-            if (dbUser.Email != request.CurrentEmail)
-            {
-                return BadRequest("Wrong current user email");
-            }
-
-            var dbUserOfNewEmail = await _userIdentityService.FindByEmailAsync(request.NewEmail);
-            if (dbUserOfNewEmail != null)
-            {
-                return BadRequest("Choose another new email");
-            }
-
-            dbUser.Email = request.NewEmail;
-
-            await _userIdentityService.UpdateAsync(dbUser);
-
-            // logout user from all sessions
-            await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, dbUser.Id.ToString());
-
-            return Ok();
-        }
-
-
     }
 }

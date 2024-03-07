@@ -2,7 +2,7 @@
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 {
-    public class AuthUserLoginRequest
+    public class AuthLoginRequest
     {
         [Required]
         [EmailAddress]

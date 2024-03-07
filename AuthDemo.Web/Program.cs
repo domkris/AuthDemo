@@ -1,6 +1,6 @@
-using AuthDemo.Infrastructure;
 using AuthDemo.Cache;
 using AuthDemo.Domain;
+using AuthDemo.Infrastructure;
 using AuthDemo.Security;
 using AuthDemo.Web.AutoMapper;
 using Microsoft.OpenApi.Models;
@@ -46,6 +46,9 @@ builder.Services.AddSwaggerGen(setupAction =>
             Array.Empty<string>()
         }
     });
+
+  
+    //setupAction.OperationFilter<SwaggerRefreshTokenEndpointFilter>();
 });
 builder.Services.AddAutoMapper(typeof(AuthDemoMappingProfile));
 

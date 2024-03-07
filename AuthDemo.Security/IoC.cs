@@ -19,9 +19,32 @@ namespace AuthDemo.Security
     {
         public static IServiceCollection RegisterSecurityServices(this IServiceCollection services, IConfiguration configuration)
         {
+
+            string? secret = configuration.GetSection(nameof(JwtSettings))["Secret"];
+
+            if (string.IsNullOrEmpty(secret))
+            {
+                throw new Exception("JwtSettings.Secret is not configured.");
+            }
+
+            var secretKey = Encoding.UTF8.GetBytes(secret);
+
+            TokenValidationParameters tokenValidationParameters = new TokenValidationParameters() 
+            {
+                ValidateIssuer = true,
+                ValidIssuer = configuration.GetSection(nameof(JwtSettings))["Issuer"],
+                ValidateAudience = true,
+                ValidAudience = configuration.GetSection(nameof(JwtSettings))["Audience"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+                ValidateLifetime = true,
+                RequireExpirationTime = true,
+                ClockSkew = TimeSpan.Zero
+            };
             services.AddHttpUserAgentParser();
             services.Configure<JwtSettings>(configuration.GetSection(nameof(JwtSettings)));
-            services.AddSingleton<IJwtTokenService, JwtTokenService>();
+            services.AddSingleton(tokenValidationParameters);
+            services.AddTransient<ITokenService, TokenService>();
             services.AddAuthentication(configureOptions =>
             {
                 configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -30,27 +53,10 @@ namespace AuthDemo.Security
             })
             .AddJwtBearer(jwtBearerOptions =>
             {
-                string? secret = configuration.GetSection(nameof(JwtSettings))["Secret"];
 
-                if(string.IsNullOrEmpty(secret))
-                {
-                    throw new Exception("JwtSettings.Secret is not configured.");
-                }
 
-                var secretKey = Encoding.UTF8.GetBytes(secret);
-
-                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidIssuer = configuration.GetSection(nameof(JwtSettings))["Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = configuration.GetSection(nameof(JwtSettings))["Audience"],
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-                    ValidateLifetime = true,
-                    RequireExpirationTime = true,
-                };
-                var tokenService = services.BuildServiceProvider().GetRequiredService<IJwtTokenService>();
+                jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
+                var tokenService = services.BuildServiceProvider().GetRequiredService<ITokenService>();
                 jwtBearerOptions.Events = new JwtBearerEvents
                 {
                    OnTokenValidated = context => {
@@ -67,11 +73,10 @@ namespace AuthDemo.Security
                            throw new SecurityTokenException($"Claim of type ClaimTypes.NameIdentifier is missing or has invalid value");
                        }
 
-                       var result = tokenService.IsTokenCached(tokenId, userId).Result;
+                       var result = tokenService.IsAccessTokenCached(tokenId, userId).Result;
                        if (!result)
                        {
-                           // each generated token must be in cache! If it is not it means we removed it from cache and therefore it is not valid anymore
-                           context.Fail("Unauthorized");
+                           context.Fail("Access token expired. Use the refresh token to obtain a new access token.");
                        }
                        return Task.CompletedTask;
                    }

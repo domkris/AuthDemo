@@ -1,18 +1,15 @@
-﻿using AuthDemo.Contracts.DataTransferObjects.Request;
+﻿using AuthDemo.Contracts.DataTransferObjects.Common;
+using AuthDemo.Contracts.DataTransferObjects.Request;
 using AuthDemo.Contracts.DataTransferObjects.Response;
-using AuthDemo.Contracts.DataTransferObjects.Common;
-using AuthDemo.Infrastructure;
+using AuthDemo.Domain.Identity.Interfaces;
+using AuthDemo.Domain.Repositories.Interfaces;
 using AuthDemo.Infrastructure.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
-using AuthDemo.Domain;
-using AuthDemo.Domain.Repositories.Interfaces;
-using AuthDemo.Domain.Identity.Interfaces;
 
 namespace AuthDemo.Web.Controllers
 {

@@ -1,9 +1,9 @@
-﻿using AuthDemo.Cache.Interfaces;
-using AuthDemo.Cache.Models;
-using AuthDemo.Contracts.DataTransferObjects.Request;
+﻿using AuthDemo.Contracts.DataTransferObjects.Request;
+using AuthDemo.Contracts.DataTransferObjects.Response;
+using AuthDemo.Security.Interfaces;
+using AuthDemo.Web.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static AuthDemo.Cache.Constants.CacheKeys;
 using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
@@ -13,36 +13,43 @@ namespace AuthDemo.Web.Controllers
     [Authorize]
     public class AuthTokensController : ControllerBase
     {
-        private readonly ICacheService _cacheService;
-
+        private readonly ITokenService _tokenService;
+      
         public AuthTokensController(
-            ICacheService cacheService)
+            ITokenService tokenService)
         {
-            _cacheService = cacheService;
+            _tokenService = tokenService;
         }
 
-       
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpGet("GetTokensPerUser/{id}")]
-        public async Task<IActionResult> GetTokensPerUser(long id)
+        /// <summary>
+        /// Used when access token is expired to generate a new one
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpPost("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(AuthTokenRequest request)
         {
-            var result = await _cacheService.GetAllResourcesPerObjectIdAsync<AccessToken>(CacheResources.UserToken, id.ToString());
-            return Ok(result);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            (var accessToken, var refreshToken) = await _tokenService.VerifyAndGenerateTokens(request.AccessToken, request.RefreshToken);
+
+            if(string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken)) 
+            {
+                return Unauthorized("Invalid tokens");
+            }
+
+            return Ok(new AuthResponse { AccessToken = accessToken, RefreshToken = refreshToken });
         }
 
         [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpGet("RemoveTokenPerUser")]
-        public async Task<IActionResult> RemoveTokenPerUser(AuthTokenRemoveRequest request)
+        [HttpPut("InvalidateUserTokens/{id}")]
+        public async Task<IActionResult> InvalidateUserTokens(long id)
         {
-            var result = await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.UserToken, request.TokenId, request.UserId.ToString());
-            return Ok(result);
-        }
-
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpGet("RemoveAllTokensPerUser/{id}")]
-        public async Task<IActionResult> RemoveAllTokensPerUser(long id)
-        {
-            var result = await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.UserToken, id.ToString());
+            var result = await _tokenService.InvalidateUserTokens(id, Constants.ReasonsOfRevoke.AdminRequestedInvalidationOfUserTokens);
             return Ok(result);
         }
     }

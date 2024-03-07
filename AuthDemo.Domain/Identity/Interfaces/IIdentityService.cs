@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
 
 namespace AuthDemo.Domain.Identity.Interfaces
 {

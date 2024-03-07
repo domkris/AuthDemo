@@ -3,10 +3,7 @@
     public interface IUnitOfWork : IDisposable
     {
         IChoresRepository Chores { get; }
-
+        ITokensRepository Tokens { get; }
         Task<int> SaveAsync();
-
-        // int Save();
-
     }
 }

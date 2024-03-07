@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 {
-    public class AuthUserEmailChangeRequest
+    public class AuthEmailChangeRequest
     {
         [Required]
         public required long UserId { get; set; }

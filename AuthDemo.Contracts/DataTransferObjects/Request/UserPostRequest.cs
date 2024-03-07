@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AuthDemo.Contracts.DataTransferObjects.Request
 { 
-    public class AuthUserCreateRequest
+    public class UserPostRequest
     {
         [Required]
         public required string FirstName { get; set; }

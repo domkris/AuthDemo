@@ -21,6 +21,7 @@ namespace AuthDemo.Infrastructure
         }
     
         public DbSet<Chore> Chores { get; set; }
+        public DbSet<Token> Tokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

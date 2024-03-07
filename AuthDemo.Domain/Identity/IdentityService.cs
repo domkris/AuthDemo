@@ -1,7 +1,5 @@
 ﻿using AuthDemo.Domain.Identity.Interfaces;
-using AuthDemo.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace AuthDemo.Domain.Identity
 {
