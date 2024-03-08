@@ -3,6 +3,7 @@ using AuthDemo.Domain;
 using AuthDemo.Infrastructure;
 using AuthDemo.Security;
 using AuthDemo.Web.AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,14 +47,18 @@ builder.Services.AddSwaggerGen(setupAction =>
             Array.Empty<string>()
         }
     });
-
-  
-    //setupAction.OperationFilter<SwaggerRefreshTokenEndpointFilter>();
 });
 builder.Services.AddAutoMapper(typeof(AuthDemoMappingProfile));
 
 builder.Services.AddMemoryCache();
 var app = builder.Build();
+
+using (var serviceScope = app.Services.CreateScope())
+{
+
+    var dbContext = serviceScope.ServiceProvider.GetRequiredService<AuthDemoDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

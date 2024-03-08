@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  authdemo.web:
+    image: ${DOCKER_REGISTRY-}authdemoweb
+    build:
+      context: .
+      dockerfile: AuthDemo.Web/Dockerfile
+    volumes:
+      - ./.containers/authdemo:/var/lib/sqllite/data/
+    environment:
+      - ConnectionStrings__DockerConnectionSQLite=DataSource=/var/lib/sqllite/data/authdemo.db
+    depends_on:
+      authdemo.db-postgres:
+        condition: service_started
+      authdemo.redis:
+        condition: service_started
+  authdemo.redis:
+    image: redis
+    container_name: AuthDemo.Redis
+    ports:
+      - "6379:6379"
+    restart: always
+  authdemo.db-postgres:
+    image: postgres:latest
+    container_name: AuthDemo.DB-Postgres
+    environment:
+      - POSTGRES_DB=AuthDemo
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/authdemo:/var/lib/postgres/data/
+    ports:
+     - "5432:5432"
+    
+  

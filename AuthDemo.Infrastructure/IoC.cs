@@ -8,10 +8,23 @@ namespace AuthDemo.Infrastructure
     {
         public static void RegisterInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            string? env = Environment.GetEnvironmentVariable("DOCKER_COMPOSE");
+
             // Register DbContext with Dependency Injection
             // See https://docs.microsoft.com/en-us/ef/core/dbcontext-configuration/#using-dbcontext-with-dependency-injection
-            services.AddDbContext<AuthDemoDbContext>(options =>
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
+            if (env == "true")
+            {
+              
+                services.AddDbContext<AuthDemoDbContext>(options =>
+                    options.UseNpgsql(configuration.GetConnectionString("DockerConnectionPostgres")));
+
+            }
+            else
+            {
+                services.AddDbContext<AuthDemoDbContext>(options =>
+                    options.UseSqlite(configuration.GetConnectionString("DefaultConnectionPostgres")));
+            }
+
         }
     }
 }
