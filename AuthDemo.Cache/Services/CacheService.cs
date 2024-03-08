@@ -30,9 +30,9 @@ namespace AuthDemo.Cache.Services
             return await _cacheDb.StringSetAsync(key, JsonSerializer.Serialize(value));
         }
 
-        public async Task<bool> SetDataAsync<T>(string key, T value, DateTime expiration)
+        public async Task<bool> SetDataAsync<T>(string key, T value, DateTimeOffset expiration)
         {
-            var expirationTime = expiration - DateTime.UtcNow;
+            var expirationTime = expiration - DateTimeOffset.UtcNow;
             return await _cacheDb.StringSetAsync(key, JsonSerializer.Serialize(value), expirationTime);
         }
 
@@ -74,10 +74,10 @@ namespace AuthDemo.Cache.Services
 
         }
 
-        public async Task<bool> SetResourceDataPerObjectIdAsync<T>(CacheResources resource, string resourceId, T resourceValue, string objectId, DateTime expiration)
+        public async Task<bool> SetResourceDataPerObjectIdAsync<T>(CacheResources resource, string resourceId, T resourceValue, string objectId, DateTimeOffset expiration)
         {
             var newCacheKey = $"{App}:{resource.GetEnumName()}:{objectId}:{resourceId}";
-            var expirationTime = expiration - DateTime.UtcNow;
+            var expirationTime = expiration - DateTimeOffset.UtcNow;
             return await _cacheDb.StringSetAsync(newCacheKey, JsonSerializer.Serialize(resourceValue), expirationTime);
         }
 

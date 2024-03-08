@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Contracts", "AuthD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Infrastructure", "AuthDemo.Infrastructure\AuthDemo.Infrastructure.csproj", "{816C7F81-A452-4DB0-8C22-09D4993444E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Cache", "AuthDemo.Cache\AuthDemo.Cache.csproj", "{F0281690-8933-4FB8-A452-4D5DB821E487}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Cache", "AuthDemo.Cache\AuthDemo.Cache.csproj", "{F0281690-8933-4FB8-A452-4D5DB821E487}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemo.Domain", "AuthDemo.Domain\AuthDemo.Domain.csproj", "{0E4B3AD4-832E-4E5D-9603-45E504B1638B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthDemo.Domain", "AuthDemo.Domain\AuthDemo.Domain.csproj", "{0E4B3AD4-832E-4E5D-9603-45E504B1638B}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{30D5107D-EA39-493C-A13F-C5845EE83DB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{0E4B3AD4-832E-4E5D-9603-45E504B1638B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E4B3AD4-832E-4E5D-9603-45E504B1638B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E4B3AD4-832E-4E5D-9603-45E504B1638B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30D5107D-EA39-493C-A13F-C5845EE83DB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30D5107D-EA39-493C-A13F-C5845EE83DB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30D5107D-EA39-493C-A13F-C5845EE83DB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30D5107D-EA39-493C-A13F-C5845EE83DB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,7 +18,7 @@ namespace AuthDemo.Infrastructure.Entities
         public virtual User? CreatedBy { get; set; }
         public virtual long? UpdatedById { get; set; }
         public virtual User? UpdatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }

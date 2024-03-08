@@ -42,12 +42,12 @@ namespace AuthDemo.Infrastructure
             {
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).CreatedAt = DateTimeOffset.UtcNow;
                     ((IAuditableEntity)entityEntry.Entity).CreatedById = userId;
                 }
                 else
                 {
-                    ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTime.UtcNow;
+                    ((IAuditableEntity)entityEntry.Entity).UpdatedAt = DateTimeOffset.UtcNow;
                     ((IAuditableEntity)entityEntry.Entity).UpdatedById = userId;
                 }
             }
@@ -89,14 +89,15 @@ namespace AuthDemo.Infrastructure
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
+                .AddJsonFile("appsettings.migrations.json")
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<AuthDemoDbContext>();
-            optionsBuilder.UseSqlite(
-                configuration.GetConnectionString("DefaultConnection"),
-                builder => builder.MigrationsAssembly(typeof(AuthDemoDbContext).Assembly.FullName)
-                );
+
+            optionsBuilder.UseNpgsql(
+                 configuration.GetConnectionString("DockerConnectionPostgres"),
+                 builder => builder.MigrationsAssembly(typeof(AuthDemoDbContext).Assembly.FullName));
+
             return new AuthDemoDbContext(null, optionsBuilder.Options);
         }
     }

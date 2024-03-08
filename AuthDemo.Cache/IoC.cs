@@ -10,11 +10,23 @@ namespace AuthDemo.Cache
     {
         public static void RegisterCacheServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddSingleton<IConnectionMultiplexer>(provider =>
-            {
-                return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
-            });
+            string? env = Environment.GetEnvironmentVariable("DOCKER_COMPOSE");
 
+            if(env == "true")
+            {
+                services.AddSingleton<IConnectionMultiplexer>(provider =>
+                {
+                    return ConnectionMultiplexer.Connect(configuration.GetConnectionString("DockerRedis")!);
+                });
+            }
+            else
+            {
+                services.AddSingleton<IConnectionMultiplexer>(provider =>
+                {
+                    return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
+                });
+            }
+           
             services.AddSingleton<ICacheService, CacheService>();
             services.AddSingleton(provider =>
                provider.GetRequiredService<IConnectionMultiplexer>().GetDatabase());
