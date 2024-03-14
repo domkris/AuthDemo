@@ -53,6 +53,6 @@ Contributions to this repository are welcome!
 
 ## Contact
 
-For any inquiries or feedback, please contact [domagojkk@gmail.com](mailto:domagojkk@gmail.com).
+For any inquiries or feedback, please contact me at [domagojkk@gmail.com](mailto:domagojkk@gmail.com).
 
 
