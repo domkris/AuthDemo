@@ -22,6 +22,68 @@ namespace AuthDemo.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AuthDemo.Infrastructure.Audit.AuditLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Action")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("EntityId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("EntityType")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntityId");
+
+                    b.HasIndex("EntityType");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AuditLogs");
+                });
+
+            modelBuilder.Entity("AuthDemo.Infrastructure.Audit.AuditLogDetail", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AuditLogId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("NewValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Property")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuditLogId");
+
+                    b.ToTable("AuditLogDetails");
+                });
+
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Chore", b =>
                 {
                     b.Property<long>("Id")
@@ -280,7 +342,7 @@ namespace AuthDemo.Infrastructure.Migrations
                         {
                             Id = 1L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6aace28e-85a1-4a7b-8342-4d3fd8f06d94",
+                            ConcurrencyStamp = "97d46f05-dc14-44a9-a2e1-4b1fc7389880",
                             EmailConfirmed = false,
                             IsActive = false,
                             LockoutEnabled = false,
@@ -294,7 +356,7 @@ namespace AuthDemo.Infrastructure.Migrations
                         {
                             Id = 2L,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9fb636ce-9987-4495-a203-6bb2c37f4b90",
+                            ConcurrencyStamp = "8e99a220-ba7f-4f0c-a751-516227d0ad51",
                             CreatedById = 1L,
                             Email = "admin@authdemo.com",
                             EmailConfirmed = true,
@@ -302,10 +364,10 @@ namespace AuthDemo.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@AUTHDEMO.COM",
                             NormalizedUserName = "ADMINAUTHDEMO",
-                            PasswordHash = "AQAAAAIAAYagAAAAEM6hGsV+rt64KpjsmtL4XGH8Rqi0uDaGbwl7hvZ83/v5AlFemaWWet6dsVY77buQDA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELfinxCxqtOmzVdiPHFyVe3tLZ0QO+pO44IwnIU3+cBzp+qH0M3FKbW+rqFxBp2kWg==",
                             PhoneNumberConfirmed = false,
                             RoleId = 1L,
-                            SecurityStamp = "LZ7YEBSXZCOWD2PC45DKH47VX7AJTINO",
+                            SecurityStamp = "ZKBIXVHYVZMF3EA5YH7NSAKQT5LCCRZ7",
                             TwoFactorEnabled = false,
                             UserName = "adminauthdemo"
                         });
@@ -412,6 +474,26 @@ namespace AuthDemo.Infrastructure.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AuthDemo.Infrastructure.Audit.AuditLog", b =>
+                {
+                    b.HasOne("AuthDemo.Infrastructure.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("AuthDemo.Infrastructure.Audit.AuditLogDetail", b =>
+                {
+                    b.HasOne("AuthDemo.Infrastructure.Audit.AuditLog", "AuditLog")
+                        .WithMany("AuditLogDetails")
+                        .HasForeignKey("AuditLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AuditLog");
                 });
 
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Chore", b =>
@@ -530,6 +612,11 @@ namespace AuthDemo.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AuthDemo.Infrastructure.Audit.AuditLog", b =>
+                {
+                    b.Navigation("AuditLogDetails");
                 });
 
             modelBuilder.Entity("AuthDemo.Infrastructure.Entities.Role", b =>

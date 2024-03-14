@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuthDemo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial_v10 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -188,6 +188,28 @@ namespace AuthDemo.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLogs",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<long>(type: "bigint", nullable: true),
+                    EntityType = table.Column<string>(type: "text", nullable: true),
+                    EntityId = table.Column<long>(type: "bigint", nullable: true),
+                    Action = table.Column<string>(type: "text", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuditLogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Chores",
                 columns: table => new
                 {
@@ -261,6 +283,28 @@ namespace AuthDemo.Infrastructure.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AuditLogDetails",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AuditLogId = table.Column<long>(type: "bigint", nullable: false),
+                    Property = table.Column<string>(type: "text", nullable: false),
+                    OldValue = table.Column<string>(type: "text", nullable: true),
+                    NewValue = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLogDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuditLogDetails_AuditLogs_AuditLogId",
+                        column: x => x.AuditLogId,
+                        principalTable: "AuditLogs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -276,8 +320,8 @@ namespace AuthDemo.Infrastructure.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "CreatedById", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RoleId", "SecurityStamp", "TwoFactorEnabled", "UpdatedAt", "UpdatedById", "UserName" },
                 values: new object[,]
                 {
-                    { 1L, 0, "6aace28e-85a1-4a7b-8342-4d3fd8f06d94", null, null, null, false, null, false, null, false, null, null, "SYSTEM", null, null, false, 1L, null, false, null, null, "system" },
-                    { 2L, 0, "9fb636ce-9987-4495-a203-6bb2c37f4b90", null, 1L, "admin@authdemo.com", true, null, true, null, false, null, "ADMIN@AUTHDEMO.COM", "ADMINAUTHDEMO", "AQAAAAIAAYagAAAAEM6hGsV+rt64KpjsmtL4XGH8Rqi0uDaGbwl7hvZ83/v5AlFemaWWet6dsVY77buQDA==", null, false, 1L, "LZ7YEBSXZCOWD2PC45DKH47VX7AJTINO", false, null, null, "adminauthdemo" }
+                    { 1L, 0, "97d46f05-dc14-44a9-a2e1-4b1fc7389880", null, null, null, false, null, false, null, false, null, null, "SYSTEM", null, null, false, 1L, null, false, null, null, "system" },
+                    { 2L, 0, "8e99a220-ba7f-4f0c-a751-516227d0ad51", null, 1L, "admin@authdemo.com", true, null, true, null, false, null, "ADMIN@AUTHDEMO.COM", "ADMINAUTHDEMO", "AQAAAAIAAYagAAAAELfinxCxqtOmzVdiPHFyVe3tLZ0QO+pO44IwnIU3+cBzp+qH0M3FKbW+rqFxBp2kWg==", null, false, 1L, "ZKBIXVHYVZMF3EA5YH7NSAKQT5LCCRZ7", false, null, null, "adminauthdemo" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -339,6 +383,26 @@ namespace AuthDemo.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AuditLogDetails_AuditLogId",
+                table: "AuditLogDetails",
+                column: "AuditLogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditLogs_EntityId",
+                table: "AuditLogs",
+                column: "EntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditLogs_EntityType",
+                table: "AuditLogs",
+                column: "EntityType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditLogs_UserId",
+                table: "AuditLogs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Chores_CreatedById",
                 table: "Chores",
                 column: "CreatedById");
@@ -393,10 +457,16 @@ namespace AuthDemo.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "AuditLogDetails");
+
+            migrationBuilder.DropTable(
                 name: "Chores");
 
             migrationBuilder.DropTable(
                 name: "Tokens");
+
+            migrationBuilder.DropTable(
+                name: "AuditLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
