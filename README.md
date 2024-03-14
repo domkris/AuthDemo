@@ -15,6 +15,8 @@ This repository aims to provide an understanding of how to integrate authorizati
 - **Policies**: Define and enforce custom authorization policies to control access to resources based on various conditions and requirements.
 - **Access and Refresh Tokens**: Implement access and refresh token functionality to manage user sessions securely and efficiently.
 - **Redis Integration**: Utilize Redis for storing and managing access tokens, improving scalability and session management.
+- **Entity Framework**: Utilize Entity Framework for data access and database management in your .NET Web API application.
+- **PostgreSQL Integration**: Integrate PostgreSQL as the database backend for your .NET Web API application.
 - **Audit Log**: Implement auditing functionality to track and log user actions such as additions, deletions, and modifications, enhancing transparency and accountability.
 - **Docker Integration**: Utilize Docker for containerization to ensure consistent deployment across different environments.
 - **Docker Compose**: Leverage Docker Compose for orchestrating multi-container Docker applications, simplifying the deployment process.
