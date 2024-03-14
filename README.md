@@ -11,7 +11,13 @@ This repository aims to provide an understanding of how to integrate authorizati
 - **JWT Authentication**: Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
 - **Role-based Authorization**: Explore role-based access control (RBAC) to restrict access to specific endpoints based on user roles.
 - **Bearer Token Authorization**: Understand how to use bearer tokens to authenticate and authorize requests.
-- **Secure Password Storage**: Securely storing passwords using hashing algorithms.
+- **Claims**: Learn how to utilize claims to carry additional information about the user within JWTs, enabling fine-grained authorization and personalization.
+- **Policies**: Define and enforce custom authorization policies to control access to resources based on various conditions and requirements.
+- **Access and Refresh Tokens**: Implement access and refresh token functionality to manage user sessions securely and efficiently.
+- **Redis Integration**: Utilize Redis for storing and managing access tokens, improving scalability and session management.
+- **Audit Log**: Implement auditing functionality to track and log user actions such as additions, deletions, and modifications, enhancing transparency and accountability.
+- **Docker Integration**: Utilize Docker for containerization to ensure consistent deployment across different environments.
+- **Docker Compose**: Leverage Docker Compose for orchestrating multi-container Docker applications, simplifying the deployment process.
 - **Demo Application**: Get hands-on experience with a fully functional .NET Web API application showcasing these concepts.
 
 ## Getting Started
