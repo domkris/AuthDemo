@@ -58,3 +58,13 @@ Contributions to this repository are welcome!
 For any inquiries or feedback, please contact me at [domagojkk@gmail.com](mailto:domagojkk@gmail.com).
 
 
+
+<hr>
+
+**Successfull Login Request**
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequest.gif?raw=true)
+
+<hr>
+
+
