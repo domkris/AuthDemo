@@ -91,14 +91,14 @@ To get started with the tutorial, follow these steps:
     send expired Access Token and current valid unexpired<br>
     Refresh Token to refreshToken api endpoint.<br><br>
 - **Step 3: Server creates Refresh token, stores it to DB**<br>
-    Refresh Token is in format of random string<br>
-    and is valid for 7 days and can only be used once.<br>
-    Refresh Token is stored indefinitely, it is persistent.<br>
-    On each use of Refresh Token user gets a new refresh Token<br>
-    that is valid for another 7 days meaning that<br>
-    if user has been inactive for 7 days user will  have to<br>
-    login by using email and password.<br>
-    After all steps are successfull, Server sends<br>
+    Refresh Token is in format of random string
+    and is valid for 7 days and can only be used once.
+    Refresh Token is stored indefinitely, it is persistent.
+    On each use of Refresh Token user gets a new refresh Token
+    that is valid for another 7 days meaning that
+    if user has been inactive for 7 days user will  have to
+    login by using email and password.
+    After all steps are successfull, Server sends
     Refresh and Access Tokens to the user.<br><br>
   
 </td>
