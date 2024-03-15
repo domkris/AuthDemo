@@ -610,7 +610,7 @@ To get started with the tutorial, follow these steps:
 </td>
 <td> 
     
-**api/Chores/Chores**
+**api/Chores**
 
 </td>
 <td colspan="2">
@@ -667,7 +667,7 @@ To get started with the tutorial, follow these steps:
 </td>
 <td> 
     
-**api/Chores/Chores**
+**api/Chores**
 
 </td>
 <td colspan="2">
@@ -733,89 +733,195 @@ To get started with the tutorial, follow these steps:
 
 
 
-
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**GET**
+
+</td>
+<td> 
+    
+**api/Chores/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+- **Step 1: User send request to get specific chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB to fecth specific chore**<br><br>     
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+**Request**
 
-### api/Chores/Chores/{id}
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 401 Unauthorized**
 
-<td>
 </td>
-
 </tr>
 </table>
+<br>
+<br>
+
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**PUT**
+
+</td>
+<td> 
+    
+**api/Chores/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=AdminOrManager** 
+
+</td>
 </tr>
 <tr>
-  
-<td>
-    
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+<td rowspan="1" colspan="2"> 
 
-### api/Chores/Chores/{id}
+  
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to update a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
+- **Step 4: Server sends request to DB to update a chore**<br><br>     
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
-  "title": "string",
-  "description": "string"
+  "title": "Chore 1A",
+  "description": "Chore 1A Desc"
 }
 ```
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 400 Bad Request on Model Validation**
 
-<td>
+**Response 401 Unauthorized**
+
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**DELETE**
+
+</td>
+<td> 
+    
+**api/Chores/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=AdminOrManager** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to delete a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
+- **Step 4: Server sends request to DB to delete a chore**<br><br>     
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/DELETE_XS.png?raw=true)
+**Request**
 
-### api/Chores/Chores/{id}
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 401 Unauthorized**
 
-<td>
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
+
 
 
 <table>
