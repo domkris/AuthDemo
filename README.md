@@ -26,23 +26,95 @@ This repository aims to provide an understanding of how to integrate authorizati
 
 To get started with the tutorial, follow these steps:
 
-1. **Clone the Repository**: Clone this repository to your local machine using the following command: 
-git clone https://github.com/domkris/AuthDemo.git
+1. **Clone the Repository**: Clone this repository to your local machine using the following command:
 
-2. **Navigate to the Project Directory**: Change your directory to the cloned repository:
+    ```powershell
+    git clone https://github.com/domkris/AuthDemo.git
 
-3. **Install Dependencies**: Install the required dependencies using NuGet Package Manager:
-dotnet restore
+4. **Navigate to the Project Directory**: Change your directory to the cloned repository:
 
-4. **Run the Application**: Start the AuthDemo.Web API application:
-dotnet run
+5. **Install Dependencies**: Install the required dependencies using NuGet Package Manager:
+
+   ```powershell
+    dotnet restore
+   
+7. **Run the Application**: Start the AuthDemo.Web API application:
+   
+   ```powershell
+    dotnet run
+
+9. **Or Run Using Docker Compose**: Start the application using Docker Compose:
+    
+    ```powershell
+    docker-compose up
+
+11. **Explore the Tutorial**: Follow along with the tutorial provided in the repository to understand how authorization and authentication are implemented.
+
+## AuthDemo API Endpoints
+
+### POST api/Auth/Login
+
+<table>
+<tr>
+<th> Visualisation </th>
+<th> Request body </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)
+  
+</td>
+
+<td>
+
+```json
+{
+  "email": "user@example.com",
+  "password": "stringst"
+}
+```
+
+</td>
+<td>
+
+```json
+{
+  "accessToken": "****",
+  "refreshToken": "****"
+}
+```
+
+</td>
+</tr>
+</table>
+
+### (Auth): POST api/Auth/Logout
+### (Auth): POST api/Auth/LogoutAllSessions
+### (Auth): POST api/Auth/ChangePassword
+### (Auth): POST api/Auth/ChangeEmail
 
 
-5. **Or Run Using Docker Compose**: Start the application using Docker Compose:
-docker-compose up
+### (AuthTokens): POST api/AuthTokens/RefreshToken
+### (AuthTokens): PUT api/AuthTokens/InvalidateUserTokens/{id}
 
 
-6. **Explore the Tutorial**: Follow along with the tutorial provided in the repository to understand how authorization and authentication are implemented.
+### (Chores): GET api/Chores/Chores
+### (Chores): POST api/Chores/Chores
+### (Chores): GET api/Chores/Chores/{id}
+### (Chores): PUT api/Chores/Chores/{id}
+### (Chores): DELETE api/Chores/Chores/{id}
+### (Chores): PUT api/Chores/AssignUser
+### (Chores): PUT api/Chores/Finish/{id}
+### (Chores): PUT api/Chores/Approve/{id}
+
+### (Users): POST api/Users/ToggleUserActivation/{id}
+### (Users): GET api/Users
+### (Users): POST api/Users
+### (Users): GET api/Users/{id}
+<hr>
 
 ## Contributions
 
@@ -58,13 +130,5 @@ Contributions to this repository are welcome!
 For any inquiries or feedback, please contact me at [domagojkk@gmail.com](mailto:domagojkk@gmail.com).
 
 
-
-<hr>
-
-**Successfull Login Request**
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequest.gif?raw=true)
-
-<hr>
 
 
