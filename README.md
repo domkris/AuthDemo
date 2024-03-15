@@ -81,14 +81,14 @@ To get started with the tutorial, follow these steps:
 <td  colspan="2">
     
 - **Step 1: User sends login request** <br>
-    Server checks user's email and password.<br>
-    User can be locked out on 5 wrong login attempts.<br>
+    Server checks user's email and password.
+    User can be locked out on 5 wrong login attempts.
     If user credentials are correct go to step 2 and 3.<br><br>
 - **Step 2: Server Creates JWT Access Token, stores it in Redis**<br>
-    Access Token is in format of JWT Token and is valid and<br>
-    stored in Redis for 10 minutes and deleted on expire.<br>
-    To get a new Access Token without using log-in user will have to<br>
-    send expired Access Token and current valid unexpired<br>
+    Access Token is in format of JWT Token and is valid and
+    stored in Redis for 10 minutes and deleted on expire.
+    To get a new Access Token without using log-in user will have to
+    send expired Access Token and current valid unexpired
     Refresh Token to refreshToken api endpoint.<br><br>
 - **Step 3: Server creates Refresh token, stores it to DB**<br>
     Refresh Token is in format of random string
