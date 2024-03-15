@@ -63,12 +63,12 @@ To get started with the tutorial, follow these steps:
 </td>
 <td> 
     
-**api/Auth/Login** 
+**api/Auth/Login**
 
 </td>
 <td colspan="2">
     
-**Description** 
+**EndPoint Authorization: None/Anonymous** 
 
 </td>
 </tr>
@@ -84,13 +84,22 @@ To get started with the tutorial, follow these steps:
     Server checks user's email and password.<br>
     User can be locked out on 5 wrong login attempts.<br>
     If user credentials are correct go to step 2 and 3.<br><br>
-- **Step 2: Server creates Refresh token, stores it to DB**<br>
-    Refresh token is valid for 7 days and can only be used once.<br>
-    On each use of Refresh Token user gets a new refresh Token that is valid for another 7 days
-    meaning that if user has been inactive for 7 days user will  have to login by using email and password.<br><br>
-- **Step 3: Server Creates Access Token, stores it in Redis**<br>
-    After all steps are successfull, Server send refresh and access token to the user.<br>
-    Access Token is valid for 10 minutes. To get a new Access Token without using log in user will have to send expired access token and current Refresh Token to refreshToken api endpoint.<br>
+- **Step 2: Server Creates JWT Access Token, stores it in Redis**<br>
+    Access Token is in format of JWT Token and is valid and<br>
+    stored in Redis for 10 minutes and deleted on expire.<br>
+    To get a new Access Token without using log-in user will have to<br>
+    send expired Access Token and current valid unexpired<br>
+    Refresh Token to refreshToken api endpoint.<br><br>
+- **Step 3: Server creates Refresh token, stores it to DB**<br>
+    Refresh Token is in format of random string<br>
+    and is valid for 7 days and can only be used once.<br>
+    Refresh Token is stored indefinitely, it is persistent.<br>
+    On each use of Refresh Token user gets a new refresh Token<br>
+    that is valid for another 7 days meaning that<br>
+    if user has been inactive for 7 days user will  have to<br>
+    login by using email and password.<br>
+    After all steps are successfull, Server sends<br>
+    Refresh and Access Tokens to the user.<br><br>
   
 </td>
 </tr>
