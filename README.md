@@ -1005,65 +1005,133 @@ To get started with the tutorial, follow these steps:
 <br>
 
 
+<table>
+<tr>
+<td> 
+    
+**PUT**
+
+</td>
+<td> 
+    
+**api/Chores/Finish/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy, Custom Code Validation, User must be Admin or Manager otherwise can only finish Chore they were assigned to** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+
+  
+        
+</td>
+<td  colspan="2">
+
+- **Step 1: User send request to finish a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
+- **Step 4: Server sends request to DB to update a Chore**<br><br>     
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+
+</td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
+</td>
+<td colspan="1">
+    
+**Response 404 Not Found**<br>
+"Chore does not exists"
+    
+**Response 401 Unauthorized**
+
+**Response 403 Forbidden**
+
+</td>
+</tr>
+</table>
+<br>
+<br>
+
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**PUT**
+
+</td>
+<td> 
+    
+**api/Chores/Approve/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=AdminOrManager** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+- **Step 1: User send request to approve a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
+- **Step 4: Server sends request to DB to update a Chore**<br><br>     
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
-
-### api/Chores/Finish/{id}
-
-```json
-{
-  "choreId": 0,
-  "userId": 0
-}
-```
+**Request**
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 404 Not Found**<br>
+"Chore does not exists"
+    
+**Response 401 Unauthorized**
 
-<td>
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
 
-### (Chores): PUT api/Chores/Approve/{id}
-
-<table>
-<tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
-    
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
-
-### api/Chores/Approve/{id}
-
-</td>
-
-<td>
-</td>
-
-<td>
-</td>
-
-</tr>
-</table>
 
 
 <table>
