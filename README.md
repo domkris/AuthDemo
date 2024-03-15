@@ -52,23 +52,19 @@ To get started with the tutorial, follow these steps:
 
 ## AuthDemo API Endpoints
 
-### POST api/Auth/Login
-
 <table>
 <tr>
+<th> Request </th>
 <th> Visualisation </th>
-<th> Request body </th>
 <th> Response (SUCCESS 200 Ok) </th>
 </tr>
 <tr>
-  
-<td>
-  
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)
-  
-</td>
 
 <td>
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Auth/Login
 
 ```json
 {
@@ -78,6 +74,13 @@ To get started with the tutorial, follow these steps:
 ```
 
 </td>
+  
+<td>
+  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)
+  
+</td>
+
 <td>
 
 ```json
@@ -91,29 +94,556 @@ To get started with the tutorial, follow these steps:
 </tr>
 </table>
 
-### (Auth): POST api/Auth/Logout
-### (Auth): POST api/Auth/LogoutAllSessions
-### (Auth): POST api/Auth/ChangePassword
-### (Auth): POST api/Auth/ChangeEmail
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+
+<td>
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Auth/Logout
 
 
-### (AuthTokens): POST api/AuthTokens/RefreshToken
-### (AuthTokens): PUT api/AuthTokens/InvalidateUserTokens/{id}
+</td>
+  
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
 
 
-### (Chores): GET api/Chores/Chores
-### (Chores): POST api/Chores/Chores
-### (Chores): GET api/Chores/Chores/{id}
-### (Chores): PUT api/Chores/Chores/{id}
-### (Chores): DELETE api/Chores/Chores/{id}
-### (Chores): PUT api/Chores/AssignUser
-### (Chores): PUT api/Chores/Finish/{id}
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Auth/LogoutAllSessions
+  
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Auth/ChangePassword
+
+```json
+{
+  "userId": 0,
+  "currentPassword": "string",
+  "newPassword": "stringst",
+  "confirmNewPassword": "string"
+}
+```
+  
+</td>
+
+<td>
+
+
+</td>
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Auth/ChangeEmail
+
+```json
+{
+  "userId": 0,
+  "currentEmail": "user@example.com",
+  "newEmail": "user@example.com"
+}
+```
+  
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/AuthTokens/RefreshToken
+
+```json
+{
+  "accessToken": "string",
+  "refreshToken": "string"
+}
+```
+  
+</td>
+
+<td>
+</td>
+
+<td>
+
+```json
+{
+  "accessToken": "****",
+  "refreshToken": "****"
+}
+```
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/AuthTokens/InvalidateUserTokens/{id}
+
+
+  
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+
+### api/Chores/Chores
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Chores/Chores
+
+```json
+{
+  "title": "string",
+  "description": "string"
+}
+```
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+
+### api/Chores/Chores/{id}
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/Chores/Chores/{id}
+
+```json
+{
+  "title": "string",
+  "description": "string"
+}
+```
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/DELETE_XS.png?raw=true)
+
+### api/Chores/Chores/{id}
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/Chores/AssignUser
+
+```json
+{
+  "choreId": 0,
+  "userId": 0
+}
+```
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/Chores/Finish/{id}
+
+```json
+{
+  "choreId": 0,
+  "userId": 0
+}
+```
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
 ### (Chores): PUT api/Chores/Approve/{id}
 
-### (Users): POST api/Users/ToggleUserActivation/{id}
-### (Users): GET api/Users
-### (Users): POST api/Users
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/Chores/Approve/{id}
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
+
+### api/Users/ToggleUserActivation/{id}
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+
+### api/Users
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+### api/Users
+
+```json
+{
+  "firstName": "string",
+  "lastName": "string",
+  "email": "user@example.com",
+  "password": "stringst",
+  "confirmPassword": "string",
+  "role": 1
+}
+```
+
+```csharp
+
+// not a part of request
+public enum Role
+{
+    Administrator = 1,
+    Manager = 2,
+    Employee = 3
+}
+```
+
+</td>
+
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
 ### (Users): GET api/Users/{id}
+
+<table>
+<tr>
+<th> Request </th>
+<th> Visualisation </th>
+<th> Response (SUCCESS 200 Ok) </th>
+</tr>
+<tr>
+  
+<td>
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+
+### api/Users
+
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+</tr>
+</table>
+
+
 <hr>
 
 ## Contributions
