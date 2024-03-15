@@ -1131,74 +1131,179 @@ To get started with the tutorial, follow these steps:
 </table>
 <br>
 <br>
+<br>
 
+### Users
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**POST**
+
+</td>
+<td> 
+    
+**api/Users/ToggleUserActivation/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=Admin** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+- **Step 1: User send request to activate/deactivate a specific User** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+   Server cheks if User exists in DB, if it does go to Step 4. <br><br>
+- **Step 4: Server sends request to DB** <br>
+    Server sends a request to Activate or deactive User to DB. If user is Deactivated go to Step 5 and Step 6.<br><br>
+- **Step 5: Server sends request to Redis**<br>
+    Server sends request to Redis to expire/delete all Access Tokens of a deactivated user.<br><br>
+- **Step 6: Server sends request to DB**<br>
+    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of a deactivated user.<br><br>    
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
-
-### api/Users/ToggleUserActivation/{id}
+**Request**
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 404 Not Found**<br>
+"User does not exists"
+    
+**Response 401 Unauthorized**
 
-<td>
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**GET**
+
+</td>
+<td> 
+    
+**api/Users**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to get all Users** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB to fecth all Users**<br><br> 
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
-
-### api/Users
+**Request**
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 401 Unauthorized**
 
-<td>
 </td>
-
 </tr>
 </table>
+<br>
+<br>
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**POST**
+
+</td>
+<td> 
+    
+**api/Users**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=Admin** 
+
+</td>
 </tr>
 <tr>
-  
-<td>
-    
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+<td rowspan="1" colspan="2"> 
 
-### api/Users
+  
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to create a User** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB** <br>
+    Server checks from DB if another user with same email exists. If not go to Step 4. <br>
+- **Step 4: Server sends request to DB** <br>
+    Server sends request to DB to create a User. <br>
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
@@ -1223,44 +1328,89 @@ public enum Role
 ```
 
 </td>
-
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
 
-<td>
+**Response 400 Bad Request on Model Validation**
+
+**Response 400 Bad Request**<br>
+"User already exists"
+
+**Response 401 Unauthorized**
+
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
 
-### (Users): GET api/Users/{id}
+
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
+<td> 
+    
+**GET**
+
+</td>
+<td> 
+    
+**api/Users/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy** 
+
+</td>
 </tr>
 <tr>
+<td rowspan="1" colspan="2"> 
+
   
-<td>
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to get specific User** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB to fetch specific User**<br><br> 
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
-
-### api/Users
+**Request**
 
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
 </td>
+<td colspan="1">
+    
+**Response 401 Unauthorized**
 
-<td>
+**Response 404 Not Found**<br>
+"User does not exists"
+
 </td>
-
 </tr>
 </table>
-
+<br>
+<br>
+<br>
 
 <hr>
 
