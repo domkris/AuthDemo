@@ -8,7 +8,7 @@ This repository aims to provide an understanding of how to integrate authorizati
 
 ## Features
 
-- **JWT Authentication**: Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
+- **JWT Authentication**<br> Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
 - **Role-based Authorization**: Explore role-based access control (RBAC) to restrict access to specific endpoints based on user roles.
 - **Bearer Token Authorization with Claims**: Understand how to use bearer tokens to authenticate and authorize requests and learn how to utilize claims to carry additional information about the user within JWTs.
 - **Policies**: Define and enforce custom authorization policies to control access to resources based on various conditions and requirements.
