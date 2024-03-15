@@ -49,6 +49,9 @@ To get started with the tutorial, follow these steps:
     docker-compose up
 
 11. **Explore the Tutorial**: Follow along with the tutorial provided in the repository to understand how authorization and authentication are implemented.
+<br>
+<br>
+<br>
 
 ## AuthDemo API Endpoints
 
@@ -82,7 +85,7 @@ To get started with the tutorial, follow these steps:
     
 - **Step 1: User sends login request** <br>
     Server checks user's email and password.
-    User can be locked out on 5 wrong login attempts.
+    User can be locked out on 5 wrong login attempts for 5 min.
     If user credentials are correct go to step 2 and 3.<br><br>
 - **Step 2: Server Creates JWT Access Token, stores it in Redis**<br>
     Access Token is in format of JWT Token and is valid and
@@ -129,9 +132,11 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request:**
+**Response 400 Bad Request:**<br>
+"Invalid login attempt"
 
-"invalid login attempt"
+**Response 400 Bad Request:**<br>
+"Too many unsuccessful login attempts, your account is temporarily locked. Please try again in 5 minutes."
 
 </td>
 </tr>
@@ -176,13 +181,19 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="1">
     
-**Response 200 OK:**
-    
+**Response 200 OK:**<br>
+"Logout successful"   
+
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request:**
+**Response 400 Bad Request**<br>
+"Unable to logout"
 
+**Response 400 Bad Request**<br>
+"Invalid logout attempt"
+
+**Response 401 Unauthorized**
 
 </td>
 </tr>
@@ -232,8 +243,13 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request:**
+**Response 400 Bad Request**<br>
+"Unable to logout"
 
+**Response 400 Bad Request**<br>
+"Invalid logout attempt"
+
+**Response 401 Unauthorized**
 
 </td>
 </tr>
@@ -292,10 +308,14 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request:**
+**Response 400 Bad Request on Model Validation**
+
+**Response 400 Bad Request:**<br>
 "User does not exist"
 
 **Response 403 Forbidden**
+
+**Response 401 Unauthorized**
 
 </td>
 </tr>
@@ -306,17 +326,36 @@ To get started with the tutorial, follow these steps:
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
-### api/Auth/ChangeEmail
+</td>
+<td> 
+    
+**api/Auth/ChangeEmail**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy, Custom Code Validation: User is Admin or changing own email** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
@@ -325,31 +364,71 @@ To get started with the tutorial, follow these steps:
   "newEmail": "user@example.com"
 }
 ```
-  
+    
 </td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
+    
 </td>
+<td colspan="1">
+    
+**Response 400 Bad Request on Model Validation**
+    
+**Response 400 Bad Request:**<br>
+"User does not exist"
 
-<td>
+**Response 400 Bad Request:**<br>
+"Wrong current user email"
+
+**Response 400 Bad Request:**<br>
+"Choose another new email"
+
+**Response 403 Forbidden**
+
+**Response 401 Unauthorized**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
+<br>
+
+### AuthTokens
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
-### api/AuthTokens/RefreshToken
+</td>
+<td> 
+    
+**api/AuthTokens/RefreshToken**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: None/Anonymous** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
@@ -357,13 +436,11 @@ To get started with the tutorial, follow these steps:
   "refreshToken": "string"
 }
 ```
-  
+    
 </td>
-
-<td>
-</td>
-
-<td>
+<td colspan="1">
+    
+**Response 200 OK**
 
 ```json
 {
@@ -371,37 +448,77 @@ To get started with the tutorial, follow these steps:
   "refreshToken": "****"
 }
 ```
+    
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request on Model Validation**
+
+**Response 401 Unauthorized:**<br>
+"Invalid tokens"
 
 </td>
 </tr>
 </table>
+<br>
+<br>
+
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/PUT_XS.png?raw=true)
 
-### api/AuthTokens/InvalidateUserTokens/{id}
-
-
-  
 </td>
+<td> 
+    
+**api/AuthTokens/InvalidateUserTokens/{id}**
 
-<td>
 </td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=Admin, User is Admin** 
 
-<td>
 </td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
 
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+
+</td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**<br>
+"User does not exist"
+
+**Response 403 Forbidden**
+
+**Response 401 Unauthorized**
+
+</td>
 </tr>
 </table>
+<br>
+<br>
+
+
 
 <table>
 <tr>
