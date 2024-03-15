@@ -61,7 +61,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST** 
 
 </td>
 <td> 
@@ -87,13 +87,13 @@ To get started with the tutorial, follow these steps:
     Server checks user's email and password.
     User can be locked out on 5 wrong login attempts for 5 min.
     If user credentials are correct go to step 2 and 3.<br><br>
-- **Step 2: Server Creates JWT Access Token, stores it in Redis**<br>
+- **Step 2: Server Creates JWT Access Token, sends it to Redis**<br>
     Access Token is in format of JWT Token and is valid and
     stored in Redis for 10 minutes and deleted on expire.
     To get a new Access Token without using log-in user will have to
     send expired Access Token and current valid unexpired
     Refresh Token to refreshToken api endpoint.<br><br>
-- **Step 3: Server creates Refresh token, stores it to DB**<br>
+- **Step 3: Server creates Refresh token, sends it to DB**<br>
     Refresh Token is in format of random string
     and is valid for 7 days and can only be used once.
     Refresh Token is stored indefinitely, it is persistent.
@@ -149,7 +149,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -166,19 +166,26 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+
         
 </td>
 <td  colspan="2">
     
 - **Step 1: User sends logout request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid go to step 2 and 3.<br><br>
-- **Step 2: Server checkes for JWT Access Token from HTTP header in Redis**<br>
-    Server sends request to Redis to expire/delete specific Access Token.<br><br>
-- **Step 3: Server get Refresh Token from DB**<br>
+    If that token and claims are valid go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to Redis to get Access Token**<br>
+    Server sends request to Redis to Access Token of a current logged in user. Go to Step 4 and Step 5.<br><br>
+- **Step 4: Servers gets Refresh Token from DB**<br>
     JWT Access Token contains RefreshToken Id.
-    If Refresh Token is found in DB from that Id Server will update Refresh Token to revoked.<br><br>
+    If Refresh Token is found in DB from that Id Server will update Refresh Token to revoked (Step 6).<br><br>
+- **Step 5: Server sends request to Redis**<br>
+    Server sends request to Redis to expire/delete fetched Access Token of a current logged in user.<br><br>
+- **Step 6: Server sends request to DB**<br>
+    Server sends request to DB to revoke fetched Refresh Token of current logged in user.<br><br>    
       
 
 </td>
@@ -216,7 +223,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -233,17 +240,20 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+
         
 </td>
 <td  colspan="2">
 
 - **Step 1: User sends logout all sessions request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid go to step 2 and 3.<br><br>
-- **Step 2: Server checkes for JWT Access Token from HTTP header in Redis**<br>
+    If that token and claims are valid go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3 and Step 4,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to Redis**<br>
     Server sends request to Redis to expire/delete all Access Tokens of a current logged in user.<br><br>
-- **Step 3: Server get Refresh Token from DB**<br>
+- **Step 4: Server sends request to DB**<br>
     Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>    
 
 </td>
@@ -281,7 +291,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -298,18 +308,22 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+
         
 </td>
 <td  colspan="2">
     
 - **Step 1: User sends change password request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body Server will update the user's password and go to step 2 and 3.<br><br>
-- **Step 2: Server checkes for JWT Access Token from HTTP header in Redis**<br>
+    If that token and claims are valid as well as request body go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3.<br><br>
+- **Step 3: Server sends request to update user.** <br>
+    Server sends request to DB to update user. Go to Step 4 and 5.<br><br>
+- **Step 4: Server sends request to Redis**<br>
     Server sends request to Redis to expire/delete all Access Tokens of a current logged in user.<br><br>
-- **Step 3: Server get Refresh Token from DB**<br>
-    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>    
+- **Step 5: Server sends request to DB**<br>
+    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>      
 
 </td>
 </tr>
@@ -355,7 +369,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -372,7 +386,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+
         
 </td>
 <td  colspan="2">
@@ -380,11 +394,17 @@ To get started with the tutorial, follow these steps:
     
 - **Step 1: User sends change email request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body and new and old email Server will update the user's email and go to step 2 and 3.<br><br>
-- **Step 2: Server checkes for JWT Access Token from HTTP header in Redis**<br>
+    If that token and claims are valid as well as request body go to Step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3.<br><br>
+- **Step 3: Server does validation of user's data from DB** <br>
+    Server sends request to DB to validate if new email is used and if current email is correct. Go to Step 4.<br><br>
+- **Step 4: Server sends request to DB**<br>
+    Server sends request to DB to update user's email. Go to Step 5 and Step 6.<br><br>
+- **Step 5: Server sends request to Redis**<br>
     Server sends request to Redis to expire/delete all Access Tokens of a current logged in user.<br><br>
-- **Step 3: Server get Refresh Token from DB**<br>
-    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>    
+- **Step 6: Server sends request to DB**<br>
+    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>     
     
 
 </td>
@@ -438,7 +458,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -523,7 +543,7 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="2">
     
-**EndPoint Authorization: Authorized<br>Policy=Admin, User is Admin** 
+**EndPoint Authorization: Authorized<br>Policy=Admin** 
 
 </td>
 </tr>
@@ -568,66 +588,146 @@ To get started with the tutorial, follow these steps:
 </table>
 <br>
 <br>
+<br>
 
+### Chores
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
 
-### api/Chores/Chores
+</td>
+<td> 
+    
+**api/Chores/Chores**
 
 </td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy** 
 
-<td>
 </td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
 
-<td>
+  
+        
 </td>
+<td  colspan="2">
 
+ - **Step 1: User send request to get all chores** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token..<br><br>
+- **Step 3: Server sends request to DB to fecth all chores**<br><br>       
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+
+</td>
+<td colspan="1">
+    
+**Response 200 OK**
+ 
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**<br>
+"User does not exist"
+
+**Response 401 Unauthorized**
+
+</td>
 </tr>
 </table>
+<br>
+<br>
 
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
-### api/Chores/Chores
+</td>
+<td> 
+    
+**api/Chores/Chores**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=AdminOrManager** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+
+  
+        
+</td>
+<td  colspan="2">
+
+ - **Step 1: User send request to create a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
+- **Step 2: Server sends request to Redis to check if Access Token exists**<br>
+    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB to create a chore**<br><br>       
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
-  "title": "string",
-  "description": "string"
+  "title": "Chore 1",
+  "description": "Chore 1 Desc"
 }
 ```
 
 </td>
+<td colspan="1">
+    
+**Response 201 Created**
 
-<td>
+```json
+{
+  "id": "3"
+}
+```
+ 
 </td>
+<td colspan="1">
+    
+**Response 400 Bad Request on Model Validation**
 
-<td>
+**Response 401 Unauthorized**
+
+**Response 403 Forbidden**
+
 </td>
-
 </tr>
 </table>
+<br>
+<br>
+
+
+
 
 <table>
 <tr>
