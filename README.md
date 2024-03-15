@@ -52,6 +52,9 @@ To get started with the tutorial, follow these steps:
 
 ## AuthDemo API Endpoints
 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
 <table>
 <tr>
 <th> Request </th>
@@ -61,9 +64,6 @@ To get started with the tutorial, follow these steps:
 <tr>
 
 <td>
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
-
 ### api/Auth/Login
 
 ```json
