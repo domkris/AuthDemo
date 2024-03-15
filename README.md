@@ -54,13 +54,6 @@ To get started with the tutorial, follow these steps:
 
 ### Auth
 
-
-| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true) | **api/Auth/Login**  |
-|-------------|----------------------|
-| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)    | Description <br> User that was already created gets | 
-
-
-
 <table>
 <tr>
 <td> 
@@ -68,9 +61,14 @@ To get started with the tutorial, follow these steps:
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
 </td>
-<td colspan="2"> 
+<td> 
     
 **api/Auth/Login** 
+
+</td>
+<td colspan="2">
+    
+**Description** 
 
 </td>
 </tr>
@@ -80,55 +78,38 @@ To get started with the tutorial, follow these steps:
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
         
 </td>
-</tr>
-<tr>
-<td>Data B2</td>
-<td>Data C2</td>
-</tr>
-<tr>
-<td>Data B3</td>
-<td>Data C3</td>
-</tr>
-</table>
-
-
-| Header 1 | Header 2 | Header 3 |
-|----------|----------|----------|
-| Data A1  | Data B1  | Data C1  |
-| Data A2  | Data B2  | Data C2  |
-| Data A3  | Data B3  | Data C3  |
-|<th colspan="10"> Subheader 1 </th>|
-| Subdata A1 | Subdata B1 | Subdata C1 |
-| Subdata A2 | Subdata B2 | Subdata C2 |
-| Subdata A3 | Subdata B3 | Subdata C3 |
-
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)
-
-<table>
-<tr>
-<th> Request </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-
-<td>
+<td  colspan="2">
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+- **Step 1: User sends login request** <br>
+    Server checks user's email and password.<br>
+    User can be locked out on 5 wrong login attempts.<br>
+    If user credentials are correct go to step 2 and 3.<br><br>
+- **Step 2: Server creates Refresh token, stores it to DB**<br>
+    Refresh token is valid for 7 days and can only be used once.<br>
+    On each use of Refresh Token user gets a new refresh Token that is valid for another 7 days
+    meaning that if user has been inactive for 7 days user will  have to login by using email and password.<br><br>
+- **Step 3: Server Creates Access Token, stores it in Redis**<br>
+    After all steps are successfull, Server send refresh and access token to the user.<br>
+    Access Token is valid for 10 minutes. To get a new Access Token without using log in user will have to send expired access token and current Refresh Token to refreshToken api endpoint.<br>
+  
+</td>
+</tr>
+<tr>
+<td colspan="2">
     
-### api/Auth/Login
-
+**Request**
+    
 ```json
 {
-  "email": "user@example.com",
-  "password": "****"
+  "email": "admin@authdemo.com",
+  "password": "12345678"
 }
 ```
-
 </td>
-
-<td>
-
+<td colspan="1">
+    
+**Response 200 OK:**
+    
 ```json
 {
   "accessToken": "****",
@@ -137,15 +118,18 @@ To get started with the tutorial, follow these steps:
 ```
 
 </td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**
+
+"invalid login attempt"
+
+</td>
 </tr>
 </table>
+<br>
+<br>
 
-
-| HTTP Method | Description          |
-|-------------|----------------------|
-| POST   | Create new resource  |
-| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)      | Update existing resource |
-| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)    | Delete existing resource |
 
 
 <table>
