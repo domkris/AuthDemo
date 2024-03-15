@@ -140,72 +140,140 @@ To get started with the tutorial, follow these steps:
 <br>
 
 
-
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-
-<td>
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
-
-### api/Auth/Logout
-
-
-</td>
-  
-<td>
-</td>
-
-<td>
-</td>
-
-</tr>
-</table>
-
-
-<table>
-<tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
-### api/Auth/LogoutAllSessions
-  
 </td>
+<td> 
+    
+**api/Auth/Logout**
 
-<td>
 </td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized** 
 
-<td>
 </td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
 
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+    
+</td>
+<td colspan="1">
+    
+**Response 200 OK:**
+    
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**
+
+
+</td>
 </tr>
 </table>
+<br>
+<br>
+
 
 <table>
 <tr>
-<th> Request </th>
-<th> Visualisation </th>
-<th> Response (SUCCESS 200 Ok) </th>
-</tr>
-<tr>
-  
-<td>
+<td> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
 
-### api/Auth/ChangePassword
+</td>
+<td> 
+    
+**api/Auth/LogoutAllSessions**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+    
+</td>
+<td colspan="1">
+    
+**Response 200 OK:**
+    
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**
+
+
+</td>
+</tr>
+</table>
+<br>
+<br>
+
+
+<table>
+<tr>
+<td> 
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+</td>
+<td> 
+    
+**api/Auth/ChangePassword**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>NoPolicy, Custom Code Validation: User is Admin or changing own password** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
+        
+</td>
+<td  colspan="2">
+    
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
 
 ```json
 {
@@ -215,18 +283,26 @@ To get started with the tutorial, follow these steps:
   "confirmNewPassword": "string"
 }
 ```
-  
+    
 </td>
+<td colspan="1">
+    
+**Response 200 OK**
+    
+</td>
+<td colspan="1">
+    
+**Response 400 Bad Request:**
+"User does not exist"
 
-<td>
-
+**Response 403 Forbidden**
 
 </td>
-<td>
-</td>
-
 </tr>
 </table>
+<br>
+<br>
+
 
 <table>
 <tr>
