@@ -59,31 +59,36 @@ To get started with the tutorial, follow these steps:
 |-------------|----------------------|
 | ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)    | Description <br> User that was already created gets | 
 
-```json
-{
-  "email": "user@example.com",
-  "password": "****"
-}
-```
+
 
 <table>
-  <tr>
-    <td rowspan="3"> 
-        
+<tr>
+<td> 
+    
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+
+</td>
+<td colspan="2"> 
+    
+**api/Auth/Login** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+    
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
         
 </td>
-<td>Data B1</td>
-<td>Data C1</td>
-  </tr>
-  <tr>
-    <td>Data B2</td>
-    <td>Data C2</td>
-  </tr>
-  <tr>
-    <td>Data B3</td>
-    <td>Data C3</td>
-  </tr>
+</tr>
+<tr>
+<td>Data B2</td>
+<td>Data C2</td>
+</tr>
+<tr>
+<td>Data B3</td>
+<td>Data C3</td>
+</tr>
 </table>
 
 
