@@ -605,7 +605,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/GET_XS.png?raw=true)
+**GET**
 
 </td>
 <td> 
@@ -629,10 +629,10 @@ To get started with the tutorial, follow these steps:
 
  - **Step 1: User send request to get all chores** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists**<br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
     We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token..<br><br>
-- **Step 3: Server sends request to DB to fecth all chores**<br><br>       
+    if not then user has to use Refresh Token to get new Access Token.<br><br>
+- **Step 3: Server sends request to DB to fecth all chores**<br><br> 
 
 </td>
 </tr>
@@ -649,9 +649,6 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request:**<br>
-"User does not exist"
-
 **Response 401 Unauthorized**
 
 </td>
@@ -665,7 +662,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)
+**POST**
 
 </td>
 <td> 
@@ -689,7 +686,7 @@ To get started with the tutorial, follow these steps:
 
  - **Step 1: User send request to create a chore** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists**<br>
+- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
     We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
     if not then user has to use Refresh Token to get new Access Token.<br><br>
 - **Step 3: Server sends request to DB to create a chore**<br><br>       
