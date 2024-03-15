@@ -52,6 +52,52 @@ To get started with the tutorial, follow these steps:
 
 ## AuthDemo API Endpoints
 
+### Auth
+
+
+| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true) | **api/Auth/Login**  |
+|-------------|----------------------|
+| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)    | Description <br> User that was already created gets | 
+
+```json
+{
+  "email": "user@example.com",
+  "password": "****"
+}
+```
+
+<table>
+  <tr>
+    <td rowspan="3"> 
+        
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+        
+</td>
+<td>Data B1</td>
+<td>Data C1</td>
+  </tr>
+  <tr>
+    <td>Data B2</td>
+    <td>Data C2</td>
+  </tr>
+  <tr>
+    <td>Data B3</td>
+    <td>Data C3</td>
+  </tr>
+</table>
+
+
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Data A1  | Data B1  | Data C1  |
+| Data A2  | Data B2  | Data C2  |
+| Data A3  | Data B3  | Data C3  |
+|<th colspan="10"> Subheader 1 </th>|
+| Subdata A1 | Subdata B1 | Subdata C1 |
+| Subdata A2 | Subdata B2 | Subdata C2 |
+| Subdata A3 | Subdata B3 | Subdata C3 |
+
+
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)
 
 <table>
