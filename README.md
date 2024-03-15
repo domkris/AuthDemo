@@ -57,7 +57,6 @@ To get started with the tutorial, follow these steps:
 <table>
 <tr>
 <th> Request </th>
-<th> Visualisation </th>
 <th> Response (SUCCESS 200 Ok) </th>
 </tr>
 <tr>
@@ -71,13 +70,10 @@ To get started with the tutorial, follow these steps:
 ```json
 {
   "email": "user@example.com",
-  "password": "stringst"
+  "password": "****"
 }
 ```
 
-</td>
-  
-<td>
 </td>
 
 <td>
@@ -92,6 +88,13 @@ To get started with the tutorial, follow these steps:
 </td>
 </tr>
 </table>
+
+
+| HTTP Method | Description          |
+|-------------|----------------------|
+| POST   | Create new resource  |
+| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/POST_XS.png?raw=true)      | Update existing resource |
+| ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true)    | Delete existing resource |
 
 
 <table>
