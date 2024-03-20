@@ -78,6 +78,8 @@ To get started with the tutorial, follow these steps:
 <td rowspan="1" colspan="2"> 
     
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_ResponseStep4A.gif?raw=true) 
         
 </td>
 <td  colspan="2">
@@ -101,7 +103,9 @@ To get started with the tutorial, follow these steps:
     if user has been inactive for 7 days user will  have to
     login by using email and password.
     After all steps are successfull, Server sends
-    Refresh and Access Tokens to the user.<br><br>
+    Refresh and Access Tokens to the user.<br>
+
+- **Step 4: Server sends Refresh and Access Tokens to the user.**<br><br>
   
 </td>
 </tr>
