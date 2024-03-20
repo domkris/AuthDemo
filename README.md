@@ -169,8 +169,10 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LogoutSteps123A.gif?raw=true) 
 
-        
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LogoutSteps456.gif?raw=true) 
+
 </td>
 <td  colspan="2">
     
@@ -180,11 +182,11 @@ To get started with the tutorial, follow these steps:
 - **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
     We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
     if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to Redis to get Access Token**<br>
-    Server sends request to Redis to Access Token of a current logged in user. Go to Step 4 and Step 5.<br><br>
+- **Step 3: Server gets Access Token from Redis**<br>
+    Server sends request to Redis to Access Token of a current logged in user. Go to Step 4.<br><br>
 - **Step 4: Servers gets Refresh Token from DB**<br>
     JWT Access Token contains RefreshToken Id.
-    If Refresh Token is found in DB from that Id Server will update Refresh Token to revoked (Step 6).<br><br>
+    If Refresh Token is found in DB from that Id Server will update Refresh Token to revoked. Go to Step 5 and 6.<br><br>
 - **Step 5: Server sends request to Redis**<br>
     Server sends request to Redis to expire/delete fetched Access Token of a current logged in user.<br><br>
 - **Step 6: Server sends request to DB**<br>
