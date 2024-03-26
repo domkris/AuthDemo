@@ -178,14 +178,14 @@ To get started with the tutorial, follow these steps:
 <td  colspan="2">
     
 - **Step 1: User sends logout request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to step 2 and 3.<br><br>
 
-- **Step 2: Invalidation of Current Access Token**<br>
+- **Step 2: Invalidation of User's Current Access Token**<br>
     Server sends request to Redis to invalidate Access Token of a current logged-in user.
     Redis deletes Access Token and sends response to the Server. <br><br>
     
-- **Step 3: Invalidation of Current Refresh Token from DB**<br>
+- **Step 3: Invalidation of User's Current Refresh Token from DB**<br>
     Server sends request to DB to invalidate Refresh Token.
     JWT Access Token contains RefreshToken Id that is used to found RefreshToken in DB.
     DB will update that Refresh Token to revoked and send response to the Server.<br><br>
@@ -238,32 +238,33 @@ To get started with the tutorial, follow these steps:
 </td>
 <td colspan="2">
     
-**EndPoint Authorization: Authorized<br>NoPolicy, Claims contain current user to logout** 
+**EndPoint Authorization: Authorized<br>NoPolicy, Claims contain current user to logout from all sessions** 
 
 </td>
 </tr>
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LogoutSteps123A.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout123.gif?raw=true) 
 
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LogoutSteps45.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true) 
 
 </td>
 <td  colspan="2">
 
 - **Step 1: User sends logout all sessions request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server gets Access Token from Redis**<br>
-    Server sends request to Redis to Access Token of a current logged in user. Go to Step 4 and 5.<br><br>
-- **Step 4: Server sends request to Redis**<br>
-    Server sends request to Redis to expire/delete all Access Tokens of a current logged in user.<br><br>
-- **Step 5: Server sends request to DB**<br>
-    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>    
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to step 2 and 3.<br><br>
+    
+- **Step 2: Invalidation of All User's Access Tokens**<br>
+    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends response to the Server. <br><br>
+    
+- **Step 3: Invalidation of All User's Refresh Tokens**<br>
+    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+
+- **Step 4: Server sends response to the User**<br>
 
 </td>
 </tr>
