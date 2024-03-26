@@ -1413,17 +1413,28 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Response3.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to get all Users** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB to fecth all Users**<br><br> 
+- **Step 1: User send request to get all Users** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Fetching all Users**<br>
+    Server sends request to DB to get all Users. DB sends data to the Server.<br><br>
+
+- **Step 3: Server sends response to the User**<br>   
 
 </td>
 </tr>
@@ -1560,17 +1571,28 @@ public enum Role
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Response3.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to get specific User** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB to fetch specific User**<br><br> 
+- **Step 1: User send request to get specific User** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Fetching specific User**<br>
+    Server sends request to DB to get specific User. DB sends data to the Server.<br><br>
+
+- **Step 3: Server sends response to the User**<br>    
 
 </td>
 </tr>
