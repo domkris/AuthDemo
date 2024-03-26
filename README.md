@@ -52,7 +52,12 @@ To get started with the tutorial, follow these steps:
 <br>
 <br>
 
-## AuthDemo API Endpoints
+
+## AuthDemo API Endpoints Summary
+
+...
+
+## AuthDemo API Endpoints Details
 
 ### Auth
 
