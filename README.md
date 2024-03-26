@@ -133,6 +133,8 @@ To get started with the tutorial, follow these steps:
 
 </td>
 <td colspan="1">
+
+**Response 400 Bad Request on Model Validation**
     
 **Response 400 Bad Request:**<br>
 "Invalid login attempt"
