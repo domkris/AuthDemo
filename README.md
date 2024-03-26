@@ -57,16 +57,13 @@ To get started with the tutorial, follow these steps:
 
 | Endpoint                       | Description                           | Method |
 |-----------------------------------------------|---------------------------------------|--------|
-| **AUTH**                                      |                                       |        |
 | /api/auth/login                               | Login                                 | POST   |
 | /api/auth/logout                              | Logout                                | POST   |
 | /api/auth/logoutAllSessions                   | Logout from all Sessions              | POST   |
 | /api/auth/changePassword                      | Change User's password                | POST   |
 | /api/auth/changeEmail                         | Change User's email                   | POST   |
-| **AUTH TOKENS**                               |                                       |        |
 | /api/authTokens/refreshTokens                 | Request a new Access Token            | POST   |
 | /api/authTokens/invalidateUserTokens/{id}     | Invalidate all User's tokens          | POST   |
-| **CHORES**                                    |                                       |        |
 | /api/chores                                   | Get all chores                        | GET    | 
 | /api/chores                                   | Create new chore                      | POST   | 
 | /api/chores/{id}                              | Get specific chore                    | GET    | 
@@ -75,7 +72,6 @@ To get started with the tutorial, follow these steps:
 | /api/chores/assignUser                        | Assing User to chore                  | PUT    |
 | /api/chores/finish/{id}                       | Finish chore                          | PUT    | 
 | /api/chores/approve/{id}                      | Approve chore                         | PUT    | 
-| **USERS**                                     |                                       |        |
 | /api/users/toggleUserActivation/{id}          | Activate/Deactivate user              | POST   |
 | /api/users                                    | Create a user                         | POST   | 
 | /api/users                                    | Get all users                         | GET    | 
