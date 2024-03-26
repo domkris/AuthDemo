@@ -77,35 +77,34 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_LoginRequestA.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Login/Login123.gif?raw=true) 
 
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthDemo_ResponseStep4A.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Login/Login345.gif?raw=true) 
         
 </td>
 <td  colspan="2">
     
-- **Step 1: User sends login request** <br>
-    Server checks user's email and password.
+- **Step 1: User sends login request to Server** <br><br>
+
+- **Step 2: Server checks user's email and password.** <br>
+    Server sends a request to DB to check user's email and password.
     User can be locked out on 5 wrong login attempts for 5 min.
-    If user credentials are correct go to step 2 and 3.<br><br>
-- **Step 2: Server Creates JWT Access Token, sends it to Redis**<br>
+    Server gets response from DB and if user credentials are correct go to step 3 and 4.<br><br>
+  
+- **Step 3: Server sends request to Redis to create Access Token**<br>
     Access Token is in format of JWT Token and is valid and
-    stored in Redis for 10 minutes and deleted on expire.
-    To get a new Access Token without using log-in user will have to
-    send expired Access Token and current valid unexpired
-    Refresh Token to refreshToken api endpoint.<br><br>
-- **Step 3: Server creates Refresh token, sends it to DB**<br>
+    stored in Redis for 10 minutes and deleted on expire. Server gets newly created Access Token from Redis.<br><br>
+    
+- **Step 4: Server sends request to DB to create Refresh Token**<br>
     Refresh Token is in format of random string
     and is valid for 7 days and can only be used once.
     Refresh Token is stored indefinitely, it is persistent.
     On each use of Refresh Token user gets a new refresh Token
     that is valid for another 7 days meaning that
     if user has been inactive for 7 days user will  have to
-    login by using email and password.
-    After all steps are successfull, Server sends
-    Refresh and Access Tokens to the user.<br>
+    login by using email and password. Server gets newly created Refresh Token from DB.<br>
 
-- **Step 4: Server sends Refresh and Access Tokens to the user.**<br><br>
+- **Step 5: Server sends Refresh and Access Tokens to the user.**<br><br>
   
 </td>
 </tr>
