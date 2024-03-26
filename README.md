@@ -629,20 +629,35 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
- 
-        
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_RefreshToken/RefreshToken2.gif?raw=true)     
+
+   ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_InvalidateTokens/InvalidateTokens345.gif?raw=true)          
 </td>
 <td  colspan="2">
+    
+- **Step 1: User send request to invalidate all tokens of a specific user** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
- - **Step 1: User send request to invalidate all tokens of a specific user** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3.<br><br>
-- **Step 3: Server sends request to DB** <br>
-    Server checks if specifc user exists in DB. If user exists go to Step 4 ad Step 5.<br><br>
-- **Step 4: Server sends request to Redis to expire/delete all Access Tokens of a specific user**<br><br>
-- **Step 5: Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of a specific user**<br><br>       
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Server sends request to DB** <br>
+    Server checks if specifc user exists in DB. If user exists go to Step 3 and Step 4.<br><br>
+    
+- **Step 3: Invalidation of All User's Access Tokens**<br>
+    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends response to the Server. <br><br>
+    
+- **Step 4: Invalidation of All User's Refresh Tokens**<br>
+    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+
+- **Step 5: Server sends response to the User**<br>    
 
 </td>
 </tr>
