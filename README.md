@@ -635,7 +635,8 @@ To get started with the tutorial, follow these steps:
 
  ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_RefreshToken/RefreshToken2.gif?raw=true)     
 
-   ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_InvalidateTokens/InvalidateTokens345.gif?raw=true)          
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_InvalidateTokens/InvalidateTokens345.gif?raw=true)          
+
 </td>
 <td  colspan="2">
     
@@ -712,17 +713,28 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Response3.gif?raw=true)     
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to get all chores** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB to fecth all chores**<br><br> 
+- **Step 1: User send request to get all chores** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Fetching all Chores**<br>
+    Server sends request to DB to get all Chores. DB sends data to the Server.<br><br>
+
+- **Step 3: Server sends response to the User**<br>    
 
 </td>
 </tr>
@@ -769,17 +781,29 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Response3.gif?raw=true)       
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to create a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB to create a chore**<br><br>       
+
+- **Step 1: User send request to create a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Creation of Chore**<br>
+    Server sends request to DB to create a Chore. DB creates a Chore and sends data to the Server.<br><br>
+- **Step 3: Server sends response to the User**<br>
+   
 
 </td>
 </tr>
@@ -797,7 +821,7 @@ To get started with the tutorial, follow these steps:
 
 </td>
 <td colspan="1">
-    
+
 **Response 201 Created**
 
 ```json
@@ -844,17 +868,28 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Response3.gif?raw=true)  
         
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to get specific chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB to fecth specific chore**<br><br>     
+- **Step 1: User send request to get specific chore**<br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Fetching specific Chore**<br>
+    Server sends request to DB to get specific Chore. DB sends data to the Server.<br><br>
+
+- **Step 3: Server sends response to the User**<br>       
 
 </td>
 </tr>
@@ -904,19 +939,33 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to update a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
-- **Step 4: Server sends request to DB to update a chore**<br><br>     
+- **Step 1: User send request to update a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Validation of Chore**<br>
+    Server sends request to DB to check if Chore exists. DB sends respond to the Server.<br><br>
+
+- **Step 3: Update of Chore**<br>
+    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+    
+- **Step 4: Server sends response to the User**<br> 
 
 </td>
 </tr>
@@ -976,19 +1025,34 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)      
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to delete a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
-- **Step 4: Server sends request to DB to delete a chore**<br><br>     
+
+- **Step 1: User send request to delete a chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Validation of Chore**<br>
+    Server sends request to DB to check if Chore exists. DB sends respond to the Server.<br><br>
+
+- **Step 3: Deleteion of Chore**<br>
+    Server sends request to DB to delete a Chore. DB deletes a Chore and sends data to the Server.<br><br>
+    
+- **Step 4: Server sends response to the User**<br> 
 
 </td>
 </tr>
@@ -1040,19 +1104,30 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)  
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to assing a user to a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if User and Chore exist in DB, if they do go to Step 4. <br><br>
-- **Step 4: Server sends request to DB to update a Chore**<br><br>     
+- **Step 1: User send request to assing specific User to the Chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 2: Validation of User and Chore** <br>
+   Server sends requests to DB to check for User and Chore. Db sends response to the Server. <br><br>
+- **Step 3: Update of Chore**<br>
+    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+- **Step 4: Server sends response to the User**<br>   
 
 </td>
 </tr>
@@ -1116,19 +1191,30 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to finish a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
-- **Step 4: Server sends request to DB to update a Chore**<br><br>     
+- **Step 1: User send request to finish the Chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 2: Validation of Chore** <br>
+   Server sends requests to DB to check for Chore. Db sends response to the Server. <br><br>
+- **Step 3: Update of Chore**<br>
+    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+- **Step 4: Server sends response to the User**<br>   
 
 </td>
 </tr>
@@ -1180,19 +1266,30 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)     
         
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to approve a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if Chore exists in DB, if it does go to Step 4. <br><br>
-- **Step 4: Server sends request to DB to update a Chore**<br><br>     
+- **Step 1: User send request to approve the Chore** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 2: Validation of Chore** <br>
+   Server sends requests to DB to check for Chore. Db sends response to the Server. <br><br>
+- **Step 3: Update of Chore**<br>
+    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+- **Step 4: Server sends response to the User**<br>   
 
 </td>
 </tr>
