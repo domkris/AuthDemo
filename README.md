@@ -1344,24 +1344,40 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword456.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
 - **Step 1: User send request to activate/deactivate a specific User** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-   Server cheks if User exists in DB, if it does go to Step 4. <br><br>
-- **Step 4: Server sends request to DB** <br>
-    Server sends a request to Activate or deactive User to DB. If user is Deactivated go to Step 5 and Step 6.<br><br>
-- **Step 5: Server sends request to Redis**<br>
-    Server sends request to Redis to expire/delete all Access Tokens of a deactivated user.<br><br>
-- **Step 6: Server sends request to DB**<br>
-    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of a deactivated user.<br><br>    
+   Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
+    If that token and claims are valid as well as request body go to 1b midstep and then to step 2.<br><br>
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Check User and Request's Data**<br>
+    Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
+    
+- **Step 3: Server sends request to update user.** <br>
+    Server sends request to DB to update User. DB updates the User and sends response to the Server. Go to steps 4 and 5 is user is deactivated and then to Step 6.<br><br>
+    
+- **Step 4: Invalidation of All User's Access Tokens**<br>
+    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends response to the Server. Go to step 6. <br><br>
+    
+- **Step 5: Invalidation of All User's Refresh Tokens**<br>
+    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to revoked and send response to the Server. Go to step 6. <br><br>
+
+- **Step 6: Server sends response to the User**<br>
 
 </td>
 </tr>
@@ -1481,20 +1497,33 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
 
-  
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true)    
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+ ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true)   
         
 </td>
 <td  colspan="2">
 
- - **Step 1: User send request to create a User** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims, if all is good go to step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3,
-    if not then user has to use Refresh Token to get new Access Token.<br><br>
-- **Step 3: Server sends request to DB** <br>
-    Server checks from DB if another user with same email exists. If not go to Step 4. <br>
-- **Step 4: Server sends request to DB** <br>
-    Server sends request to DB to create a User. <br>
+- **Step 1: User send request to create a User** <br>
+    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Validation of New user email**<br>
+    Server sends request to DB to check if email is already used. DB sends respond to the Server.<br><br>
+
+- **Step 3: Creation of User**<br>
+    Server sends request to DB to create a User. DB sends data to the Server.<br><br>
+    
+- **Step 4: Server sends response to the User**<br>   
 
 </td>
 </tr>
