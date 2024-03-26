@@ -428,25 +428,41 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword456.gif?raw=true) 
         
 </td>
 <td  colspan="2">
 
-    
 - **Step 1: User sends change email request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to Step 2.<br><br>
-- **Step 2: Server sends request to Redis to check if Access Token exists (Auth Handler)**<br>
-    We do this step to make sure that user's Access Token was not invalidated, if all is good go to Step 3.<br><br>
-- **Step 3: Server does validation of user's data from DB** <br>
-    Server sends request to DB to validate if new email is used and if current email is correct. Go to Step 4.<br><br>
-- **Step 4: Server sends request to DB**<br>
-    Server sends request to DB to update user's email. Go to Step 5 and Step 6.<br><br>
-- **Step 5: Server sends request to Redis**<br>
-    Server sends request to Redis to expire/delete all Access Tokens of a current logged in user.<br><br>
-- **Step 6: Server sends request to DB**<br>
-    Server sends request to DB to revoke all unrevoked and unexpired Refresh Tokens of current logged in user.<br><br>     
+    If that token and claims are valid as well as request body go to 1b midstep and then to step 2 and 3.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Check User and Request's Data**<br>
+    Server sends request to DB to check and validate if User exists, if new email is used and if current email in request body is correct. DB sends response to the Server.<br><br>
+
+- **Step 3: Server sends request to update user.** <br>
+    Server sends request to DB to update User's email. DB updates the User and sends response to the Server.<br><br>
+    
+- **Step 4: Invalidation of All User's Access Tokens**<br>
+    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends response to the Server. <br><br>
+    
+- **Step 5: Invalidation of All User's Refresh Tokens**<br>
+    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+
+- **Step 6: Server sends response to the User**<br>
     
 
 </td>
