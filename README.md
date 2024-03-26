@@ -104,7 +104,7 @@ To get started with the tutorial, follow these steps:
     if user has been inactive for 7 days user will  have to
     login by using email and password. Server gets newly created Refresh Token from DB.<br>
 
-- **Step 5: Server sends Refresh and Access Tokens to the user.**<br><br>
+- **Step 5: Server sends Refresh and Access Tokens to the User.**<br><br>
   
 </td>
 </tr>
