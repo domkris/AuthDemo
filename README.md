@@ -86,17 +86,17 @@ To get started with the tutorial, follow these steps:
     
 - **Step 1: User sends login request to Server** <br><br>
 
-- **Step 2: Server checks user's email and password.** <br>
+- **Step 2: Validation of user's email and password.** <br>
     Server sends a request to DB to check user's email and password.
     User can be locked out on 5 wrong login attempts for 5 min.
     Server gets response from DB and if user credentials are correct go to step 3 and 4.<br><br>
   
-- **Step 3: Server sends request to Redis to create Access Token**<br>
-    Access Token is in format of JWT Token and is valid and
+- **Step 3: Creation of Access Token**<br>
+    Server sends request to Redis to create Access Token. Access Token is in format of JWT Token and is valid and
     stored in Redis for 10 minutes and deleted on expire. Server gets newly created Access Token from Redis.<br><br>
     
-- **Step 4: Server sends request to DB to create Refresh Token**<br>
-    Refresh Token is in format of random string
+- **Step 4: Creation of Refresh Token**<br>
+    Server sends request to DB to create Refresh Token. Refresh Token is in format of random string
     and is valid for 7 days and can only be used once.
     Refresh Token is stored indefinitely, it is persistent.
     On each use of Refresh Token user gets a new refresh Token
