@@ -178,14 +178,16 @@ To get started with the tutorial, follow these steps:
 <td  colspan="2">
     
 - **Step 1: User sends logout request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token  and user's Claims in the Access Token.
+    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
     If Access Token and User's Claims are valid go to step 2 and 3.<br><br>
 
 - **Step 2: Invalidation of Current Access Token**<br>
-    Server sends request to Redis to invalidate Access Token of a current logged-in user. Redis deletes Access Token and sends response to the Server. <br><br>
+    Server sends request to Redis to invalidate Access Token of a current logged-in user.
+    Redis deletes Access Token and sends response to the Server. <br><br>
     
 - **Step 3: Invalidation of Current Refresh Token from DB**<br>
-    Server sends request to DB to invalidate Refresh Token. JWT Access Token contains RefreshToken Id that is used to found RefreshToken in DB.
+    Server sends request to DB to invalidate Refresh Token.
+    JWT Access Token contains RefreshToken Id that is used to found RefreshToken in DB.
     DB will update that Refresh Token to revoked and send response to the Server.<br><br>
 
 - **Step 4: Server sends response to the User**<br>
