@@ -170,7 +170,11 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout123.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/TokenInvalidation23.gif?raw=true) 
 
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true) 
 
@@ -179,7 +183,10 @@ To get started with the tutorial, follow these steps:
     
 - **Step 1: User sends logout request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to step 2 and 3.<br><br>
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2 and 3.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Invalidation of User's Current Access Token**<br>
     Server sends request to Redis to invalidate Access Token of a current logged-in user.
@@ -245,7 +252,11 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout123.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/TokenInvalidation23.gif?raw=true) 
 
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_Logout/Logout4.gif?raw=true) 
 
@@ -254,7 +265,10 @@ To get started with the tutorial, follow these steps:
 
 - **Step 1: User sends logout all sessions request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to step 2 and 3.<br><br>
+    If Access Token and User's Claims are valid go to 1b midstep and then to step 2 and 3.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
     
 - **Step 2: Invalidation of All User's Access Tokens**<br>
     Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
@@ -318,16 +332,26 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword12.gif?raw=true) 
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
 
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
-        
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword456.gif?raw=true) 
+       
 </td>
 <td  colspan="2">
     
 - **Step 1: User sends change password request** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to step 2.<br><br>
+    If that token and claims are valid as well as request body go to 1b midstep and then to step 2 and 3.<br><br>
+
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+    
 - **Step 2: Check User and Request's Data**<br>
     Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
 - **Step 3: Server sends request to update user.** <br>
