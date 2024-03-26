@@ -318,7 +318,7 @@ To get started with the tutorial, follow these steps:
 <tr>
 <td rowspan="1" colspan="2"> 
     
-
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword12.gif?raw=true) 
         
 </td>
 <td  colspan="2">
