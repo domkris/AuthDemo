@@ -53,11 +53,35 @@ To get started with the tutorial, follow these steps:
 <br>
 
 
-## AuthDemo API Endpoints Summary
+## API Endpoints
 
-...
+| Endpoint                       | Description                           | Method |
+|-----------------------------------------------|---------------------------------------|--------|
+| **AUTH**                                      |                                       |        |
+| /api/auth/login                               | Login                                 | POST   |
+| /api/auth/logout                              | Logout                                | POST   |
+| /api/auth/logoutAllSessions                   | Logout from all Sessions              | POST   |
+| /api/auth/changePassword                      | Change User's password                | POST   |
+| /api/auth/changeEmail                         | Change User's email                   | POST   |
+| **AUTH TOKENS**                               |                                       |        |
+| /api/authTokens/refreshTokens                 | Request a new Access Token            | POST   |
+| /api/authTokens/invalidateUserTokens/{id}     | Invalidate all User's tokens          | POST   |
+| **CHORES**                                    |                                       |        |
+| /api/chores                                   | Get all chores                        | GET    | 
+| /api/chores                                   | Create new chore                      | POST   | 
+| /api/chores/{id}                              | Get specific chore                    | GET    | 
+| /api/chores/{id}                              | Update specific chore                 | PUT    | 
+| /api/chores/{id}                              | Delete specific chore                 | DELETE | 
+| /api/chores/assignUser                        | Assing User to chore                  | PUT    |
+| /api/chores/finish/{id}                       | Finish chore                          | PUT    | 
+| /api/chores/approve/{id}                      | Approve chore                         | PUT    | 
+| **USERS**                                     |                                       |        |
+| /api/users/toggleUserActivation/{id}          | Activate/Deactivate user              | POST   |
+| /api/users                                    | Create a user                         | POST   | 
+| /api/users                                    | Get all users                         | GET    | 
+| /api/users/{id}                               | Get specific user                     | GET    | 
 
-## AuthDemo API Endpoints Details
+## API Endpoints Details
 
 ### Auth
 
