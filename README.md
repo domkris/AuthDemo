@@ -1925,6 +1925,7 @@ public enum Role
 | Global Error Handler  | Centralized error handling for improved error logging, standardized error responses, and user feedback.  |
 | Logging               | Incorporation of logging mechanisms for monitoring, debugging, and better visibility into application behavior. |
 | Database Concurrency  | Implementation of concurrency control mechanisms to prevent data inconsistency issues during concurrent access. |
+|Multi-Factor Authentication | Implementation of multi-factor authentication for enhanced security by requiring additional verification steps during login. |
 
 <br>
 <hr>
