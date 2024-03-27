@@ -69,41 +69,20 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 
 AuthDemo follows a structured architecture to ensure modularity, scalability, and maintainability. Here's a breakdown of the main components:
 
-### AuthDemo.Cache
+| Component         | Purpose                                                              | Functionality                                                                                                                                                             |
+|-------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AuthDemo.Cache    | Handles Redis JWT token caching.                                     | Responsible for caching JWT tokens in Redis for efficient session management and token validation.                                                                       |
+| AuthDemo.Contracts| Contains request and response objects used throughout the application.| Defines contracts and data transfer objects (DTOs) for communication between different layers of the application.                                                          |
+| AuthDemo.Domain   | Houses all repositories and services responsible for interacting with the database. | Implements business logic and data access operations.                                                                                                                     |
+| AuthDemo.Infrastructure | Centralizes entities, audits, entity type configurations, lookup data, and migration files. | Provides infrastructure-related functionalities such as database entity definitions, database migrations, and data seeding.                                           |
+| AuthDemo.Security | Manages security-related functionalities such as JWT settings, token creation, and authorization policies. | Defines JWT settings, generates JWT tokens, and enforces authorization policies based on user roles and claims.                                                         |
+| AuthDemo.Web      | Contains controllers and automapper configurations for handling HTTP requests and responses. | Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.                                                |
 
-- **Purpose**: Handles Redis JWT token caching.
-- **Functionality**: Responsible for caching JWT tokens in Redis for efficient session management and token validation.
-
-### AuthDemo.Contracts
-
-- **Purpose**: Contains request and response objects used throughout the application.
-- **Functionality**: Defines contracts and data transfer objects (DTOs) for communication between different layers of the application.
-
-### AuthDemo.Domain
-
-- **Purpose**: Houses all repositories and services responsible for interacting with the database.
-- **Functionality**: Implements business logic and data access operations.
-
-### AuthDemo.Infrastructure
-
-- **Purpose**: Centralizes entities, audits, entity type configurations, lookup data, and migration files.
-- **Functionality**: Provides infrastructure-related functionalities such as database entity definitions, database migrations, and data seeding.
-
-### AuthDemo.Security
-
-- **Purpose**: Manages security-related functionalities such as JWT settings, token creation, and authorization policies.
-- **Functionality**: Defines JWT settings, generates JWT tokens, and enforces authorization policies based on user roles and claims.
-
-### AuthDemo.Web
-
-- **Purpose**: Contains controllers and automapper configurations for handling HTTP requests and responses.
-- **Functionality**: Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.
 
 This architecture ensures separation of concerns, making the application modular and easy to maintain. Each component is responsible for a specific aspect of the application, promoting code organization and reusability.
 <br>
 <br>
 <br>
-
 
 ## API Endpoints
 
