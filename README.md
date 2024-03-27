@@ -10,6 +10,11 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 3. [Getting Started](#getting-started)
 4. [Architecture Overview](#architecture-overview)
 5. [API Endpoints](#api-endpoints)
+6. [API Endpoints Details](#api-endpoints-details)
+7. [Future Enhancements](#future-enhancements)
+8. [Contributions](#contributions)
+9. [Acknowledgments](#ccknowledgments)
+10. [Contact](#contact)
 
 ## Key Features
 
@@ -1913,7 +1918,7 @@ public enum Role
 <!--END GET /api/Users/{id} ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
-## To Implement in the Future
+## Future Enhancements
 
 | Feature               | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
