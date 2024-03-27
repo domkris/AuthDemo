@@ -1,12 +1,17 @@
-# .NET Web API Authorization and Authentication Demo & Tutorial
+# AuthDemo: .NET Web API Authorization and Authentication Demo & Tutorial
 
-Welcome to the .NET Web API Authorization and Authentication Demo & Tutorial! This repository serves as a guide and demonstration of implementing authorization and authentication mechanisms in a .NET Web API application.
+AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
 
-## Introduction
+## Key Features
 
-This repository aims to provide an understanding of how to integrate authorization and authentication features into .NET Web API projects.
+- **Secure Authentication**: Implement secure user login functionality.
+- **Role-Based Authorization**: Control user access based on roles (Administrator, Manager, Employee).
+- **Chore Management**: Manage chores efficiently with chore creation, updating, and deletion capabilities.
+- **Task Assignment**: Assign chores to users.
+- **Progress Tracking**: Monitor chore completion status to track task progress effectively.
 
-## Features
+
+## Technical Highlights
 
 - **JWT Authentication**<br> Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
 - **Role-based Authorization**<br> Explore role-based access control (RBAC) to restrict access to specific endpoints based on user roles.
@@ -47,7 +52,54 @@ To get started with the tutorial, follow these steps:
     ```powershell
     docker-compose up
 
-11. **Explore the Tutorial**: Follow along with the tutorial provided in the repository to understand how authorization and authentication are implemented.
+10. **Explore the Endpoints**: Once the application is running, you can explore the available API endpoints. Refer to the [API Endpoints](#api-endpoints) section below for a summary list of endpoints and their descriptions.
+
+11. **Interact with Endpoints**: Use tools like [Postman](https://www.postman.com/downloads/), [curl](https://curl.se/download.html) or build-in Swagger UI to interact with the endpoints. You can send requests to endpoints such as login, logout, create user, manage chores, etc.
+
+12. **Follow the Tutorial**: For a detailed understanding of how authorization and authentication are implemented within the application, refer to the tutorial provided in the repository. The tutorial offers step-by-step guidance and explanations on key concepts and functionalities.
+
+13. **Explore Endpoint Details**: Each endpoint has detailed explanations provided in the repository. Refer to the [API Endpoints Details](#api-endpoints-details) to understand the purpose and usage of each endpoint effectively.
+
+By following these steps, you'll be able to navigate through AuthDemo, understand its functionalities, and gain insights into implementing authorization and authentication mechanisms within your own .NET Web API applications.
+<br>
+<br>
+<br>
+
+## Architecture Overview
+
+AuthDemo follows a structured architecture to ensure modularity, scalability, and maintainability. Here's a breakdown of the main components:
+
+### AuthDemo.Cache
+
+- **Purpose**: Handles Redis JWT token caching.
+- **Functionality**: Responsible for caching JWT tokens in Redis for efficient session management and token validation.
+
+### AuthDemo.Contracts
+
+- **Purpose**: Contains request and response objects used throughout the application.
+- **Functionality**: Defines contracts and data transfer objects (DTOs) for communication between different layers of the application.
+
+### AuthDemo.Domain
+
+- **Purpose**: Houses all repositories and services responsible for interacting with the database.
+- **Functionality**: Implements business logic and data access operations.
+
+### AuthDemo.Infrastructure
+
+- **Purpose**: Centralizes entities, audits, entity type configurations, lookup data, and migration files.
+- **Functionality**: Provides infrastructure-related functionalities such as database entity definitions, database migrations, and data seeding.
+
+### AuthDemo.Security
+
+- **Purpose**: Manages security-related functionalities such as JWT settings, token creation, and authorization policies.
+- **Functionality**: Defines JWT settings, generates JWT tokens, and enforces authorization policies based on user roles and claims.
+
+### AuthDemo.Web
+
+- **Purpose**: Contains controllers and automapper configurations for handling HTTP requests and responses.
+- **Functionality**: Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.
+
+This architecture ensures separation of concerns, making the application modular and easy to maintain. Each component is responsible for a specific aspect of the application, promoting code organization and reusability.
 <br>
 <br>
 <br>
@@ -76,6 +128,10 @@ To get started with the tutorial, follow these steps:
 | /api/users                                    | Create a user                         | POST   | 
 | /api/users                                    | Get all users                         | GET    | 
 | /api/users/{id}                               | Get specific user                     | GET    | 
+
+<br>
+<br>
+<br>
 
 ## API Endpoints Details
 
