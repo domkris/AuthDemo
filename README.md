@@ -2,6 +2,11 @@
 
 AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
 
+
+## Table of Contents
+
+1. [Key Features](#key-features)
+
 ## Key Features
 
 - **Secure Authentication**: Implement secure user login functionality.
@@ -1904,6 +1909,13 @@ public enum Role
 <!--END GET /api/Users/{id} ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
+## To Implement in the Future
+
+| Feature               | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| Global Error Handler  | Centralized error handling for improved error logging, standardized error responses, and user feedback.  |
+| Logging               | Incorporation of logging mechanisms for monitoring, debugging, and better visibility into application behavior. |
+| Database Concurrency  | Implementation of concurrency control mechanisms to prevent data inconsistency issues during concurrent access. |
 
 <br>
 <hr>
