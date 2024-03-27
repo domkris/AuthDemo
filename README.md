@@ -8,6 +8,8 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 1. [Key Features](#key-features)
 2. [Technical Highlights](#technical-highlights)
 3. [Getting Started](#getting-started)
+4. [Architecture Overview](#architecture-overview)
+5. [API Endpoints](#api-endpoints)
 
 ## Key Features
 
