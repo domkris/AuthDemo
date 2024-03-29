@@ -2085,6 +2085,20 @@ public class AuditLogDetail: BaseEntity
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 
+<!--BEGIN ExcludeFromAuditLogAttribute ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **ExcludeFromAuditLogAttribute**
+```csharp
+[AttributeUsage(AttributeTargets.Class)]
+internal class ExcludeFromAuditLogAttribute : Attribute
+{
+}
+```
+ <br>
+<!--END ExcludeFromAuditLogAttribute ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
 ## Architecture Overview
 
 AuthDemo follows a structured architecture to ensure modularity, scalability, and maintainability. Here's a breakdown of the main components:
