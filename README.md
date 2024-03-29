@@ -9,12 +9,13 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 3. [Getting Started](#getting-started)
 4. [API Endpoints](#api-endpoints)
 5. [API Endpoints Details](#api-endpoints-details)
-6. [Architecture Overview](#architecture-overview)
-7. [Technical Highlights](#technical-highlights)
-8. [Future Enhancements](#future-enhancements)
-9. [Contributions](#contributions)
-10. [Acknowledgments](#acknowledgments)
-11. [Contact](#contact)
+6. [Data Objects](#data-objects)
+7. [Architecture Overview](#architecture-overview)
+8. [Technical Highlights](#technical-highlights)
+9. [Future Enhancements](#future-enhancements)
+10. [Contributions](#contributions)
+11. [Acknowledgments](#acknowledgments)
+12. [Contact](#contact)
 
 ## App Overview
 ### AuthDemo Capabilities
@@ -1899,6 +1900,188 @@ public enum Role
 </details>
  <br>
 <!--END GET /api/Users/{id} ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+## Data Objects 
+
+<!--BEGIN Refresh Token ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **Refresh Token** 
+
+```csharp
+using System;
+
+[ExcludeFromAuditLog]
+public class Token : BaseEntity, IAuditableEntity
+{
+    public long? UserId { get; set; }
+    public User? User { get; set; }
+    public string JwtAccessTokenId { get; set; } = default!;
+    public string RefreshToken { get; set; } = default!;
+    public DateTimeOffset Expires { get; set; }
+    public DateTimeOffset? Revoked { get; set; }
+    public string? ReplacedByRefreshToken { get; set; }
+    public string? ReasonRevoked { get; set; }
+    public bool IsExpired => DateTimeOffset.UtcNow >= Expires;
+    public bool IsRevoked => Revoked != null;
+    public bool IsActive => !IsRevoked && !IsExpired && !string.IsNullOrEmpty(ReplacedByRefreshToken);
+    public long? CreatedById { get; set; }
+    public User? CreatedBy { get; set; }
+    public long? UpdatedById { get; set; }
+    public User? UpdatedBy { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
+}
+```
+
+ <br>
+<!--END Refresh Token ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+
+
+<!--BEGIN User ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **User**
+
+```csharp
+public class User : IdentityUser<long>, IAuditableEntity
+{
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
+    [Required]
+    public long RoleId { get; set; }
+    public Role? Role { get; set; }
+
+    public bool IsActive { get; set; }
+    public long? CreatedById { get; set; }
+    public User? CreatedBy { get; set; }
+    public long? UpdatedById { get; set; }
+    public User? UpdatedBy { get; set; }
+    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
+}
+```
+
+ <br>
+<!--END User ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+
+<!--BEGIN Role ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **Role**
+
+```csharp
+public class Role : IdentityRole<long>
+{
+    public virtual ICollection<User>? Users { get; set; }
+}
+```
+ <br>
+<!--END Role ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+
+<!--BEGIN Chore ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **Chore**
+
+```csharp
+ public class Chore : BaseEntity, IAuditableEntity
+ {
+     [MinLength(3)]
+     public required string Title { get; set; }
+     public string? Description { get; set; }
+     public long? UserAssigneeId { get; set; }
+     public User? UserAssignee { get; set; }
+     public bool IsFinished { get; set; }
+     public bool IsApproved { get; set; }
+     public long? CreatedById { get; set; }
+     public User? CreatedBy { get; set; }
+     public long? UpdatedById { get; set; }
+     public User? UpdatedBy { get; set; }
+     public DateTimeOffset? CreatedAt { get; set; }
+     public DateTimeOffset? UpdatedAt { get; set; }
+ }
+```
+ <br>
+<!--END Chore ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+<!--BEGIN Base Entity ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **BaseEntity**
+```csharp
+ public abstract class BaseEntity
+ {
+     public long Id { get; set; }
+ }
+```
+ <br>
+<!--END Base Entity ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+<!--BEGIN IAuditableEntity ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **IAuditableEntity**
+```csharp
+  public interface IAuditableEntity
+  {
+      long? CreatedById { get; set; }
+      long? UpdatedById { get; set; }
+      DateTimeOffset? CreatedAt { get; set; }
+      DateTimeOffset? UpdatedAt { get; set; }
+
+  }
+```
+ <br>
+<!--END IAuditableEntity ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+<!--BEGIN AuditLog ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **AuditLog**
+```csharp
+ public class AuditLog : BaseEntity
+{
+    public long? UserId { get; set; }
+    public User? User { get; set; }
+    public string? EntityType { get; set; }
+    public long? EntityId { get; set; }
+    public string? Action { get; set; }
+    public required DateTimeOffset CreatedAt { get; set; }
+    public virtual ICollection<AuditLogDetail> AuditLogDetails { get; set; } = new HashSet<AuditLogDetail>();
+}
+```
+ <br>
+<!--END AuditLog ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+<!--BEGIN AuditLogDetail ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **AuditLogDetail**
+```csharp
+public class AuditLogDetail: BaseEntity
+{
+    public required long AuditLogId { get; set; }
+    public required AuditLog AuditLog { get; set; }
+    public required string Property { get; set; }
+    public string? OldValue { get; set; }
+    public string? NewValue { get; set; }
+}
+```
+ <br>
+<!--END AuditLogDetail ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 
