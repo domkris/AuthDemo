@@ -1905,6 +1905,19 @@ public enum Role
 
 ## Data Objects 
 
+
+<!--BEGIN Access Token ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **Access Token** 
+
+
+
+ <br>
+<!--END Access Token ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+
 <!--BEGIN Refresh Token ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 ### **Refresh Token** 
@@ -1934,6 +1947,13 @@ public class Token : BaseEntity, IAuditableEntity
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 ```
+Refresh token is long lived token used in authentication system to requets a new short lived access token when they expire.
+
+AuthDemo Refresh Token contains properties that desribe the User that RefreshToken is meant for (User), Id of Access Token (JwtAccessTokenId) that was generated with that RefreshToken.
+
+In AuthDemo on each new Access Token we also create a new Refresh Token, old Refresh Token's property (ReplacedByRefreshToken) is set to new random string (RefreshToken).
+
+Properties (Revoked), (ReasonRevoked) are used when User's role, email or password has been changed, we want user to login again. Property (Expires) defines a time and date when Refresh Token will expire.
 
  <br>
 <!--END Refresh Token ------------------------------------------------------------------------------------------------------------------------------->
