@@ -1,6 +1,6 @@
 # AuthDemo: .NET Web API Authorization and Authentication Demo & Tutorial
 
-AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
+AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application using JWT. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
 
 ## Table of Contents
 
@@ -1910,8 +1910,87 @@ public enum Role
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 ### **Access Token** 
 
+AuthDemo Access Token is JWT Token. JWT stands for JSON Web Token, open industry standard [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) method for representing claims securely between two parties.
 
+It is like a digital passport that helps Server recognize who you are (Authentication) and what are you allowed to do (Authorization).
 
+JWT Token contains Claims which are pieces of information about the user like: user role, user email, user Id, token expiration, etc.
+
+JWT Token has 3 components: Header, Payload and Signature.
+- Header typically consists of two parts: the type of token (JWT) and the signing algorithm being used, such as HMAC SHA256 or RSA.
+- Payload: The payload contains the claims. Claims are statements about an entity (typically, the user) and additional data.
+- Signature: The signature is created by combining the encoded header, encoded payload, and a secret (or private key) using the specified algorithm. This signature verifies that the sender of the JWT is who it says it is and ensures that the message wasn't changed along the way.
+- 
+Encoded JWT Token looks like:
+
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiYWRtaW5hdXRoZGVtbyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQGF1dGhkZW1vLmNvbSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWVpZGVudGlmaWVyIjoiMiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IjEiLCJqdGkiOiJmMzk1NzBiNy01NTZjLTQ2MzEtYWU4OS1iZGY5Y2EwMGRjNzQiLCJleHAiOjE3MTE3MTQyMTEsImlzcyI6IkF1dGhEZW1vIiwiYXVkIjoiQXV0aERlbW8ifQ.azNf-2S6s8aNNrorRxaqP5YTn9Kc1mZq03Xh2ITJ6IM"
+}
+```
+Decoded JWT Token looks like this (visit [JWT.io](https://jwt.io/) to decode):
+
+```json
+{
+  "header": {
+    "alg": "HS256",
+    "typ": "JWT"
+  },
+  "payload": {
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": "adminauthdemo",
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": "admin@authdemo.com",
+    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": "2",
+    "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "1",
+    "jti": "f39570b7-556c-4631-ae89-bdf9ca00dc74",
+    "exp": 1711714211,
+    "iss": "AuthDemo",
+    "aud": "AuthDemo"
+  },
+  "signature": "HMACSHA256(base64UrlEncode(header) + \".\" + base64UrlEncode(payload), your-256-bit-secret)"
+}
+```
+<br>
+Encoded/Decoded JWT Token is shared to the User, but on Server side we use Redis to store it as a key, value pair.
+Redis is in-memory data structure and it is not persistent if not configured to save data on a disk. In AuthDemo we do not care if our Redis instance crashes/loses data, it basically means that all Users will have to login again.
+<br><br>
+
+Run this command in your Redis terminal:
+ ```powershell
+    redis-cli KEYS '*'
+ ```
+
+You should get a list of KEYs, Key looks like:
+ ```powershell
+   "AuthDemo:User:2:AccessToken:b1e4f507-f642-4236-bca5-bb1fb6bb69e4"
+ ```
+
+Check this for naming Redis keys [How to name Redis Keys](https://riptutorial.com/redis/example/13636/key-naming-schemes).
+ <br>
+
+Value is serialized json that is structured like this:
+```csharp
+public sealed class UserAgentInfo
+{
+    public required string BrowserName { get; set; }
+    public required string Version { get; set; }
+    public required string Platform { get; set; }
+
+}
+
+public class AccessToken
+{
+    public required string UserId { get; set; }
+    public required string TokenId { get; set; }
+    public  string? RefreshToken { get; set; }
+    public required DateTime TokenExpiration { get; set; }
+    public required TimeSpan TokenDuration { get; set; }
+    public UserAgentInfo? UserAgentInfo { get; set; }
+}
+```
+Property **UserAgenInfo** contains info like browser and OS user is using to login.
+
+ 
+ <br>
  <br>
 <!--END Access Token ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -1947,13 +2026,21 @@ public class Token : BaseEntity, IAuditableEntity
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 ```
-Refresh token is long lived token used in authentication system to requets a new short lived access token when they expire.
+Refresh token is long lived random string token (on UI side, in DB it is stored as a Token class) used in authentication system to requets a new short lived access token when they expire.
 
-AuthDemo Refresh Token contains properties that desribe the User that RefreshToken is meant for (User), Id of Access Token (JwtAccessTokenId) that was generated with that RefreshToken.
+AuthDemo Refresh Token contains properties that desribe the User that RefreshToken is meant for **User**, Id of Access Token **JwtAccessTokenId** that was generated with that RefreshToken.
 
-In AuthDemo on each new Access Token we also create a new Refresh Token, old Refresh Token's property (ReplacedByRefreshToken) is set to new random string (RefreshToken).
+In AuthDemo on each new Access Token we also create a new Refresh Token, old Refresh Token's property **ReplacedByRefreshToken** is set to new random string **RefreshToken** therefore we know that that Refresh Token has been used.
 
-Properties (Revoked), (ReasonRevoked) are used when User's role, email or password has been changed, we want user to login again. Property (Expires) defines a time and date when Refresh Token will expire.
+Properties **Revoked**, **ReasonRevoked** are used when User's role, email or password has been changed, we want user to login again. Property **Expires** defines a time and date when Refresh Token will expire.
+
+Refresh Token is not sent to user as a whole Token class, we only send to the user property **RefreshToken** that looks like this:
+
+```json
+{
+  "refreshToken": "A84SdiKyDfPgy2zzg1vs9uXueGr101s5uPOEa1DdKvfIsei4LI0L8UBndZE0zL2Hc/jzjbwSiw2mbZHFLMSapQ=="
+}
+```
 
  <br>
 <!--END Refresh Token ------------------------------------------------------------------------------------------------------------------------------->
