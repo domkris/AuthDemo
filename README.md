@@ -10,12 +10,13 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 4. [API Endpoints](#api-endpoints)
 5. [API Endpoints Details](#api-endpoints-details)
 6. [Data Objects](#data-objects)
-7. [Architecture Overview](#architecture-overview)
-8. [Technical Highlights](#technical-highlights)
-9. [Future Enhancements](#future-enhancements)
-10. [Contributions](#contributions)
-11. [Acknowledgments](#acknowledgments)
-12. [Contact](#contact)
+7. [Auth Handler](#auth-handler)  --- TO DO
+8. [Architecture Overview](#architecture-overview)
+9. [Technical Highlights](#technical-highlights)
+10. [Future Enhancements](#future-enhancements)
+11. [Contributions](#contributions)
+12. [Acknowledgments](#acknowledgments)
+13. [Contact](#contact)
 
 ## App Overview
 ### AuthDemo Capabilities
