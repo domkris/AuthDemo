@@ -2155,7 +2155,7 @@ Contributions to this repository are welcome!
 - Gifs and images created using [Figma](https://www.figma.com) and [Motion UI Figma plugin](https://www.figma.com/community/plugin/889777319208467032/motion-ui-and-games-animation).
 - Guided by [Microsoft Security & Identity Documentation](https://learn.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-8.0).
 - Inspiration drawn from tutorials and resources on authorization and authentication in .NET Web API primarily provided by [Barry Dorrans](https://github.com/blowdart/idunno.Authentication) and [Mohamad Lawand](https://github.com/mohamadlawand087).
-- Special thanks to [Sandi Zeher](https://github.com/sandizeher) for helping me understand the concept of Refresh Tokens.
+- Special thanks to [Sandi Zeher](https://github.com/sandizeher) for helping me understand the concept of Refresh Tokens and explaining its practical application in real-life scenarios and projects.
 
 ## Contact
 
