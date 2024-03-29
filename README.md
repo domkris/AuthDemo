@@ -2,19 +2,35 @@
 
 AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
 
-
 ## Table of Contents
 
-1. [Key Features](#key-features)
-2. [Technical Highlights](#technical-highlights)
+1. [App Overview](#app-overview)
+2. [Key Features](#key-features)
 3. [Getting Started](#getting-started)
-4. [Architecture Overview](#architecture-overview)
-5. [API Endpoints](#api-endpoints)
-6. [API Endpoints Details](#api-endpoints-details)
-7. [Future Enhancements](#future-enhancements)
-8. [Contributions](#contributions)
-9. [Acknowledgments](#ccknowledgments)
-10. [Contact](#contact)
+4. [API Endpoints](#api-endpoints)
+5. [API Endpoints Details](#api-endpoints-details)
+6. [Architecture Overview](#architecture-overview)
+7. [Technical Highlights](#technical-highlights)
+8. [Future Enhancements](#future-enhancements)
+9. [Contributions](#contributions)
+10. [Acknowledgments](#acknowledgments)
+11. [Contact](#contact)
+
+## App Overview
+### AuthDemo Capabilities
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Roles.svg?raw=true) 
+
+
+| Capability            | Description                                                                                               |
+|--------------------|-----------------------------------------------------------------------------------------------------------|
+| Roles              | Users can be assigned one of three roles: Administrator, Manager, or Employee, each with different levels of access and permissions within the application.   |
+| Manage Chores      | All users can view all chores and mark them as finished. Managers and Admins can assign others or themselves to specific chores. Additionally, they have the authority to create, edit, and delete chores. |
+| User Management    | Users can view all users or specific user profiles. Admins can create new user accounts and activate or deactivate existing ones. Users can also modify their own email addresses and passwords, as well as those of other users if granted appropriate permissions. |
+| Approval Workflow  | Users can participate in the chore finish and approval process.                                            |
+| Token Management   | Users have the ability to invalidate their specific token, all of their tokens, or the tokens of other users if they have administrative privileges. This feature enhances security measures, allowing users to maintain control over access to their accounts. |
+
+<br>
 
 ## Key Features
 
@@ -24,21 +40,6 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 - **Task Assignment**: Assign chores to users.
 - **Progress Tracking**: Monitor chore completion status to track task progress effectively.
 
-
-## Technical Highlights
-
-- **JWT Authentication**<br> Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
-- **Role-based Authorization**<br> Explore role-based access control (RBAC) to restrict access to specific endpoints based on user roles.
-- **Bearer Token Authorization with Claims**<br> Understand how to use bearer tokens to authenticate and authorize requests and learn how to utilize claims to carry additional information about the user within JWTs.
-- **Policies**<br> Define and enforce custom authorization policies to control access to resources based on various conditions and requirements.
-- **Access and Refresh Tokens**<br> Implement access and refresh token functionality to manage user sessions securely and efficiently.
-- **Redis Integration**<br> Utilize Redis for storing and managing access tokens, improving scalability and session management.
-- **Entity Framework**<br> Utilize Entity Framework for data access and database management in your .NET Web API application.
-- **PostgreSQL Integration**<br> Integrate PostgreSQL as the database backend for your .NET Web API application.
-- **Audit Log**<br> Implement auditing functionality to track and log user actions such as additions, deletions, and modifications, enhancing transparency and accountability.
-- **Docker Integration**<br> Utilize Docker for containerization to ensure consistent deployment across different environments.
-- **Docker Compose**<br> Leverage Docker Compose for orchestrating multi-container Docker applications, simplifying the deployment process.
-- **Demo Application**<br> Get hands-on experience with a fully functional .NET Web API application showcasing these concepts.
 
 ## Getting Started
 
@@ -79,24 +80,6 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <br>
 <br>
 
-## Architecture Overview
-
-AuthDemo follows a structured architecture to ensure modularity, scalability, and maintainability. Here's a breakdown of the main components:
-
-| Component         | Purpose                                                              | Functionality                                                                                                                                                             |
-|-------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| AuthDemo.Cache    | Handles Redis JWT token caching.                                     | Responsible for caching JWT tokens in Redis for efficient session management and token validation.                                                                       |
-| AuthDemo.Contracts| Contains request and response objects used throughout the application.| Defines contracts and data transfer objects (DTOs) for communication between different layers of the application.                                                          |
-| AuthDemo.Domain   | Houses all repositories and services responsible for interacting with the database. | Implements business logic and data access operations.                                                                                                                     |
-| AuthDemo.Infrastructure | Centralizes entities, audits, entity type configurations, lookup data, and migration files. | Provides infrastructure-related functionalities such as database entity definitions, database migrations, and data seeding.                                           |
-| AuthDemo.Security | Manages security-related functionalities such as JWT settings, token creation, and authorization policies. | Defines JWT settings, generates JWT tokens, and enforces authorization policies based on user roles and claims.                                                         |
-| AuthDemo.Web      | Contains controllers and automapper configurations for handling HTTP requests and responses. | Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.                                                |
-
-
-This architecture ensures separation of concerns, making the application modular and easy to maintain. Each component is responsible for a specific aspect of the application, promoting code organization and reusability.
-<br>
-<br>
-<br>
 
 ## API Endpoints
 
@@ -1917,6 +1900,41 @@ public enum Role
  <br>
 <!--END GET /api/Users/{id} ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+
+
+## Architecture Overview
+
+AuthDemo follows a structured architecture to ensure modularity, scalability, and maintainability. Here's a breakdown of the main components:
+
+| Component         | Purpose                                                              | Functionality                                                                                                                                                             |
+|-------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| AuthDemo.Cache    | Handles Redis JWT token caching.                                     | Responsible for caching JWT tokens in Redis for efficient session management and token validation.                                                                       |
+| AuthDemo.Contracts| Contains request and response objects used throughout the application.| Defines contracts and data transfer objects (DTOs) for communication between different layers of the application.                                                          |
+| AuthDemo.Domain   | Houses all repositories and services responsible for interacting with the database. | Implements business logic and data access operations.                                                                                                                     |
+| AuthDemo.Infrastructure | Centralizes entities, audits, entity type configurations, lookup data, and migration files. | Provides infrastructure-related functionalities such as database entity definitions, database migrations, and data seeding.                                           |
+| AuthDemo.Security | Manages security-related functionalities such as JWT settings, token creation, and authorization policies. | Defines JWT settings, generates JWT tokens, and enforces authorization policies based on user roles and claims.                                                         |
+| AuthDemo.Web      | Contains controllers and automapper configurations for handling HTTP requests and responses. | Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.                                                |
+
+
+This architecture ensures separation of concerns, making the application modular and easy to maintain. Each component is responsible for a specific aspect of the application, promoting code organization and reusability.
+<br>
+<br>
+<br>
+
+## Technical Highlights
+
+- **JWT Authentication**<br> Learn how to implement JSON Web Token (JWT) authentication in .NET Web API application.
+- **Role-based Authorization**<br> Explore role-based access control (RBAC) to restrict access to specific endpoints based on user roles.
+- **Bearer Token Authorization with Claims**<br> Understand how to use bearer tokens to authenticate and authorize requests and learn how to utilize claims to carry additional information about the user within JWTs.
+- **Policies**<br> Define and enforce custom authorization policies to control access to resources based on various conditions and requirements.
+- **Access and Refresh Tokens**<br> Implement access and refresh token functionality to manage user sessions securely and efficiently.
+- **Redis Integration**<br> Utilize Redis for storing and managing access tokens, improving scalability and session management.
+- **Entity Framework**<br> Utilize Entity Framework for data access and database management in your .NET Web API application.
+- **PostgreSQL Integration**<br> Integrate PostgreSQL as the database backend for your .NET Web API application.
+- **Audit Log**<br> Implement auditing functionality to track and log user actions such as additions, deletions, and modifications, enhancing transparency and accountability.
+- **Docker Integration**<br> Utilize Docker for containerization to ensure consistent deployment across different environments.
+- **Docker Compose**<br> Leverage Docker Compose for orchestrating multi-container Docker applications, simplifying the deployment process.
+- **Demo Application**<br> Get hands-on experience with a fully functional .NET Web API application showcasing these concepts.
 
 ## Future Enhancements
 
