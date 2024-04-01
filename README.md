@@ -5,7 +5,7 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 ## Table of Contents
 
 1. [App Overview](#app-overview)
-2. [Key Features](#key-features)
+2. [ASP.NET Security and Identity](#asp.net-security-and-identity)
 3. [Getting Started](#getting-started)
 4. [API Endpoints](#api-endpoints)
 5. [API Endpoints Details](#api-endpoints-details)
@@ -26,22 +26,16 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 
 | Capability            | Description                                                                                               |
 |--------------------|-----------------------------------------------------------------------------------------------------------|
-| Roles              | Users can be assigned one of three roles: Administrator, Manager, or Employee, each with different levels of access and permissions within the application.   |
-| Manage Chores      | All users can view all chores and mark them as finished. Managers and Admins can assign others or themselves to specific chores. Additionally, they have the authority to create, edit, and delete chores. |
+| Secure Authentication | Users can securely log in to our application using JWT tokens. Upon successful authentication, a JWT token is issued, allowing users access to protected resources throughout their session.   |
+| Role-Based Authorization | Users can be assigned one of three roles: Administrator, Manager, or Employee, each with different levels of access and permissions within the application.   |
+| Chore Mangement      | All users can view all chores and mark them as finished. Managers and Admins can approve chore, assign others or themselves to specific chores. Additionally, they have the authority to create, edit, and delete chores. |
 | User Management    | Users can view all users or specific user profiles. Admins can create new user accounts and activate or deactivate existing ones. Users can also modify their own email addresses and passwords, as well as those of other users if granted appropriate permissions. |
-| Approval Workflow  | Users can participate in the chore finish and approval process.                                            |
 | Token Management   | Users have the ability to invalidate their specific token, all of their tokens, or the tokens of other users if they have administrative privileges. This feature enhances security measures, allowing users to maintain control over access to their accounts. |
+| Audit tracking | Audit tracking of entities is implemented to track changes made withing AuthDemo application   |
 
-<br>
+<br><br>
 
-## Key Features
-
-- **Secure Authentication**: Implement secure user login functionality.
-- **Role-Based Authorization**: Control user access based on roles (Administrator, Manager, Employee).
-- **Chore Management**: Manage chores efficiently with chore creation, updating, and deletion capabilities.
-- **Task Assignment**: Assign chores to users.
-- **Progress Tracking**: Monitor chore completion status to track task progress effectively.
-
+## ASP.NET Security and Identity
 
 ## Getting Started
 
