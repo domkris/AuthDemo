@@ -141,6 +141,13 @@ services.AddAuthentication(configureOptions =>
 
 ## ASP.NET Core Identity
 
+It is a ASP.NET CORE built-in authentication provider.<br>
+It is an API that supports user interface login functionality, manages users, user registration, passwords, profile data, roles, claims, tokens, email configuration and more.<br><br> 
+
+Functionalities:
+- UserManager class in ASP.NET Core Identity interacts with the AspNetUsers table to handle user-related operations like creation, deletion, updating profiles, etc.
+- The SignInManager class in ASP.NET Core Identity handles sign-in operations, including password checks, cookie management, etc.
+- RoleManager: ASP.NET Core Identity provides the RoleManager class to manage roles. This class is used to create, delete, and update roles and to assign roles to users.
 
 
 ## Getting Started
