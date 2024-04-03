@@ -110,24 +110,14 @@ services.AddAuthentication(configureOptions =>
 .AddJwtBearer(jwtBearerOptions =>
 {
 
-    jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
-    var tokenService = services.BuildServiceProvider().GetRequiredService<ITokenService>();
+    //...
     jwtBearerOptions.Events = new JwtBearerEvents
     {
        OnTokenValidated = context => {
            long.TryParse(context.Principal.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
            string? tokenId = context.Principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
 
-           if (string.IsNullOrEmpty(tokenId))
-           {
-               throw new SecurityTokenException($"Claim of type JwtRegisteredClaimNames.Jti is missing");
-           }
-
-           if(userId == 0) 
-           {                            
-               throw new SecurityTokenException($"Claim of type ClaimTypes.NameIdentifier is missing or has invalid value");
-           }
-
+           // ...
            var result = tokenService.IsAccessTokenCached(tokenId, userId).Result;
            if (!result)
            {
