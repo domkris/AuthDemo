@@ -39,7 +39,7 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 ## ASP.NET Authentication and Authorization
 
 **Authentication** is confirming a user's identity, a process in which user provides credentials that are compared to those stored in operating system, database, app or resource.<br><br> 
-**Authorization** is checking if authenticated user is allowed to access a resource.<br>
+**Authorization** is checking if authenticated user is allowed to access a resource.<br><br>
 
 ### Claims and Identity
 
@@ -53,6 +53,7 @@ Sometimes a user can have more identities, for example:<br>
 Let's say that you are a employee but also have a gym membership. One identity (*employee card*) is a set of claims that represent your employee identity which contains claims like: emplyeeId, role, status etc.<br> 
 Other identity (*gym card*) represent your gym identity and contains claims like membershipId, membership type etc. In real life scenario a passport would be an identity that proves your nationality.
 
+<br>
 
 ### Authentication configuration 
 
@@ -130,8 +131,8 @@ services.AddAuthentication(configureOptions =>
     };
 });
 ```
-
-### Authentication scheme actions
+<br>
+Authentication scheme actions:
 
 | Action            | Description                                                                                               |
 |--------------------|-----------------------------------------------------------------------------------------------------------|
@@ -139,7 +140,7 @@ services.AddAuthentication(configureOptions =>
 | Challenge | Invoked when unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect user to login page. Jwt bearer scheme will return a 401 result with a www-authenticate: bearer header.|
 | Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
 
-<br>
+<br><br>
 
 ### Authorization
 
@@ -224,15 +225,15 @@ The most important for AuthDemo are *AspNetUsers* and *AspNetRoles*. You can cus
 More info about tables and fields they contain can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).
 
 Functionalities:
-- UserManager class in ASP.NET Core Identity interacts with the AspNetUsers table to handle user-related operations like creation, deletion, updating profiles, etc.
-- The SignInManager class in ASP.NET Core Identity handles sign-in operations, including password checks, cookie management, etc.
-- RoleManager: ASP.NET Core Identity provides the RoleManager class to manage roles. This class is used to create, delete, and update roles and to assign roles to users.
+- **UserManager** class in ASP.NET Core Identity interacts with the AspNetUsers table to handle user-related operations like creation, deletion, updating profiles, etc.
+- **SignInManager** class in ASP.NET Core Identity handles sign-in operations, including password checks, cookie management, etc.
+- **RoleManager** class in ASP.NET Core Identity provides the RoleManager class to manage roles. This class is used to create, delete, and update roles and to assign roles to users.
 
 For more info about ASP.NET Identity check out [this link](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio).
 You are free to not use ASP.NET Core Identity but your custom users, roles etc. I used it because it simplifies validation of user registration, login, configuring password rules and other security functionality.
 <br><br>
 
-### ASP.NET Core Identity vs IdentityServer
+**ASP.NET Core Identity vs IdentityServer** <br>
 
 ASP.NET Core Identity is not related to [Duende IdentityServer](https://duendesoftware.com/products/identityserver) or [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) *(formerly Azure Active Directory)*.<br>
 These  are frameworks that act as an authentication and authorization server and provide centralized authentication and single sign-on (SSO) capabilities across multiple applications and services.
