@@ -5,13 +5,14 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 ## Table of Contents
 
 1. [App Overview](#app-overview)
-2. [ASP.NET Security and Identity](#asp.net-security-and-identity)
-3. [Getting Started](#getting-started)
-4. [API Endpoints](#api-endpoints)
-5. [API Endpoints Details](#api-endpoints-details)
-6. [Data Objects](#data-objects)
-7. [Architecture Overview](#architecture-overview)
-8. [Technical Highlights](#technical-highlights)
+2. [ASP.NET security features](#asp.net-security-features)
+3. [ASP.NET Core Identity](#asp.net-core-identity)
+4. [Getting Started](#getting-started)
+5. [API Endpoints](#api-endpoints)
+6. [API Endpoints Details](#api-endpoints-details)
+7. [Data Objects](#data-objects)
+8. [Architecture Overview](#architecture-overview)
+9. [Technical Highlights](#technical-highlights)
 0. [Future Enhancements](#future-enhancements)
 10. [Contributions](#contributions)
 11. [Acknowledgments](#acknowledgments)
@@ -34,7 +35,7 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 
 <br><br>
 
-## ASP.NET Security and Identity
+## ASP.NET security features
 
 **Authentication** is confirming a user's identity, a process in which user provides credentials that are compared to those stored in operating system, database, app or resource.<br><br> 
 **Authorization** is checking if authenticated user is allowed to access a resource.<br>
@@ -136,6 +137,11 @@ services.AddAuthentication(configureOptions =>
 | Authenticate | Responsible for constructing user's identity. Cookie authentication scheme constructs user's identity from cookies. JWT bearer scheme deserializes and validates JWT token to constuct user's identity.|
 | Challenge | Invoked when unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect user to login page. Jwt bearer scheme will return a 401 result with a www-authenticate: bearer header.|
 | Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
+
+
+## ASP.NET Core Identity
+
+
 
 ## Getting Started
 
