@@ -100,6 +100,43 @@ Configuration of AuthDemo JWT  bearer scheme:
      RequireExpirationTime = true,
      ClockSkew = TimeSpan.Zero
  };
+
+services.AddAuthentication(configureOptions =>
+{
+    configureOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    configureOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    configureOptions.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(jwtBearerOptions =>
+{
+
+    jwtBearerOptions.TokenValidationParameters = tokenValidationParameters;
+    var tokenService = services.BuildServiceProvider().GetRequiredService<ITokenService>();
+    jwtBearerOptions.Events = new JwtBearerEvents
+    {
+       OnTokenValidated = context => {
+           long.TryParse(context.Principal.FindFirstValue(ClaimTypes.NameIdentifier), out long userId);
+           string? tokenId = context.Principal.FindFirstValue(JwtRegisteredClaimNames.Jti);
+
+           if (string.IsNullOrEmpty(tokenId))
+           {
+               throw new SecurityTokenException($"Claim of type JwtRegisteredClaimNames.Jti is missing");
+           }
+
+           if(userId == 0) 
+           {                            
+               throw new SecurityTokenException($"Claim of type ClaimTypes.NameIdentifier is missing or has invalid value");
+           }
+
+           var result = tokenService.IsAccessTokenCached(tokenId, userId).Result;
+           if (!result)
+           {
+               context.Fail("Access token expired. Use the refresh token to obtain a new access token.");
+           }
+           return Task.CompletedTask;
+       }
+    };
+});
 ```
 
 ### Authentication scheme actions
