@@ -1,11 +1,11 @@
 # AuthDemo: .NET Web API Authorization and Authentication Demo & Tutorial
 
 AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application using JWT. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
-
+<br><br>
 ## Table of Contents
 
 1. [App Overview](#app-overview)
-2. [ASP.NET security features](#asp.net-security-features)
+2. [ASP.NET Authentication and Authorization](#asp.net-authentication-and-authorization)
 3. [ASP.NET Core Identity](#asp.net-core-identity)
 4. [Getting Started](#getting-started)
 5. [API Endpoints](#api-endpoints)
@@ -18,6 +18,7 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 11. [Acknowledgments](#acknowledgments)
 12. [Contact](#contact)
 
+<br><br>
 ## App Overview
 ### AuthDemo Capabilities
 
@@ -35,7 +36,7 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 
 <br><br>
 
-## ASP.NET security features
+## ASP.NET Authentication and Authorization
 
 **Authentication** is confirming a user's identity, a process in which user provides credentials that are compared to those stored in operating system, database, app or resource.<br><br> 
 **Authorization** is checking if authenticated user is allowed to access a resource.<br>
@@ -53,13 +54,13 @@ Let's say that you are a employee but also have a gym membership. One identity (
 Other identity (*gym card*) represent your gym identity and contains claims like membershipId, membership type etc. In real life scenario a passport would be an identity that proves your nationality.
 
 
-### Configuration 
+### Authentication configuration 
 
 In ASP.NET Core, authentication is handled by authentication service (*IAuthenticationService*) and authentication middleware. Authentication service uses authentication handlers, called "schemes", to perform tasks like user authentication and handling unauthorized access attempts.
 
 Authentication services are registered in Program.cs (*builder.Services.AddAuthentication()*).<br>
 Schemes are registered by calling specific methods like *AddJwtBearer* or *AddCookie* after AddAuthentication in Program.cs.<br>
-Example that defines using schemes that allows us to use both Cookies and JWT tokens for authentication from [official Microsoft documentation](https://www.postman.com/downloads/](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0)):
+Example that defines using schemes that allows us to use both Cookies and JWT tokens for authentication from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0)):
 
 ```csharp
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -138,18 +139,112 @@ services.AddAuthentication(configureOptions =>
 | Challenge | Invoked when unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect user to login page. Jwt bearer scheme will return a 401 result with a www-authenticate: bearer header.|
 | Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
 
+<br>
 
+### Authorization
+
+You can use a combination of:
+- Policy *(a rule or a requirement that has to be satisfied)* based authorization.
+- Claim *(a part of identity)* based authorization.
+- Role *(user's role like admin)* based authorization.
+  
+Registering the policy takes place as part of the Authorization service configuration, typically in the Program.cs.
+
+Role based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles?view=aspnetcore-8.0):
+
+```csharp
+builder.Services.AddAuthorization(options => { 
+    options.AddPolicy("RequireAdministratorRole", 
+        policy => policy.RequireRole("Administrator")); 
+});
+
+//...
+
+app.UseAuthorization();
+
+```
+
+Policy based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0):
+
+```csharp
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AtLeast21", policy =>
+        policy.Requirements.Add(new MinimumAgeRequirement(21)));
+});
+```
+
+Claim based authorization in AuthDemo *(based on a user's role in Claim that are part of JWT bearer token)*:
+
+```csharp
+options.AddPolicy(AuthDemoPolicies.Roles.Admin, policy =>
+{
+    policy.RequireClaim(ClaimTypes.Role, Roles.Administrator.GetValue());
+});
+
+options.AddPolicy(AuthDemoPolicies.Roles.Manager, policy =>
+{
+    policy.RequireClaim(ClaimTypes.Role, Roles.Manager.GetValue());
+});
+
+options.AddPolicy(AuthDemoPolicies.Roles.AdminOrManager, policy =>
+{
+    policy.RequireClaim(
+        ClaimTypes.Role,
+        Roles.Administrator.GetValue(),
+        Roles.Manager.GetValue());
+});
+```
+
+To apply the policy use Policy property on the [Authorize] attribute:
+```csharp
+[Authorize(Policy = Policies.Roles.AdminOrManager)]
+```
+
+<br><br>
 ## ASP.NET Core Identity
 
 It is a ASP.NET CORE built-in authentication provider.<br>
-It is an API that supports user interface login functionality, manages users, user registration, passwords, profile data, roles, claims, tokens, email configuration and more.<br><br> 
+It is an API that supports user interface login functionality, manages users, user registration, passwords, profile data, roles, claims, tokens, email configuration and more.
+You do not need to use it, you can create your custom User and Role classes and use dbContext to do DB operations.<br><br>
+
+By default it creates tables in your DB using EntityFramework. Running your first migrations you can see these tables:
+
+| Table            |
+|--------------------|
+| dbo.AspNetRoleClaims | 
+| dbo.AspNetRoles | 
+| dbo.AspNetUserClaims| 
+| dbo.AspNetUserLogins| 
+| dbo.AspNetUserRoles|
+| dbo.AspNetUsers| 
+| dbo.AspNetUserTokens| 
+
+The most important for AuthDemo are *AspNetUsers* and *AspNetRoles*. You can customize those tables and add new fields, for example in AuthDemo a user can have only one role but ASP.NET Identity by default defines multiple roles per user.<br> 
+More info about tables and fields they contain can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).
 
 Functionalities:
 - UserManager class in ASP.NET Core Identity interacts with the AspNetUsers table to handle user-related operations like creation, deletion, updating profiles, etc.
 - The SignInManager class in ASP.NET Core Identity handles sign-in operations, including password checks, cookie management, etc.
 - RoleManager: ASP.NET Core Identity provides the RoleManager class to manage roles. This class is used to create, delete, and update roles and to assign roles to users.
 
+For more info about ASP.NET Identity check out [this link](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio).
+You are free to not use ASP.NET Core Identity but your custom users, roles etc. I used it because it simplifies validation of user registration, login, configuring password rules and other security functionality.
+<br><br>
 
+### ASP.NET Core Identity vs IdentityServer
+
+ASP.NET Core Identity is not related to [Duende IdentityServer](https://duendesoftware.com/products/identityserver) or [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) *(formerly Azure Active Directory)*.<br>
+These  are frameworks that act as an authentication and authorization server and provide centralized authentication and single sign-on (SSO) capabilities across multiple applications and services.
+
+Possible implementation for demonstration of separate Authentication and Authorization OIDC Server:
+- Authentication and Authorization is integrated into AuthDemo as part of *Security project/ class library*.<br>
+We could  customize and exclude Security project from AuthDemo and move it to *separate  Web API application* that will act as a centralized auth server for AuthDemo and any other app.
+AuthDemo would communicate with that IdentityServer to authorize and authenticate user.
+That new IdentityServer could use ASP.NET Core Identity to manager users, tokens, roles etc..
+
+
+<br><br>
 ## Getting Started
 
 To get started with the tutorial, follow these steps:
