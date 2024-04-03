@@ -10,13 +10,12 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 4. [API Endpoints](#api-endpoints)
 5. [API Endpoints Details](#api-endpoints-details)
 6. [Data Objects](#data-objects)
-7. [Auth Handler](#auth-handler)  --- TO DO
-8. [Architecture Overview](#architecture-overview)
-9. [Technical Highlights](#technical-highlights)
-10. [Future Enhancements](#future-enhancements)
-11. [Contributions](#contributions)
-12. [Acknowledgments](#acknowledgments)
-13. [Contact](#contact)
+7. [Architecture Overview](#architecture-overview)
+8. [Technical Highlights](#technical-highlights)
+0. [Future Enhancements](#future-enhancements)
+10. [Contributions](#contributions)
+11. [Acknowledgments](#acknowledgments)
+12. [Contact](#contact)
 
 ## App Overview
 ### AuthDemo Capabilities
@@ -36,6 +35,80 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 <br><br>
 
 ## ASP.NET Security and Identity
+
+**Authentication** is confirming a user's identity, a process in which user provides credentials that are compared to those stored in operating system, database, app or resource.<br><br> 
+**Authorization** is checking if authenticated user is allowed to access a resource.<br>
+
+### Claims and Identity
+
+On each request we get the user from **HttpContext** as a *ClaimsPrincipal*.<br> 
+**HttpContext** is like the environment in which the app is running and it contains info about the current request and response.<br>
+
+**ClaimsPrincipal** is a collection of user's identities (*ClaimsIdentity*), each identity is containing user's claims.<br>
+**Identity** is like a document that proves who you are, identity is represented by set of information about the user (age, name, role), each of those info is a **Claim**.<br>
+
+Sometimes a user can have more identities, for example:<br>
+Let's say that you are a employee but also have a gym membership. One identity (*employee card*) is a set of claims that represent your employee identity which contains claims like: emplyeeId, role, status etc.<br> 
+Other identity (*gym card*) represent your gym identity and contains claims like membershipId, membership type etc. In real life scenario a passport would be an identity that proves your nationality.
+
+
+### Configuration 
+
+In ASP.NET Core, authentication is handled by authentication service (*IAuthenticationService*) and authentication middleware. Authentication service uses authentication handlers, called "schemes", to perform tasks like user authentication and handling unauthorized access attempts.
+
+Authentication services are registered in Program.cs (*builder.Services.AddAuthentication()*).<br>
+Schemes are registered by calling specific methods like *AddJwtBearer* or *AddCookie* after AddAuthentication in Program.cs.<br>
+Example that defines using schemes that allows us to use both Cookies and JWT tokens for authentication from [official Microsoft documentation](https://www.postman.com/downloads/](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/?view=aspnetcore-8.0)):
+
+```csharp
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme,
+        options => builder.Configuration.Bind("JwtSettings", options))
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+        options => builder.Configuration.Bind("CookieSettings", options));
+```
+
+The Authentication middleware is added in Program.cs by calling *UseAuthentication*.<br>
+Calling *UseAuthentication* registers the middleware that uses the previously registered authentication schemes.<br> 
+Call *UseAuthentication* before any middleware that depends on users being authenticated.
+
+
+### Authentication scheme configuration
+
+It is a setup of how authentication will work in the application. It involves defining mechanisms used to verify a user's identity. Examples:
+
+- Setting up JWT (JSON Web Token) authentication.
+	- Configuring JWT bearer auth scheme
+    - Specify options like token validation parameters, token expiration, issuer, audience, signing key.
+- Setting up Cookie based authentication
+	- Configuring Cookie name, expiration time, login path, etc.
+- Setting up external authentication providers like Oauth 2.0, OIDC (Facebook, Twitter/X, Google, Microsoft or other)
+	- Configuring connection using industry-defined protocols between our application and other unrelated application to share user profile information.
+
+Configuration of AuthDemo JWT  bearer scheme:
+
+```csharp
+ TokenValidationParameters tokenValidationParameters = new TokenValidationParameters() 
+ {
+     ValidateIssuer = true,
+     ValidIssuer = configuration.GetSection(nameof(JwtSettings))["Issuer"],
+     ValidateAudience = true,
+     ValidAudience = configuration.GetSection(nameof(JwtSettings))["Audience"],
+     ValidateIssuerSigningKey = true,
+     IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+     ValidateLifetime = true,
+     RequireExpirationTime = true,
+     ClockSkew = TimeSpan.Zero
+ };
+```
+
+### Authentication scheme actions
+
+| Action            | Description                                                                                               |
+|--------------------|-----------------------------------------------------------------------------------------------------------|
+| Authenticate | Responsible for constructing user's identity. Cookie authentication scheme constructs user's identity from cookies. JWT bearer scheme deserializes and validates JWT token to constuct user's identity.|
+| Challenge | Invoked when unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect user to login page. Jwt bearer scheme will return a 401 result with a www-authenticate: bearer header.|
+| Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
 
 ## Getting Started
 
