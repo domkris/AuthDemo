@@ -695,6 +695,9 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
     
 **Response 400 Bad Request on Model Validation**
 
+**Response 400 Bad Request **<br>
+"Unable to invalidate tokens"
+
 **Response 404 Not Found:**<br>
 "User does not exist"
 
@@ -803,6 +806,9 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td colspan="1">
     
 **Response 400 Bad Request on Model Validation**
+
+**Response 400 Bad Request **<br>
+"Unable to invalidate tokens"
     
 **Response 404 Not Found:**<br>
 "User does not exist"
@@ -918,7 +924,8 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td colspan="1">
     
-**Response 400 Bad Request on Model Validation**
+**Response 400 Bad Request **<br>
+"Unable to invalidate tokens"
 
 **Response 401 Unauthorized:**<br>
 "Invalid tokens"
@@ -1811,13 +1818,18 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td colspan="1">
     
-**Response 200 OK**
+**Response 200 OK**<br>
+ "user: {user.Email} deactivated"<br>
+ "user: {user.Email} activated"
  
 </td>
 <td colspan="1">
     
 **Response 404 Not Found**<br>
 "User does not exists"
+
+**Response 400 Bad Request **<br>
+"Unable to invalidate tokens"
     
 **Response 401 Unauthorized**
 
