@@ -2165,7 +2165,7 @@ Run this command in your Redis terminal:
 
 You should get a list of KEYs, Key looks like:
  ```powershell
-   "AuthDemo:User:2:AccessToken:b1e4f507-f642-4236-bca5-bb1fb6bb69e4"
+   "authdemo:user:2:accesstoken:aa921d69-4f9d-4212-88f1-1bc3b8249c82"
  ```
 
 Check this for naming Redis keys [How to name Redis Keys](https://riptutorial.com/redis/example/13636/key-naming-schemes).
