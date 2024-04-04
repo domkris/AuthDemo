@@ -1896,7 +1896,51 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td colspan="1">
     
 **Response 200 OK**
- 
+
+  ```json
+[
+  {
+    "id": 2,
+    "username": "adminauthdemo",
+    "email": "admin@authdemo.com",
+    "createdBy": {
+      "id": 1,
+      "username": "system",
+      "email": null
+    },
+    "updatedBy": null,
+    "createdAt": null,
+    "updatedAt": null
+  },
+  {
+    "id": 3,
+    "username": "alicemanager",
+    "email": "alice@authdemo.com",
+    "createdBy": {
+      "id": 2,
+      "username": "adminauthdemo",
+      "email": "admin@authdemo.com"
+    },
+    "updatedBy": null,
+    "createdAt": "2024-04-04T19:09:18.463805+00:00",
+    "updatedAt": null
+  },
+  {
+    "id": 4,
+    "username": "bobemployee",
+    "email": "bob@authdemo.com",
+    "createdBy": {
+      "id": 2,
+      "username": "adminauthdemo",
+      "email": "admin@authdemo.com"
+    },
+    "updatedBy": null,
+    "createdAt": "2024-04-04T19:12:44.189219+00:00",
+    "updatedAt": null
+  }
+]
+```
+
 </td>
 <td colspan="1">
     
@@ -2002,7 +2046,7 @@ public enum Role
 <td colspan="1">
     
 **Response 200 OK**
- 
+
 </td>
 <td colspan="1">
 
@@ -2088,7 +2132,23 @@ public enum Role
 <td colspan="1">
     
 **Response 200 OK**
- 
+
+```json
+ {
+  "id": 4,
+  "username": "bobemployee",
+  "email": "bob@authdemo.com",
+  "createdBy": {
+    "id": 2,
+    "username": "adminauthdemo",
+    "email": "admin@authdemo.com"
+  },
+  "updatedBy": null,
+  "createdAt": "2024-04-04T19:12:44.189219+00:00",
+  "updatedAt": null
+}
+```
+
 </td>
 <td colspan="1">
     
