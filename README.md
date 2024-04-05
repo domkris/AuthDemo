@@ -295,6 +295,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 | /api/auth/logoutAllSessions                   | Logout from all Sessions              | POST   |
 | /api/auth/changePassword                      | Change User's password                | POST   |
 | /api/auth/changeEmail                         | Change User's email                   | POST   |
+| /api/auth/toggleUserActivation/{id}          | Activate/Deactivate user              | POST   |
 | /api/authTokens/refreshTokens                 | Request a new Access Token            | POST   |
 | /api/authTokens/invalidateUserTokens/{id}     | Invalidate all User's tokens          | POST   |
 | /api/chores                                   | Get all chores                        | GET    | 
@@ -305,7 +306,6 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 | /api/chores/assignUser                        | Assing User to chore                  | PUT    |
 | /api/chores/finish/{id}                       | Finish chore                          | PUT    | 
 | /api/chores/approve/{id}                      | Approve chore                         | PUT    | 
-| /api/users/toggleUserActivation/{id}          | Activate/Deactivate user              | POST   |
 | /api/users                                    | Create a user                         | POST   | 
 | /api/users                                    | Get all users                         | GET    | 
 | /api/users/{id}                               | Get specific user                     | GET    | 
@@ -831,6 +831,105 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
  <br>
 <!--END POST /api/Auth/ChangeEmail ------------------------------------------------------------------------------------------------------------------------------->
 <!---------------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+<!--BEGIN POST /api/Auth/ToggleUserActivation/{id} ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
+### **POST** **api/Auth/ToggleUserActivation/{id}**
+<details>
+  <summary>Click to expand!</summary>
+  <br>
+  <br>
+<table>
+<tr>
+<td> 
+    
+**POST**
+
+</td>
+<td> 
+    
+**api/Auth/ToggleUserActivation/{id}**
+
+</td>
+<td colspan="2">
+    
+**EndPoint Authorization: Authorized<br>Policy=Admin** 
+
+</td>
+</tr>
+<tr>
+<td rowspan="1" colspan="2"> 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
+
+![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword456.gif?raw=true)   
+        
+</td>
+<td  colspan="2">
+
+- **Step 1: User send request to activate/deactivate a specific User** <br>
+   Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
+    If that token and claims are valid as well as request body go to 1b midstep and then to step 2.<br><br>
+- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+
+- **Step 2: Check User and Request's Data**<br>
+    Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
+    
+- **Step 3: Server sends request to update user.** <br>
+    Server sends request to DB to update User. DB updates the User and sends response to the Server. Go to steps 4 and 5 is user is deactivated and then to Step 6.<br><br>
+    
+- **Step 4: Invalidation of All User's Access Tokens**<br>
+    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends response to the Server. Go to step 6. <br><br>
+    
+- **Step 5: Invalidation of All User's Refresh Tokens**<br>
+    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to revoked and send response to the Server. Go to step 6. <br><br>
+
+- **Step 6: Server sends response to the User**<br>
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+    
+**Request**
+
+</td>
+<td colspan="1">
+    
+**Response 200 OK**<br>
+ "user: {user.Email} deactivated"<br>
+ "user: {user.Email} activated"
+ 
+</td>
+<td colspan="1">
+    
+**Response 404 Not Found**<br>
+"User does not exists"
+
+**Response 400 Bad Request **<br>
+"Unable to invalidate tokens"
+    
+**Response 401 Unauthorized**
+
+**Response 403 Forbidden**
+
+</td>
+</tr>
+</table>
+
+</details>
+ <br>
+<!--END POST /api/auth/ToggleUserActivation/{id} ------------------------------------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 
 <!--BEGIN POST /api/AuthTokens/RefreshToken ------------------------------------------------------------------------------------------------------------------------------->
@@ -1739,109 +1838,6 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </details>
  <br>
 <!--END PUT /api/Chores/Approve/{id} ------------------------------------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-<!--BEGIN POST /api/Users/ToggleUserActivation/{id} ------------------------------------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------------------------------------------------------------>
-### **POST** **api/Users/ToggleUserActivation/{id}**
-<details>
-  <summary>Click to expand!</summary>
-  <br>
-  <br>
-<table>
-<tr>
-<td> 
-    
-**POST**
-
-</td>
-<td> 
-    
-**api/Users/ToggleUserActivation/{id}**
-
-</td>
-<td colspan="2">
-    
-**EndPoint Authorization: Authorized<br>Policy=Admin** 
-
-</td>
-</tr>
-<tr>
-<td rowspan="1" colspan="2"> 
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1.gif?raw=true) 
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/AuthHandler1b.gif?raw=true) 
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword2.gif?raw=true) 
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword3.gif?raw=true) 
-
-![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Auth_ChangePassword/ChangePassword456.gif?raw=true)   
-        
-</td>
-<td  colspan="2">
-
-- **Step 1: User send request to activate/deactivate a specific User** <br>
-   Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to 1b midstep and then to step 2.<br><br>
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
-
-- **Step 2: Check User and Request's Data**<br>
-    Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
-    
-- **Step 3: Server sends request to update user.** <br>
-    Server sends request to DB to update User. DB updates the User and sends response to the Server. Go to steps 4 and 5 is user is deactivated and then to Step 6.<br><br>
-    
-- **Step 4: Invalidation of All User's Access Tokens**<br>
-    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
-    Redis deletes all Access Tokens and sends response to the Server. Go to step 6. <br><br>
-    
-- **Step 5: Invalidation of All User's Refresh Tokens**<br>
-    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
-    DB will update all Refresh Tokens to revoked and send response to the Server. Go to step 6. <br><br>
-
-- **Step 6: Server sends response to the User**<br>
-
-</td>
-</tr>
-<tr>
-<td colspan="2">
-    
-**Request**
-
-</td>
-<td colspan="1">
-    
-**Response 200 OK**<br>
- "user: {user.Email} deactivated"<br>
- "user: {user.Email} activated"
- 
-</td>
-<td colspan="1">
-    
-**Response 404 Not Found**<br>
-"User does not exists"
-
-**Response 400 Bad Request **<br>
-"Unable to invalidate tokens"
-    
-**Response 401 Unauthorized**
-
-**Response 403 Forbidden**
-
-</td>
-</tr>
-</table>
-
-</details>
- <br>
-<!--END POST /api/Users/ToggleUserActivation/{id} ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 
 
