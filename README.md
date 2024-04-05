@@ -1194,7 +1194,44 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td colspan="1">
     
 **Response 200 OK**
- 
+
+ ```json
+[
+  {
+    "id": 1,
+    "title": "Chore 1",
+    "description": "chore chore 1",
+    "isFinished": false,
+    "isApproved": false,
+    "createdBy": {
+      "id": 3,
+      "username": "alicemanager",
+      "email": "alice@authdemo.com"
+    },
+    "updatedBy": null,
+    "userAssignee": null,
+    "createdAt": "2024-04-05T08:27:38.009824+00:00",
+    "updatedAt": null
+  },
+  {
+    "id": 2,
+    "title": "Chore 2",
+    "description": "chore desc2",
+    "isFinished": false,
+    "isApproved": false,
+    "createdBy": {
+      "id": 3,
+      "username": "alicemanager",
+      "email": "alice@authdemo.com"
+    },
+    "updatedBy": null,
+    "userAssignee": null,
+    "createdAt": "2024-04-05T08:29:04.774988+00:00",
+    "updatedAt": null
+  }
+]
+```
+
 </td>
 <td colspan="1">
     
@@ -1370,6 +1407,25 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td colspan="1">
     
 **Response 200 OK**
+
+```json
+{
+  "id": 2,
+  "title": "Chore 2",
+  "description": "chore desc2",
+  "isFinished": false,
+  "isApproved": false,
+  "createdBy": {
+    "id": 3,
+    "username": "alicemanager",
+    "email": "alice@authdemo.com"
+  },
+  "updatedBy": null,
+  "userAssignee": null,
+  "createdAt": "2024-04-05T08:29:04.774988+00:00",
+  "updatedAt": null
+}
+```
  
 </td>
 <td colspan="1">
