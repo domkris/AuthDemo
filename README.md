@@ -2400,6 +2400,8 @@ public class User : IdentityUser<long>, IAuditableEntity
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 ```
+User class represents the user. It inherits IdentityUser from [ASP.NET Core Identity](#asp.net-core-identity).<br>
+More info about ASP.NET Identity User can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).<br>
 
  <br>
 <!--END User ------------------------------------------------------------------------------------------------------------------------------->
@@ -2417,6 +2419,9 @@ public class Role : IdentityRole<long>
     public virtual ICollection<User>? Users { get; set; }
 }
 ```
+Role class represents the role. It inherits IdentityRole from [ASP.NET Core Identity](#asp.net-core-identity).<br>
+More info about ASP.NET Identity Role can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).<br>
+
  <br>
 <!--END Role ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2445,6 +2450,9 @@ public class Role : IdentityRole<long>
      public DateTimeOffset? UpdatedAt { get; set; }
  }
 ```
+Chore class represents the chore.<br>
+It contains the fileds like: the user assigned to it, isFInished, isApproved statuses, etc.<br> 
+
  <br>
 <!--END Chore ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2459,9 +2467,9 @@ public class Role : IdentityRole<long>
      public long Id { get; set; }
  }
 ```
- <br>
-
+ 
 Base entity is used to define primary key of all entities in DB.
+<br>
  
 <!--END Base Entity ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2480,6 +2488,10 @@ Base entity is used to define primary key of all entities in DB.
 
   }
 ```
+IAuditableEntity interface is part of the Audit functionality.<br>
+On each DELETE, UPDATE, CREATE of an entity in DB it will update the corresponding properties of a class that implements IAuditableEntity.<br> 
+Each change of object that implements IAuditableEntity will generate AuditLogs in DB. <br>
+
  <br>
 <!--END IAuditableEntity ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2500,6 +2512,9 @@ Base entity is used to define primary key of all entities in DB.
     public virtual ICollection<AuditLogDetail> AuditLogDetails { get; set; } = new HashSet<AuditLogDetail>();
 }
 ```
+AuditLog class represents audit logs in DB.<br>
+Only classes that implement IAuditableEntity will be audited, if we do not want to audit a class that implements IAuditableEntity then add attribute ExcludeFromAuditLogAttribute.<br>
+
  <br>
 <!--END AuditLog ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2518,6 +2533,8 @@ public class AuditLogDetail: BaseEntity
     public string? NewValue { get; set; }
 }
 ```
+AuditLogDetail class represents details of each audit log in DB.<br>
+
  <br>
 <!--END AuditLogDetail ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
@@ -2532,6 +2549,8 @@ internal class ExcludeFromAuditLogAttribute : Attribute
 {
 }
 ```
+This attribute is added to the classes that implement IAuditableEntity but for which we do not want to generate audit logs.<br>
+
  <br>
 <!--END ExcludeFromAuditLogAttribute ------------------------------------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
