@@ -1,6 +1,6 @@
-# AuthDemo: .NET Web API Authorization and Authentication Demo & Tutorial
+# AuthDemo: .NET Web API Authorization and Authentication Showcase
 
-AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application using JWT. Additionally, it showcases chore management functionalities, serving as a educational example of integrating these features into simulated and some real-world scenarios.
+AuthDemo is a .NET Web API application designed to provide a practical learning demonstration of implementing authorization and authentication mechanisms in a .NET Web API application using JWT. Additionally, it showcases chore management functionalities, serving as an educational example of integrating these features into simulated and some real-world scenarios.
 <br><br>
 ## Table of Contents
 
@@ -20,6 +20,10 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 
 <br><br>
 ## App Overview
+
+AuthDemo application provides secure authentication, allowing users to log in safely with assigned roles such as administrators, managers, or employees.
+Users can efficiently manage chores, user accounts, and access permissions, while audit tracking ensures transparency across all actions within the system.<br><br>
+
 ### AuthDemo Capabilities
 
 ![promisechains](https://github.com/domkris/files/blob/master/AuthDemo/Roles.svg?raw=true) 
@@ -29,29 +33,29 @@ AuthDemo is a .NET Web API application designed to provide a practical learning 
 |--------------------|-----------------------------------------------------------------------------------------------------------|
 | Secure Authentication | Users can securely log in to our application using JWT tokens. Upon successful authentication, a JWT token is issued, allowing users access to protected resources throughout their session.   |
 | Role-Based Authorization | Users can be assigned one of three roles: Administrator, Manager, or Employee, each with different levels of access and permissions within the application.   |
-| Chore Mangement      | All users can view all chores and mark them as finished. Managers and Admins can approve chore, assign others or themselves to specific chores. Additionally, they have the authority to create, edit, and delete chores. |
-| User Management    | Users can view all users or specific user profiles. Admins can create new user accounts and activate or deactivate existing ones. Users can also modify their own email addresses and passwords, as well as those of other users if granted appropriate permissions. |
+| Chore Management      | All users can view all chores and mark them as finished. Managers and Admins can approve chores, assign others or themselves to specific chores. Additionally, they have the authority to create, edit, and delete chores. |
+| User Management    | Users can view all users or specific user profiles. Admins can create new user accounts and activate or deactivate existing ones. Users can also modify their own email addresses and passwords, as well as those of other users, if granted appropriate permissions. |
 | Token Management   | Users have the ability to invalidate their specific token, all of their tokens, or the tokens of other users if they have administrative privileges. This feature enhances security measures, allowing users to maintain control over access to their accounts. |
-| Audit tracking | Audit tracking of entities is implemented to track changes made withing AuthDemo application   |
+| Audit tracking | Audit tracking of entities is implemented to track changes made withing AuthDemo application.   |
 
 <br><br>
 
 ## ASP.NET Authentication and Authorization
 
-**Authentication** is confirming a user's identity, a process in which user provides credentials that are compared to those stored in operating system, database, app or resource.<br><br> 
-**Authorization** is checking if authenticated user is allowed to access a resource.<br><br>
+**Authentication** is confirming a user's identity, a process in which a user provides credentials that are compared to those stored in an operating system, database, app or resource.<br><br> 
+**Authorization** means checking if an authenticated user is allowed to access a resource.<br><br>
 
 ### Claims and Identity
 
-On each request we get the user from **HttpContext** as a *ClaimsPrincipal*.<br> 
-**HttpContext** is like the environment in which the app is running and it contains info about the current request and response.<br>
+On each request, we get the user from **HttpContext** as a *ClaimsPrincipal*.<br> 
+**HttpContext** is like the environment in which the app is running, and it contains info about the current request and response.<br>
 
 **ClaimsPrincipal** is a collection of user's identities (*ClaimsIdentity*), each identity is containing user's claims.<br>
-**Identity** is like a document that proves who you are, identity is represented by set of information about the user (age, name, role), each of those info is a **Claim**.<br>
+**Identity** is like a document that proves who you are, identity is represented by set of information about the user (age, name, role), each of those infos is a **Claim**.<br>
 
 Sometimes a user can have more identities, for example:<br>
-Let's say that you are a employee but also have a gym membership. One identity (*employee card*) is a set of claims that represent your employee identity which contains claims like: emplyeeId, role, status etc.<br> 
-Other identity (*gym card*) represent your gym identity and contains claims like membershipId, membership type etc. In real life scenario a passport would be an identity that proves your nationality.
+Let's say that you are an employee but also have a gym membership. One identity (*employee card*) is a set of claims that represent your employee identity which contains claims like: emplyee Id, role, status etc.<br> 
+Other identity (*gym card*) represent your gym identity and contains claims like membership Id, membership type etc. In real life scenario, a passport would be an identity that proves your nationality.
 
 <br>
 
@@ -71,7 +75,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options => builder.Configuration.Bind("CookieSettings", options));
 ```
 
-The Authentication middleware is added in Program.cs by calling *UseAuthentication*.<br>
+The Authentication middleware is added to Program.cs by calling *UseAuthentication*.<br>
 Calling *UseAuthentication* registers the middleware that uses the previously registered authentication schemes.<br> 
 Call *UseAuthentication* before any middleware that depends on users being authenticated.
 
@@ -81,12 +85,12 @@ Call *UseAuthentication* before any middleware that depends on users being authe
 It is a setup of how authentication will work in the application. It involves defining mechanisms used to verify a user's identity. Examples:
 
 - Setting up JWT (JSON Web Token) authentication.
-	- Configuring JWT bearer auth scheme
+	- Configuring thg JWT bearer auth scheme
     - Specify options like token validation parameters, token expiration, issuer, audience, signing key.
 - Setting up Cookie based authentication
 	- Configuring Cookie name, expiration time, login path, etc.
 - Setting up external authentication providers like Oauth 2.0, OIDC (Facebook, Twitter/X, Google, Microsoft or other)
-	- Configuring connection using industry-defined protocols between our application and other unrelated application to share user profile information.
+	- Configuring connections using industry-defined protocols between our application and other unrelated applications to share user profile information.
 
 Configuration of AuthDemo JWT  bearer scheme:
 
@@ -136,9 +140,9 @@ Authentication scheme actions:
 
 | Action            | Description                                                                                               |
 |--------------------|-----------------------------------------------------------------------------------------------------------|
-| Authenticate | Responsible for constructing user's identity. Cookie authentication scheme constructs user's identity from cookies. JWT bearer scheme deserializes and validates JWT token to constuct user's identity.|
-| Challenge | Invoked when unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect user to login page. Jwt bearer scheme will return a 401 result with a www-authenticate: bearer header.|
-| Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
+| Authenticate | Responsible for constructing user's identity. Cookie authentication scheme constructs user's identity from cookies. JWT bearer scheme deserializes and validates JWT token to construct user's identity.|
+| Challenge | Invoked when an unauthenticated user requests resource from enpoint that requires authentication. Cookie auth scheme will redirect the user to login page. JWT bearer scheme will return a 401 result with a www-authenticate: bearer header.|
+| Forbid | Invoked when user is authenticated but not permitted to access. Cookie auth scheme will redirect the user to a page indicating that access was forbidden. JWT bearer scheme will return 403 result. |
 
 <br><br>
 
@@ -147,11 +151,11 @@ Authentication scheme actions:
 You can use a combination of:
 - Policy *(a rule or a requirement that has to be satisfied)* based authorization.
 - Claim *(a part of identity)* based authorization.
-- Role *(user's role like admin)* based authorization.
+- Role *(user's role, like admin)* based authorization.
   
 Registering the policy takes place as part of the Authorization service configuration, typically in the Program.cs.
 
-Role based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles?view=aspnetcore-8.0):
+Role-based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/roles?view=aspnetcore-8.0):
 
 ```csharp
 builder.Services.AddAuthorization(options => { 
@@ -165,7 +169,7 @@ app.UseAuthorization();
 
 ```
 
-Policy based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0):
+Policy-based example from [official Microsoft documentation](https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0):
 
 ```csharp
 builder.Services.AddAuthorization(options =>
@@ -175,7 +179,7 @@ builder.Services.AddAuthorization(options =>
 });
 ```
 
-Claim based authorization in AuthDemo *(based on a user's role in Claim that are part of JWT bearer token)*:
+Claim-based authorization in AuthDemo *(based on a user's role in Claim that are part of the JWT bearer token)*:
 
 ```csharp
 options.AddPolicy(AuthDemoPolicies.Roles.Admin, policy =>
@@ -197,7 +201,7 @@ options.AddPolicy(AuthDemoPolicies.Roles.AdminOrManager, policy =>
 });
 ```
 
-To apply the policy use Policy property on the [Authorize] attribute:
+To apply the policy, use the Policy property on the [Authorize] attribute:
 ```csharp
 [Authorize(Policy = Policies.Roles.AdminOrManager)]
 ```
@@ -209,7 +213,7 @@ It is a ASP.NET CORE built-in authentication provider.<br>
 It is an API that supports user interface login functionality, manages users, user registration, passwords, profile data, roles, claims, tokens, email configuration and more.
 You do not need to use it, you can create your custom User and Role classes and use dbContext to do DB operations.<br><br>
 
-By default it creates tables in your DB using EntityFramework. Running your first migrations you can see these tables:
+By default, it creates tables in your DB using EntityFramework. Running your first migrations, you can see these tables:
 
 | Table            |
 |--------------------|
@@ -221,16 +225,16 @@ By default it creates tables in your DB using EntityFramework. Running your firs
 | dbo.AspNetUsers| 
 | dbo.AspNetUserTokens| 
 
-The most important for AuthDemo are *AspNetUsers* and *AspNetRoles*. You can customize those tables and add new fields, for example in AuthDemo a user can have only one role but ASP.NET Identity by default defines multiple roles per user.<br> 
-More info about tables and fields they contain can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).
+The most important for AuthDemo are *AspNetUsers* and *AspNetRoles*. You can customize those tables and add new fields, for example in AuthDemo, a user can have only one role, but ASP.NET Identity by default defines multiple roles per user.<br> 
+More info about the tables and fields they contain can be found [here](https://dotnettutorials.net/lesson/asp-net-core-identity-tables/).
 
 Functionalities:
 - **UserManager** class in ASP.NET Core Identity interacts with the AspNetUsers table to handle user-related operations like creation, deletion, updating profiles, etc.
 - **SignInManager** class in ASP.NET Core Identity handles sign-in operations, including password checks, cookie management, etc.
 - **RoleManager** class in ASP.NET Core Identity provides the RoleManager class to manage roles. This class is used to create, delete, and update roles and to assign roles to users.
 
-For more info about ASP.NET Identity check out [this link](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio).
-You are free to not use ASP.NET Core Identity but your custom users, roles etc. I used it because it simplifies validation of user registration, login, configuring password rules and other security functionality.
+For more info about ASP.NET Identity, check out [this link](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio).
+You are free to not use ASP.NET Core Identity and use your custom users, roles, etc. I used it because it simplifies the validation of user registration, login, configuring password rules and other security functionality.
 <br><br>
 
 **ASP.NET Core Identity vs IdentityServer** <br>
@@ -238,11 +242,11 @@ You are free to not use ASP.NET Core Identity but your custom users, roles etc. 
 ASP.NET Core Identity is not related to [Duende IdentityServer](https://duendesoftware.com/products/identityserver) or [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) *(formerly Azure Active Directory)*.<br>
 These  are frameworks that act as an authentication and authorization server and provide centralized authentication and single sign-on (SSO) capabilities across multiple applications and services.
 
-Possible implementation for demonstration of separate Authentication and Authorization OIDC Server:
+Possible implementation for demonstration of a separate Authentication and Authorization OIDC Server:
 - Authentication and Authorization is integrated into AuthDemo as part of *Security project/ class library*.<br>
 We could  customize and exclude Security project from AuthDemo and move it to *separate  Web API application* that will act as a centralized auth server for AuthDemo and any other app.
 AuthDemo would communicate with that IdentityServer to authorize and authenticate user.
-That new IdentityServer could use ASP.NET Core Identity to manager users, tokens, roles etc..
+That new IdentityServer could use ASP.NET Core Identity to manage users, tokens, roles etc.
 
 
 <br><br>
@@ -274,7 +278,7 @@ To get started with the tutorial, follow these steps:
 
 10. **Explore the Endpoints**: Once the application is running, you can explore the available API endpoints. Refer to the [API Endpoints](#api-endpoints) section below for a summary list of endpoints and their descriptions.
 
-11. **Interact with Endpoints**: Use tools like [Postman](https://www.postman.com/downloads/), [curl](https://curl.se/download.html) or build-in Swagger UI to interact with the endpoints. You can send requests to endpoints such as login, logout, create user, manage chores, etc.
+11. **Interact with Endpoints**: Use tools like [Postman](https://www.postman.com/downloads/), [curl](https://curl.se/download.html) or the built-in Swagger UI to interact with the endpoints. You can send requests to endpoints such as login, logout, create users, manage chores, etc.
 
 12. **Follow the Tutorial**: For a detailed understanding of how authorization and authentication are implemented within the application, refer to the tutorial provided in the repository. The tutorial offers step-by-step guidance and explanations on key concepts and functionalities.
 
@@ -295,7 +299,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 | /api/auth/logoutAllSessions                   | Logout from all Sessions              | POST   |
 | /api/auth/changePassword                      | Change User's password                | POST   |
 | /api/auth/changeEmail                         | Change User's email                   | POST   |
-| /api/auth/toggleUserActivation/{id}          | Activate/Deactivate user              | POST   |
+| /api/auth/toggleUserActivation/{id}           | Activate/Deactivate user              | POST   |
 | /api/authTokens/refreshTokens                 | Request a new Access Token            | POST   |
 | /api/authTokens/invalidateUserTokens/{id}     | Invalidate all User's tokens          | POST   |
 | /api/chores                                   | Get all chores                        | GET    | 
@@ -352,25 +356,25 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
     
-- **Step 1: User sends login request to Server** <br><br>
+- **Step 1: User sends a login request to Server** <br><br>
 
-- **Step 2: Validation of user's email and password.** <br>
-    Server sends a request to DB to check user's email and password.
-    User can be locked out on 5 wrong login attempts for 5 min.
-    Server gets response from DB and if user credentials are correct go to step 3 and 4.<br><br>
+- **Step 2: Validation of the user's email and password.** <br>
+    Server sends a request to DB to check the user's email and password.
+    The U=user can be locked out on five wrong login attempts for 5 minutes.
+    The server gets a response from DB, and if the user's credentials are correct, go to step 3 and 4.<br><br>
   
-- **Step 3: Creation of Access Token**<br>
-    Server sends request to Redis to create Access Token. Access Token is in format of JWT Token and is valid and
+- **Step 3: Creation of the Access Token**<br>
+    Server sends request to Redis to create the Access Token. Access Token is in the format of JWT Token and is valid and
     stored in Redis for 10 minutes and deleted on expire. Server gets newly created Access Token from Redis.<br><br>
     
-- **Step 4: Creation of Refresh Token**<br>
-    Server sends request to DB to create Refresh Token. Refresh Token is in format of random string
+- **Step 4: Creation of the Refresh Token**<br>
+    Server sends request to DB to create the Refresh Token. Refresh Token is in format of a random string
     and is valid for 7 days and can only be used once.
-    Refresh Token is stored indefinitely, it is persistent.
-    On each use of Refresh Token user gets a new refresh Token
-    that is valid for another 7 days meaning that
+    The Refresh Token is stored indefinitely, it is persistent.
+    On each use of Refresh Token, the user gets a new refresh Token
+    that is valid for another 7 days, meaning that
     if user has been inactive for 7 days user will  have to
-    login by using email and password. Server gets newly created Refresh Token from DB.<br>
+    login by using an email and password. Server gets newly created Refresh Token from DB.<br>
 
 - **Step 5: Server sends Refresh and Access Tokens to the User.**<br><br>
   
@@ -463,23 +467,23 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
     
-- **Step 1: User sends logout request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2 and 3.<br><br>
+- **Step 1: User sends a logout request** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and the User's Claims in the Access Token.
+    If the Access Token and User's Claims are valid, go to 1b midstep and then to step 2 and 3.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
-- **Step 2: Invalidation of User's Current Access Token**<br>
-    Server sends request to Redis to invalidate Access Token of a current logged-in user.
+- **Step 2: Invalidation of the User's Current Access Token**<br>
+    Server sends request to Redis to invalidate the Access Token of a current logged-in user.
     Redis deletes Access Token and sends response to the Server. <br><br>
     
-- **Step 3: Invalidation of User's Current Refresh Token from DB**<br>
-    Server sends request to DB to invalidate Refresh Token.
-    JWT Access Token contains RefreshToken Id that is used to found RefreshToken in DB.
-    DB will update that Refresh Token to revoked and send response to the Server.<br><br>
+- **Step 3: Invalidation of the User's Current Refresh Token from DB**<br>
+    Server sends a request to DB to invalidate the Refresh Token.
+    JWT Access Token contains RefreshToken's Id that is used to found the RefreshToken in DB.
+    DB will update that Refresh Token to be revoked and send a response to the Server.<br><br>
 
-- **Step 4: Server sends response to the User**<br>
+- **Step 4: Server sends a response to the User**<br>
       
 
 </td>
@@ -556,21 +560,21 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td  colspan="2">
 
 - **Step 1: User sends logout all sessions request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2 and 3.<br><br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and the User's Claims in the Access Token.
+    If the Access Token and User's Claims are valid, go to 1b midstep and then to step 2 and 3.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
     
 - **Step 2: Invalidation of All User's Access Tokens**<br>
-    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Server sends request to Redis to invalidate all Access Tokens for a current logged-in user.
     Redis deletes all Access Tokens and sends response to the Server. <br><br>
     
 - **Step 3: Invalidation of All User's Refresh Tokens**<br>
-    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
-    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+    Server sends request to DB to invalidate all Refresh Tokens for a current logged-in user.
+    DB will update all Refresh Tokens to be revoked and send a response to the Server.<br><br>
 
-- **Step 4: Server sends response to the User**<br>
+- **Step 4: Server sends a response to the User**<br>
 
 </td>
 </tr>
@@ -647,25 +651,25 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
     
-- **Step 1: User sends change password request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to 1b midstep and then to step 2 and 3.<br><br>
+- **Step 1: User sends a change password request** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and the user's Claims in the Access Token.
+    If that token and claims are valid, as well as the request body, go to 1b midstep and then to step 2 and 3.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
     
 - **Step 2: Check User and Request's Data**<br>
-    Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
-- **Step 3: Server sends request to update user.** <br>
-    Server sends request to DB to update User's password. DB updates the User and sends response to the Server.<br><br>
+    Server sends request to the DB to check and validate if User exists. DB sends response to the Server.<br><br>
+- **Step 3: Server sends a request to update user.** <br>
+    Server sends a request to DB to update the User's password. DB updates the User and sends a response to the Server.<br><br>
     
 - **Step 4: Invalidation of All User's Access Tokens**<br>
     Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
-    Redis deletes all Access Tokens and sends response to the Server. <br><br>
+    Redis deletes all Access Tokens and sends a response to the Server. <br><br>
     
 - **Step 5: Invalidation of All User's Refresh Tokens**<br>
     Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
-    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+    DB will update all Refresh Tokens to revoked and send a response to the Server.<br><br>
 
 - **Step 6: Server sends response to the User**<br>
 
@@ -758,28 +762,28 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User sends change email request** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to 1b midstep and then to step 2 and 3.<br><br>
+- **Step 1: User sends a change email request** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and the User's Claims in the Access Token.
+    If that token and claims are valid, as well as the request body, go to 1b midstep and then to step 2 and 3.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Check User and Request's Data**<br>
-    Server sends request to DB to check and validate if User exists, if new email is used and if current email in request body is correct. DB sends response to the Server.<br><br>
+    Server sends request to DB to check and validate if User exists, if a new email is used, and if the current email in the request body is correct. DB sends response to the Server.<br><br>
 
-- **Step 3: Server sends request to update user.** <br>
-    Server sends request to DB to update User's email. DB updates the User and sends response to the Server.<br><br>
+- **Step 3: Server sends a request to update the user.** <br>
+    Server sends a request to DB to update the User's email. DB updates the User and sends response to the Server.<br><br>
     
 - **Step 4: Invalidation of All User's Access Tokens**<br>
-    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
-    Redis deletes all Access Tokens and sends response to the Server. <br><br>
+    Server sends a request to Redis to invalidate all Access Tokens of a current logged-in user.
+    Redis deletes all Access Tokens and sends a response to the Server. <br><br>
     
 - **Step 5: Invalidation of All User's Refresh Tokens**<br>
-    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
-    DB will update all Refresh Tokens to revoked and send response to the Server.<br><br>
+    Server sends a request to DB to invalidate all Refresh Tokens of a current logged-in user.
+    DB will update all Refresh Tokens to be revoked and send a response to the Server.<br><br>
 
-- **Step 6: Server sends response to the User**<br>
+- **Step 6: Server sends a response to the User**<br>
     
 
 </td>
@@ -873,27 +877,27 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to activate/deactivate a specific User** <br>
-   Server checks user's HTTP Authorization header for JWT bearer token and user's Claims in the Access Token.
-    If that token and claims are valid as well as request body go to 1b midstep and then to step 2.<br><br>
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 1: User send a request to activate/deactivate a specific User** <br>
+   Server checks the User's HTTP Authorization header for the JWT bearer token and the user's Claims in the Access Token.
+    If that token and claims are valid, as well as the request body, go to 1b midstep and then to step 2.<br><br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Check User and Request's Data**<br>
-    Server sends request to DB to check and validate if User exists. DB sends response to the Server.<br><br>
+    Server sends request to the DB to check and validate if User exists. DB sends a response to the Server.<br><br>
     
 - **Step 3: Server sends request to update user.** <br>
-    Server sends request to DB to update User. DB updates the User and sends response to the Server. Go to steps 4 and 5 is user is deactivated and then to Step 6.<br><br>
+    Server sends request to the DB to update User. DB updates the User and sends a response to the Server. Go to steps 4 and 5 is user is deactivated and then to Step 6.<br><br>
     
 - **Step 4: Invalidation of All User's Access Tokens**<br>
-    Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
-    Redis deletes all Access Tokens and sends response to the Server. Go to step 6. <br><br>
+    Server sends a request to Redis to invalidate all Access Tokens for a current logged-in user.
+    Redis deletes all Access Tokens and sends a response to the Server. Go to step 6. <br><br>
     
 - **Step 5: Invalidation of All User's Refresh Tokens**<br>
-    Server sends request to DB to invalidate all Refresh Tokens of a current logged-in user.
-    DB will update all Refresh Tokens to revoked and send response to the Server. Go to step 6. <br><br>
+    Server sends request to DB to invalidate all Refresh Tokens for a current logged-in user.
+    DB will update all Refresh Tokens to be revoked and send a response to the Server. Go to step 6. <br><br>
 
-- **Step 6: Server sends response to the User**<br>
+- **Step 6: Server sends a response to the User**<br>
 
 </td>
 </tr>
@@ -973,12 +977,12 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
- - **Step 1: User sends request to get new access token** <br>
+ - **Step 1: User sends a request to get new Access Token** <br>
     Server validates the request body.
-    Access Token has to be expired and generated by the Server.
+    The Access Token has to be expired and generated by the Server.
     Go to step 2<br><br>
-- **Step 2: Validation of Refresh Token from request body**<br>
-    Server sends request to DB. Refresh Token must exist in DB, must not be used, expired or revoked as well as it's AccessTokenId property  has to be the same as  AccessToken Id from body's Access Token.
+- **Step 2: Validation of the Refresh Token from the request body**<br>
+    Server sends a request to DB. The Refresh Token must exist in DB, must not be used, expired or revoked as well as it's AccessTokenId property  has to be the same as  AccessToken Id from body's Access Token.
     If Accesss Token is not expired go to optional Step 3 otherwise go to Step 4.<br><br>
 - **Step 3: Invalidation of User's Access Token**<br>
     Server sends request to Redis to invalidate Access Token from request body.
@@ -988,7 +992,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 - **Step 5: Creation of Access Token**<br>
     Server sends request to Redis to create Access Token.
     Server gets newly created Access Token from Redis.<br><br>  
-- **Step 6: Creation of Refresh Token**<br>
+- **Step 6: Creation of the Refresh Token**<br>
     Server sends request to DB to create Refresh Token. Server gets newly created Refresh Token from DB.<br><br>
 - **Step 7: Server sends Refresh and Access Tokens to the User.**<br><br>
     
@@ -1088,7 +1092,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
     We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Server sends request to DB** <br>
-    Server checks if specifc user exists in DB. If user exists go to Step 3 and Step 4.<br><br>
+    Server checks if specific user exists in DB. If user exists go to Step 3 and Step 4.<br><br>
     
 - **Step 3: Invalidation of All User's Access Tokens**<br>
     Server sends request to Redis to invalidate all Access Tokens of a current logged-in user.
@@ -1287,8 +1291,8 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td  colspan="2">
 
 
-- **Step 1: User send request to create a chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
+- **Step 1: User send a request to create a chore** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
@@ -1296,7 +1300,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 
 - **Step 2: Creation of Chore**<br>
     Server sends request to DB to create a Chore. DB creates a Chore and sends data to the Server.<br><br>
-- **Step 3: Server sends response to the User**<br>
+- **Step 3: Server sends a response to the User**<br>
    
 
 </td>
@@ -1383,7 +1387,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to get specific chore**<br>
+- **Step 1: User send a request to get specific chore**<br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
@@ -1393,7 +1397,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 - **Step 2: Fetching specific Chore**<br>
     Server sends request to DB to get specific Chore. DB sends data to the Server.<br><br>
 
-- **Step 3: Server sends response to the User**<br>       
+- **Step 3: Server sends a response to the User**<br>       
 
 </td>
 </tr>
@@ -1582,11 +1586,11 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 <td  colspan="2">
 
 
-- **Step 1: User send request to delete a chore** <br>
+- **Step 1: User send a request to delete a chore** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
     We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Validation of Chore**<br>
@@ -1595,7 +1599,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 - **Step 3: Deleteion of Chore**<br>
     Server sends request to DB to delete a Chore. DB deletes a Chore and sends data to the Server.<br><br>
     
-- **Step 4: Server sends response to the User**<br> 
+- **Step 4: Server sends a response to the User**<br> 
 
 </td>
 </tr>
@@ -1670,7 +1674,7 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to assing specific User to the Chore** <br>
+- **Step 1: User send request to assign specific User to the Chore** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
@@ -1767,17 +1771,17 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to finish the Chore** <br>
+- **Step 1: User send a request to finish the Chore** <br>
     Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
     If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
 
 - **Step 1b: Validation of Access Token (Auth Handler)**<br>
     We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 - **Step 2: Validation of Chore** <br>
-   Server sends requests to DB to check for Chore. Db sends response to the Server. <br><br>
+   Server sends a requests to the DB to check for Chore. Db sends response to the Server. <br><br>
 - **Step 3: Update of Chore**<br>
-    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
-- **Step 4: Server sends response to the User**<br>   
+    Server sends a request to the DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+- **Step 4: Server sends a response to the User**<br>   
 
 </td>
 </tr>
@@ -1853,17 +1857,17 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to approve the Chore** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+- **Step 1: User send a request to approve the Chore** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid, go to 1b midstep and then to step 2.<br><br>
 
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 - **Step 2: Validation of Chore** <br>
    Server sends requests to DB to check for Chore. Db sends response to the Server. <br><br>
 - **Step 3: Update of Chore**<br>
-    Server sends request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
-- **Step 4: Server sends response to the User**<br>   
+    Server sends a request to DB to update a Chore. DB updates a Chore and sends data to the Server.<br><br>
+- **Step 4: Server sends a response to the User**<br>   
 
 </td>
 </tr>
@@ -1937,17 +1941,17 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to get all Users** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+- **Step 1: User send a request to get all Users** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid, go to 1b midstep and then to step 2.<br><br>
 
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Fetching all Users**<br>
-    Server sends request to DB to get all Users. DB sends data to the Server.<br><br>
+    Server sends a request to DB to get all Users. DB sends data to the Server.<br><br>
 
-- **Step 3: Server sends response to the User**<br>   
+- **Step 3: Server sends a response to the User**<br>   
 
 </td>
 </tr>
@@ -2062,20 +2066,20 @@ By following these steps, you'll be able to navigate through AuthDemo, understan
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to create a User** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+- **Step 1: User send a request to create a User** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valida go to 1b midstep and then to step 2.<br><br>
 
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
     We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
-- **Step 2: Validation of New user email**<br>
-    Server sends request to DB to check if email is already used. DB sends respond to the Server.<br><br>
+- **Step 2: Validation of new User's email**<br>
+    Server sends a request to DB to check if email is already used. DB sends respond to the Server.<br><br>
 
-- **Step 3: Creation of User**<br>
-    Server sends request to DB to create a User. DB sends data to the Server.<br><br>
+- **Step 3: Creation of the User**<br>
+    Server sends a request to DB to create a User. DB sends data to the Server.<br><br>
     
-- **Step 4: Server sends response to the User**<br>   
+- **Step 4: Server sends a response to the User**<br>   
 
 </td>
 </tr>
@@ -2173,17 +2177,17 @@ public enum Role
 </td>
 <td  colspan="2">
 
-- **Step 1: User send request to get specific User** <br>
-    Server checks user's HTTP Authorization header for JWT bearer token and User's Claims in the Access Token.
-    If Access Token and User's Claims are valid go to 1b midstep and then to step 2.<br><br>
+- **Step 1: User send a request to get specific User** <br>
+    Server checks user's HTTP Authorization header for the JWT bearer token and User's Claims in the Access Token.
+    If Access Token and User's Claims are valid, go to 1b midstep and then to step 2.<br><br>
 
-- **Step 1b: Validation of Access Token (Auth Handler)**<br>
-    We do this on each Authorized Endpoint to make sure that User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
+- **Step 1b: Validation of the Access Token (Auth Handler)**<br>
+    We do this on each Authorized Endpoint to make sure that the User's Access Token was not invalidated (User was deactivated, changed role, email or password).<br><br>
 
 - **Step 2: Fetching specific User**<br>
-    Server sends request to DB to get specific User. DB sends data to the Server.<br><br>
+    Server sends a request to DB to get specific User. DB sends data to the Server.<br><br>
 
-- **Step 3: Server sends response to the User**<br>    
+- **Step 3: Server sends a response to the User**<br>    
 
 </td>
 </tr>
@@ -2238,13 +2242,13 @@ public enum Role
 <!------------------------------------------------------------------------------------------------------------------------------------------------------------>
 ### **Access Token** 
 
-AuthDemo Access Token is JWT Token. JWT stands for JSON Web Token, open industry standard [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) method for representing claims securely between two parties.
+AuthDemo Access Token is a JWT Token. JWT stands for JSON Web Token, open industry standard [RFC 7519](https://datatracker.ietf.org/doc/html/rfc7519) method for representing claims securely between two parties.
 
-It is like a digital passport that helps Server recognize who you are (Authentication) and what are you allowed to do (Authorization).
+It is like a digital passport that helps Server recognize who you are (Authentication) and what you are allowed to do (Authorization).
 
 JWT Token contains Claims which are pieces of information about the user like: user role, user email, user Id, token expiration, etc.
 
-JWT Token has 3 components: Header, Payload and Signature.
+JWT Token has three components: Header, Payload and Signature.
 - Header typically consists of two parts: the type of token (JWT) and the signing algorithm being used, such as HMAC SHA256 or RSA.
 - Payload: The payload contains the claims. Claims are statements about an entity (typically, the user) and additional data.
 - Signature: The signature is created by combining the encoded header, encoded payload, and a secret (or private key) using the specified algorithm. This signature verifies that the sender of the JWT is who it says it is and ensures that the message wasn't changed along the way.
@@ -2278,8 +2282,8 @@ Decoded JWT Token looks like this (visit [JWT.io](https://jwt.io/) to decode):
 }
 ```
 <br>
-Encoded/Decoded JWT Token is shared to the User, but on Server side we use Redis to store it as a key, value pair.
-Redis is in-memory data structure and it is not persistent if not configured to save data on a disk. In AuthDemo we do not care if our Redis instance crashes/loses data, it basically means that all Users will have to login again.
+The Encoded/Decoded JWT Token is shared to the User, but on Server side we use Redis to store it as a key, value pair.
+Redis is an in-memory data structure, and it is not persistent if not configured to save data on a disk. In AuthDemo we do not care if our Redis instance crashes/loses data, it basically means that all Users will have to log in again.
 <br><br>
 
 Run this command in your Redis terminal:
@@ -2315,7 +2319,7 @@ public class AccessToken
     public UserAgentInfo? UserAgentInfo { get; set; }
 }
 ```
-Property **UserAgenInfo** contains info like browser and OS user is using to login.
+Property **UserAgenInfo** contains info like browser and OS user is using to log in.
 
  
  <br>
@@ -2354,15 +2358,15 @@ public class Token : BaseEntity, IAuditableEntity
     public DateTimeOffset? UpdatedAt { get; set; }
 }
 ```
-Refresh token is long lived random string token (on UI side, in DB it is stored as a Token class) used in authentication system to requets a new short lived access token when they expire.
+A Refresh token is long-lived random string token (on the UI side, in DB it is stored as a Token class) used in authentication system to requets a new short-lived access token when they expire.
 
-AuthDemo Refresh Token contains properties that desribe the User that RefreshToken is meant for **User**, Id of Access Token **JwtAccessTokenId** that was generated with that RefreshToken.
+AuthDemo Refresh Token contains properties that describe the User that RefreshToken is meant for **User**, Id of Access Token **JwtAccessTokenId** that was generated with that RefreshToken.
 
-In AuthDemo on each new Access Token we also create a new Refresh Token, old Refresh Token's property **ReplacedByRefreshToken** is set to new random string **RefreshToken** therefore we know that that Refresh Token has been used.
+In AuthDemo, for each new Access Token we also create a new Refresh Token, old Refresh Token's property **ReplacedByRefreshToken** is set to new random string **RefreshToken** therefore we know that that Refresh Token has been used.
 
-Properties **Revoked**, **ReasonRevoked** are used when User's role, email or password has been changed, we want user to login again. Property **Expires** defines a time and date when Refresh Token will expire.
+Properties **Revoked**, **ReasonRevoked** are used when User's role, email or password has been changed and we want the user to log in again. Property **Expires** defines a time and date when the Refresh Token will expire.
 
-Refresh Token is not sent to user as a whole Token class, we only send to the user property **RefreshToken** that looks like this:
+Refresh Token is not sent to the user as a whole Token class, we only send to the user property **RefreshToken** which looks like this:
 
 ```json
 {
@@ -2451,7 +2455,7 @@ More info about ASP.NET Identity Role can be found [here](https://dotnettutorial
  }
 ```
 Chore class represents the chore.<br>
-It contains the fileds like: the user assigned to it, isFInished, isApproved statuses, etc.<br> 
+It contains the fields like: the user assigned to it, isFinished, isApproved statuses, etc.<br> 
 
  <br>
 <!--END Chore ------------------------------------------------------------------------------------------------------------------------------->
@@ -2468,7 +2472,7 @@ It contains the fileds like: the user assigned to it, isFInished, isApproved sta
  }
 ```
  
-Base entity is used to define primary key of all entities in DB.
+Base entity is used to define the primary key of all entities in DB.
 <br>
  
 <!--END Base Entity ------------------------------------------------------------------------------------------------------------------------------->
@@ -2489,8 +2493,8 @@ Base entity is used to define primary key of all entities in DB.
   }
 ```
 IAuditableEntity interface is part of the Audit functionality.<br>
-On each DELETE, UPDATE, CREATE of an entity in DB it will update the corresponding properties of a class that implements IAuditableEntity.<br> 
-Each change of object that implements IAuditableEntity will generate AuditLogs in DB. <br>
+On each DELETE, UPDATE or CREATE of an entity in DB, it will update the corresponding properties of a class that implements IAuditableEntity.<br> 
+Each change of object that implements IAuditableEntity will generate audit Logs in DB. <br>
 
  <br>
 <!--END IAuditableEntity ------------------------------------------------------------------------------------------------------------------------------->
@@ -2513,7 +2517,7 @@ Each change of object that implements IAuditableEntity will generate AuditLogs i
 }
 ```
 AuditLog class represents audit logs in DB.<br>
-Only classes that implement IAuditableEntity will be audited, if we do not want to audit a class that implements IAuditableEntity then add attribute ExcludeFromAuditLogAttribute.<br>
+Only classes that implement IAuditableEntity will be audited, if we do not want to audit a class that implements IAuditableEntity then add the attribute ExcludeFromAuditLogAttribute.<br>
 
  <br>
 <!--END AuditLog ------------------------------------------------------------------------------------------------------------------------------->
@@ -2533,7 +2537,7 @@ public class AuditLogDetail: BaseEntity
     public string? NewValue { get; set; }
 }
 ```
-AuditLogDetail class represents details of each audit log in DB.<br>
+AuditLogDetail class represents the details of each audit log in DB.<br>
 
  <br>
 <!--END AuditLogDetail ------------------------------------------------------------------------------------------------------------------------------->
@@ -2549,7 +2553,7 @@ internal class ExcludeFromAuditLogAttribute : Attribute
 {
 }
 ```
-This attribute is added to the classes that implement IAuditableEntity but for which we do not want to generate audit logs.<br>
+This attribute is added to the classes that implement IAuditableEntity, but for which we do not want to generate audit logs.<br>
 
  <br>
 <!--END ExcludeFromAuditLogAttribute ------------------------------------------------------------------------------------------------------------------------------->
@@ -2570,7 +2574,6 @@ AuthDemo follows a structured architecture to ensure modularity, scalability, an
 | AuthDemo.Web      | Contains controllers and automapper configurations for handling HTTP requests and responses. | Exposes RESTful API endpoints, maps requests to appropriate actions, and transforms data between DTOs and domain models.                                                |
 
 
-This architecture ensures separation of concerns, making the application modular and easy to maintain. Each component is responsible for a specific aspect of the application, promoting code organization and reusability.
 <br>
 <br>
 <br>
@@ -2598,7 +2601,7 @@ This architecture ensures separation of concerns, making the application modular
 | Global Error Handler  | Centralized error handling for improved error logging, standardized error responses, and user feedback.  |
 | Logging               | Incorporation of logging mechanisms for monitoring, debugging, and better visibility into application behavior. |
 | Database Concurrency  | Implementation of concurrency control mechanisms to prevent data inconsistency issues during concurrent access. |
-| Multi-Factor Authentication | Implementation of multi-factor authentication for enhanced security by requiring additional verification steps during login. |
+| Multi-Factor Authentication | Implementation of multifactor authentication for enhanced security by requiring additional verification steps during login. |
 
 <br>
 <hr>
@@ -2611,8 +2614,8 @@ Contributions to this repository are welcome!
 
 - Gifs and images created using [Figma](https://www.figma.com) and [Motion UI Figma plugin](https://www.figma.com/community/plugin/889777319208467032/motion-ui-and-games-animation).
 - Guided by [Microsoft Security & Identity Documentation](https://learn.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-8.0).
-- Inspiration drawn from tutorials and resources on authorization and authentication in .NET Web API primarily provided by [Barry Dorrans](https://github.com/blowdart/idunno.Authentication) and [Mohamad Lawand](https://github.com/mohamadlawand087), as well as various other contributors in the field.
-- Special thanks to [Sandi Zeher](https://github.com/sandizeher) for helping me understand the concept of Refresh Tokens and explaining its practical application in real-life scenarios and projects.
+- Inspiration was drawn from tutorials and resources on authorization and authentication in .NET Web API primarily provided by [Barry Dorrans](https://github.com/blowdart/idunno.Authentication) and [Mohamad Lawand](https://github.com/mohamadlawand087), as well as various other contributors in the field.
+- Special thanks to [Sandi Zeher](https://github.com/sandizeher) for helping me understand the concept of Refresh Tokens and explaining their practical application in real-life scenarios and projects.
 
 ## Contact
 
