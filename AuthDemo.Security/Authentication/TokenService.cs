@@ -47,9 +47,11 @@ namespace AuthDemo.Security.Authentication
             _tokenValidationParameters = tokenValidationParameters;
         }
 
-        public async Task<bool> IsAccessTokenCached(string tokenId, long userId)
+        public async Task<bool> IsAccessTokenCached(string accessTokenId, long userId)
         {
-            var result = await _cacheService.GetResourcePerObjectIdAsync<AccessToken>(CacheResources.AccessToken, tokenId, userId.ToString());
+            var cacheKeyValuePairs = GenerateKeyValuePairsForAccessToken(userId.ToString(), accessTokenId);
+            var result = await _cacheService.GetResourceDataPerKeyValuePairsAsync<AccessToken>(cacheKeyValuePairs);
+
             if (result == null)
             {
                 return false;
@@ -63,8 +65,9 @@ namespace AuthDemo.Security.Authentication
             string accessTokenGuid = Guid.NewGuid().ToString();
             Token refreshToken = await GenerateRefreshTokenAsync(user, accessTokenGuid);
             (var acessTokenResult, AccessToken accessToken) = GenerateAccessToken(user, refreshToken.RefreshToken, accessTokenGuid);
-    
-            await _cacheService.SetResourceDataPerObjectIdAsync(CacheResources.AccessToken, accessToken.TokenId, accessToken, user.Id.ToString(), accessToken.TokenExpiration);
+
+            var cacheKeyValuePairs = GenerateKeyValuePairsForAccessToken(user.Id.ToString(), accessToken.TokenId);
+            await _cacheService.SetResourceDataPerKeyValuePairsAsync(cacheKeyValuePairs, accessToken, accessToken.TokenExpiration);
 
             return (acessTokenResult, refreshToken.RefreshToken);
         }
@@ -110,7 +113,8 @@ namespace AuthDemo.Security.Authentication
                 // if accessToken is not expired, expire it
                 if(await IsAccessTokenCached(accessTokenId, loggedUserId))
                 {
-                    await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.AccessToken, accessTokenId, loggedUserId.ToString());
+                    var cacheKeyValuePairs = GenerateKeyValuePairsForAccessToken(loggedUserId.ToString(), accessTokenId);
+                    await _cacheService.RemoveResourceDataPerKeyValuePairsAsync(cacheKeyValuePairs);
                 }
 
                 User? user = await _userIdentityService
@@ -256,28 +260,13 @@ namespace AuthDemo.Security.Authentication
             };
         }
 
-        private string HashToken(string token)
-        {
-            byte[] keyBytes = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
-
-            using HMACSHA256 hmacSha256 = new(keyBytes);
-            byte[] hashedBytes = hmacSha256.ComputeHash(Encoding.UTF8.GetBytes(token));
-            return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
-        }
-
-        private static bool CompareHashes(string hash1, string hash2)
-        {
-            return string.Equals(hash1, hash2, StringComparison.OrdinalIgnoreCase);
-        }
-
-        
         public async Task<bool> InvalidateUserTokens(long userId, string reasonOfRevoke)
         {
-            var accessTokenInvalidationResult = await _cacheService.RemoveAllResourcesPerObjectIdAsync(CacheResources.AccessToken, userId.ToString());
+            var accessTokenInvalidationResult = await _cacheService.RemoveAllResourcesPerIdAsync(CacheResources.User, userId.ToString());
 
             List<Token>? refreshTokens = await _unitOfWork.Tokens.GetAll()
                 .Where(token => token.UserId == userId)
-                .Where(token => token.IsActive == true)
+                .Where(token => token.Revoked == null)
                 .ToListAsync();
 
             foreach (var token in refreshTokens)
@@ -292,7 +281,8 @@ namespace AuthDemo.Security.Authentication
 
         public async Task<bool> InvalidateUserTokensOnLogout(string accessTokenId, long userId, string reasonOfRevoke)
         {
-            AccessToken accessToken = await _cacheService.GetResourcePerObjectIdAsync<AccessToken>(CacheResources.AccessToken, userId.ToString(), accessTokenId);
+            var cacheKeyValuePairs = GenerateKeyValuePairsForAccessToken(userId.ToString(), accessTokenId);
+            AccessToken accessToken = await _cacheService.GetResourceDataPerKeyValuePairsAsync<AccessToken>(cacheKeyValuePairs);
 
             Token? refreshToken = await _unitOfWork.Tokens.GetAll()
                 .FirstOrDefaultAsync(token => token.RefreshToken == accessToken.RefreshToken);
@@ -304,7 +294,16 @@ namespace AuthDemo.Security.Authentication
             }
             await _unitOfWork.SaveAsync();
 
-            return await _cacheService.RemoveResourcePerObjectIdAsync(CacheResources.AccessToken, userId.ToString(), accessTokenId);
+            return await _cacheService.RemoveResourceDataPerKeyValuePairsAsync(cacheKeyValuePairs);
+        }
+
+        private static List<KeyValuePair<CacheResources, string>> GenerateKeyValuePairsForAccessToken(string userId, string accessTokenId)
+        {
+            return
+            [
+                new(CacheResources.User, userId),
+                new(CacheResources.AccessToken, accessTokenId),
+            ];
         }
     }
 } 

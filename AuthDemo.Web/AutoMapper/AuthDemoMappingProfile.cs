@@ -28,5 +28,6 @@ namespace AuthDemo.Web.AutoMapper
             CreateMap<User, UserResponse>();
             CreateMap<User, SimpleUserResponse>();
         }
+
     }
 }

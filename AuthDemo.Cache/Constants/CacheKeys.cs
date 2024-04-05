@@ -2,12 +2,12 @@
 {
     public static class CacheKeys
     {
-        public const string App = "AuthDemo";
+        public const string App = "authdemo";
 
         public enum CacheResources
         {
             AccessToken,
-            RefreshToken
+            User
         }
     }
 }

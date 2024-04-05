@@ -31,31 +31,6 @@ namespace AuthDemo.Web.Controllers
             _userIdentityService = userIdentityService;
         }
 
-        [Authorize(Policy = Policies.Roles.Admin)]
-        [HttpPost("ToggleUserActivation/{id}")]
-        public async Task<IActionResult> ToggleUserActivation(long id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var user = await _userIdentityService.FindByIdAsync(id);
-            if (user == null)
-            {
-                return BadRequest("User does not exist");
-            }
-            user.IsActive = !user.IsActive;
-            await _userIdentityService.UpdateAsync(user);
-
-            if (!user.IsActive)
-            {
-                // logout user from all sessions
-                await _tokenService.InvalidateUserTokens(id, Constants.ReasonsOfRevoke.UserDeactivated);
-            }
-            return Ok();
-        }
-
         [HttpGet]
         public async Task<IActionResult> Get()
         {

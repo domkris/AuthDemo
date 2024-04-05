@@ -11,7 +11,7 @@ namespace AuthDemo.Contracts.DataTransferObjects.Response
         public SimpleUserResponse? CreatedBy { get; set; }
         public SimpleUserResponse? UpdatedBy { get; set; }
         public SimpleUserResponse? UserAssignee { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 }
