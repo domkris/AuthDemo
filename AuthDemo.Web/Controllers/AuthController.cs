@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Policies = AuthDemo.Security.Authorization.AuthDemoPolicies;
 
 namespace AuthDemo.Web.Controllers
 {
@@ -95,7 +96,11 @@ namespace AuthDemo.Web.Controllers
             long.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out long loggedInUserId);
 
             var result = await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserRequestedInvalidationOfUserTokens);
-            return Ok(result);
+            if (!result)
+            {
+                return BadRequest("Unable to logout");
+            }
+            return Ok(new { message = "Logout successful" });
         }
 
 
@@ -120,8 +125,11 @@ namespace AuthDemo.Web.Controllers
             await _userIdentityService.ChangePasswordAsync(dbUser, request.CurrentPassword, request.NewPassword);
 
             // logout user from all sessions
-            await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedPassword);
-
+            var result = await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedPassword);
+            if (!result)
+            {
+                return BadRequest("Unable to invalidate tokens");
+            }
             return Ok();
         }
 
@@ -159,9 +167,39 @@ namespace AuthDemo.Web.Controllers
             await _userIdentityService.UpdateAsync(dbUser);
 
             // logout user from all sessions
-            await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedEmail);
+            var result = await _tokenService.InvalidateUserTokens(loggedInUserId, Constants.ReasonsOfRevoke.UserChangedEmail);
+            if (!result)
+            {
+                return BadRequest("Unable to invalidate tokens");
+            }
 
             return Ok();
+        }
+
+        [Authorize(Policy = Policies.Roles.Admin)]
+        [HttpPost("ToggleUserActivation/{id}")]
+        public async Task<IActionResult> ToggleUserActivation(long id)
+        {
+
+            var user = await _userIdentityService.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound("User does not exist");
+            }
+            user.IsActive = !user.IsActive;
+            await _userIdentityService.UpdateAsync(user);
+
+            if (!user.IsActive)
+            {
+                // logout user from all sessions
+                var result = await _tokenService.InvalidateUserTokens(id, Constants.ReasonsOfRevoke.UserDeactivated);
+                if (!result)
+                {
+                    return BadRequest("Unable to invalidate tokens");
+                }
+                return Ok(new { message = $"user: {user.Email} deactivated" });
+            }
+            return Ok(new { message = $"user: {user.Email} activated" });
         }
     }
 }

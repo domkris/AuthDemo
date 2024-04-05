@@ -50,6 +50,10 @@ namespace AuthDemo.Web.Controllers
         public async Task<IActionResult> InvalidateUserTokens(long id)
         {
             var result = await _tokenService.InvalidateUserTokens(id, Constants.ReasonsOfRevoke.AdminRequestedInvalidationOfUserTokens);
+            if (!result)
+            {
+                return BadRequest("Unable to invalidate tokens");
+            }
             return Ok(result);
         }
     }

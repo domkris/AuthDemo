@@ -13,8 +13,8 @@ namespace AuthDemo.Contracts.DataTransferObjects.Response
         public string? Email { get; set; }
         public SimpleUserResponse? CreatedBy { get; set; }
         public SimpleUserResponse? UpdatedBy { get; set; }
-        public DateTime? CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
+        public DateTimeOffset? UpdatedAt { get; set; }
     }
 
     public class SimpleUserResponse
